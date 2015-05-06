@@ -1,5 +1,4 @@
 # NetEaseMusic
-A NetEaseMusic player writen by nw.js
 目前只能播放本地音乐
 
 ###安装
