@@ -1,0 +1,15 @@
+{
+  "name": "NetEaseMusic",
+  "main": "index.html",
+  "version": "0.1.0",
+  "window": {
+    "title": "NetEaseMusic",
+    "toolbar": false,
+    "frame": true,
+    "width": 1014,
+    "height": 600
+  },
+  "dependencies": {
+    "async": "^0.9.0"
+  }
+}

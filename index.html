@@ -1,0 +1,224 @@
+<!DOCTYPE html>
+<html>
+<head lang="zh-CN">
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no">
+    <title>NetEaseMusic</title>
+    <link href="assets/css/bootstrap.min.css" rel="stylesheet">
+    <link href="assets/css/my.css" rel="stylesheet">
+</head>
+<body>
+<div id="wrapper">
+    <!-- navgaiton bar -->
+    <nav class="navbar navbar-fixed-top navbar-default">
+        <div class="container-fluid">
+            <!-- Brand and toggle get grouped for better mobile display -->
+            <div class="navbar-header">
+                <button type="button" class="navbar-toggle collapsed" data-toggle="collapse"
+                        data-target="#bs-example-navbar-collapse-1">
+                    <span class="sr-only">Toggle navigation</span>
+                    <span class="icon-bar"></span>
+                    <span class="icon-bar"></span>
+                    <span class="icon-bar"></span>
+                </button>
+                <a class="navbar-brand" href="#">网易云音乐</a>
+            </div>
+
+            <!-- Collect the nav links, forms, and other content for toggling -->
+            <div class="collapse navbar-collapse" id="bs-example-navbar-collapse-1">
+                <ul class="nav navbar-nav">
+                    <li id="main-nav" class="active"><a href="javascript:nav.go(0)">首页</a></li>
+                    <li id="settings-nav"><a href="javascript:nav.go(1)">设置</a></li>
+                    <li id="about-nav"><a href="javascript:nav.go(2)">关于</a></li>
+                </ul>
+
+                <ul class="nav navbar-nav navbar-right">
+                    <form class="navbar-form navbar-left" role="search">
+                        <div class="input-group">
+                            <input id="search" type="text" class="form-control" placeholder="搜索音乐...">
+                      <span class="input-group-btn">
+                        <a class="btn btn-default" href="javascript:nav.search()"><span class="glyphicon glyphicon-search"></span>
+                        </a>
+                      </span>
+                        </div>
+                        <!-- /input-group -->
+                    </form>
+                    <button id="refresh"
+                            data-loading-text="更新中..."
+                            class="btn btn-default navbar-btn">更新列表
+                    </button>
+                    <!-- Single button -->
+                    <div class="btn-group navbar-btn">
+                        <button type="button" class="btn btn-default dropdown-toggle" data-toggle="dropdown"
+                                aria-expanded="false">
+                            账户
+                        </button>
+                        <ul class="dropdown-menu" role="menu">
+                            <li><a href="#">登录</a></li>
+                            <li><a href="#">注册</a></li>
+                            <li><a href="#"></a></li>
+                            <li class="divider"></li>
+                            <li><a href="#">功能尚未实现</a></li>
+                        </ul>
+                    </div>
+                </ul>
+            </div>
+            <!-- /.navbar-collapse -->
+        </div>
+        <!-- /.container-fluid -->
+    </nav>
+    <!-- end navgaiton bar -->
+
+    <div id="page" class="container-fluid">
+        <div id="main" class="row">
+            <div class="col-sm-2 sidebar">
+                <div class="nav-sidebar user-head">
+                    <div class="avater">
+                        <a href="javascript:void(0);">
+                            <img class="img-thumbnail" ,
+                                 src="assets/img/avater.jpg",alt="...">
+                        </a>
+                    </div>
+                    <div class="title">
+                        <h4>MisayaFeng0xfff</h4>
+                        <span id="totsong" class="label label-primary">歌曲：0</span>
+                        <span class="label label-success">播放列表：4</span>
+                    </div>
+                </div>
+                <ul class="nav nav-sidebar">
+                    <li class="active"><a href="#">
+                        <span class="name">本地音乐</span>
+                        <span class="badge">0</span>
+                        <span class="clearfix"></span>
+                    </a>
+                    </li>
+                    <li><a href="#">
+                        <span class="name">网络音乐</span>
+                        <span class="badge">0</span>
+                        <span class="clearfix"></span>
+                    </a></li>
+                    <li><a href="#">
+                        <span class="name">FM电台</span>
+                        <span class="badge">0</span>
+                        <span class="clearfix"></span>
+                    </a></li>
+                </ul>
+            </div>
+            <div class="col-sm-10 list">
+                <table class="table table-hover">
+                    <thead>
+                    <tr>
+                        <th>#</th>
+                        <th>标题</th>
+                        <th>艺术家</th>
+                        <th>专辑</th>
+                        <th>操作</th>
+                    </tr>
+                    </thead>
+                    <tbody>
+                    </tbody>
+                </table>
+            </div>
+        </div>
+        <div id="settings" style="display:none" class="row">
+            <div class="panel panel-default">
+                <div class="panel-heading">
+                    <h3 class="panel-title">基本设置</h3>
+                </div>
+                <div class="panel-body">
+                    <form class="form-horizontal">
+                        <div class="form-group">
+                            <label for="music-dir" class="col-sm-3 control-label">自定义音乐文件夹</label>
+
+                            <div class="col-sm-9">
+                                <div class="input-group">
+                                    <input id="music-dir"
+                                           disabled="disabled"
+                                           type="text"
+                                           class="form-control">
+                                    <span class="input-group-btn">
+                                        <button id="openDialog" class="btn btn-default" type="button">选择...</button>
+                                    </span>
+                                </div>
+                                <!-- /input-group -->
+                            </div>
+                        </div>
+                    </form>
+                    <input style="display:none;" id="fileDialog" nwdirectory type="file"/>
+                </div>
+            </div>
+        </div>
+        <div id="about" style="display:none" class="row">
+            <div class="panel panel-default">
+                <div class="panel-body">
+                    <h3>设计&&实现：Kevin</h3>
+                    <p>Email:stkevintan@foxmail.com</p>
+                </div>
+                </div>
+        </div>
+    </div>
+    <div id="footer">
+        <div class="container-fluid">
+            <div class="row">
+                <div class="col-sm-2 ">
+                    <div class="audio-control">
+                        <a id="backward" href="javascript:controls.backward();">
+                            <span class="glyphicon glyphicon-step-backward"></span>
+                        </a>
+                        <a id="play" href="javascript:controls.play();">
+                            <span class="glyphicon glyphicon-play"></span>
+                        </a>
+                        <a id="pause" style="display:none" href="javascript:controls.pause();">
+                            <span class="glyphicon glyphicon-pause"></span>
+                        </a>
+                        <a id="forward" href="javascript:controls.forward();">
+                            <span class="glyphicon glyphicon-step-forward"></span>
+                        </a>
+                    </div>
+                </div>
+                <div class="col-sm-7 audio-body">
+                    <div class="media">
+                        <div class="media-left">
+                            <a href="#">
+                                <img class="img-thumbnail media-object" src="assets/img/Ever%20Eternity.jpg"
+                                     alt="...">
+                            </a>
+                        </div>
+                        <div class="media-body">
+                            <h4 class="media-heading">未选择音乐</h4>
+
+                            <p class="media-time"><span id="cur-time">00.00</span>/<span id="tot-time">00.00</span></p>
+                            <input id='progress' type="range" value="0" min="0" max="60" step="1"/>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-sm-3">
+                    <div class="audio-adjust">
+                        <a id="vol-icon" href="javascript:controls.volIcon()">
+                            <span class="glyphicon glyphicon-volume-up"></span>
+                        </a>
+
+                        <a id="order" href="javascript:controls.order();">
+                            <span class="glyphicon glyphicon-repeat"></span>
+                        </a>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div id="vol-pop" class="popover top in" role="tooltip"
+         style="display: none;">
+        <div class="arrow"></div>
+        <h3 class="popover-title" style="display: none;"></h3>
+
+        <div class="popover-content">
+            <input id="volume" type="range" min="0" max="1" step="0.01" val="0.3">
+        </div>
+    </div>
+    <audio></audio>
+    <script src="assets/js/jquery.min.js"></script>
+    <script src="assets/js/bootstrap.min.js"></script>
+    <script src="assets/js/my.js"></script>
+</div>
+</body>
+</html>

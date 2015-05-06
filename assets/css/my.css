@@ -1,0 +1,231 @@
+html, body,
+#wrapper,#page,
+#page > .row {
+    height: 100%;
+}
+
+a {
+    outline: none;
+    color: #767676;
+    text-decoration: none;
+}
+
+
+.navbar {
+    box-shadow: 0 0 8px rgba(0, 0, 0, 0.21);
+}
+
+.navbar-btn {
+    margin-right: 16px;
+    display: block;
+    float: left;
+    outline:none;
+}
+.navbar-btn:focus{
+outline:none;
+}
+#page{
+    padding-top: 50px;
+    padding-bottom:60px;
+}
+.sidebar {
+    display: none;
+}
+@media (min-width: 768px) {
+    .sidebar {
+        display: block;
+        padding: 20px;
+        height:100%;
+        min-height: 100%;
+        overflow-x: hidden;
+        overflow-y: auto; /* Scrollable contents if viewport is shorter than content. */
+        background-color: #f5f5f5;
+        border-right: 1px solid #eee;
+    }
+
+    /* Sidebar navigation */
+    .nav-sidebar {
+        margin-right: -21px; /* 20px padding + 1px border */
+        margin-bottom: 20px;
+        margin-left: -20px;
+    }
+
+    .nav-sidebar > li > a {
+        line-height:16px;
+        padding-right: 20px;
+        padding-left: 20px;
+    }
+
+    .nav-sidebar > .active > a,
+    .nav-sidebar > .active > a:hover,
+    .nav-sidebar > .active > a:focus {
+        color: #fff;
+        background-color: #428bca;
+    }
+    .nav-sidebar  a  span.name {
+        float: left;
+    }
+
+    .nav-sidebar  a  span.badge {
+        float: right;
+        background: #428BCA;
+        color: #fff;
+    }
+    .nav-sidebar  li.active a span.badge{
+        background: #fff;
+        color:#428BCA;
+    }
+}
+.list {
+    height:100%;
+    min-height:100%;
+    overflow: auto;
+}
+
+#settings .panel,
+#about .panel{
+    margin: 100px auto 0 auto;
+    width:80%;
+}
+#footer {
+    position: fixed;
+    bottom: 0;
+    width: 100%;
+    background: #262626;
+}
+
+/* Hide for mobile, show later */
+
+
+.user-head {
+    padding: 0 10px 20px 20px;
+    border-bottom: 1px solid #eee;
+    margin-bottom: 0;
+}
+
+.user-head .avater {
+    display: inline-block;
+}
+
+.user-head .title {
+    display: inline-block;
+    vertical-align: top;
+}
+
+.user-head .avater img {
+    width: 90px;
+    height: 90px;
+}
+
+#page .list table a:hover,
+#page .list table a:focus {
+    color: #d9534f;
+}
+
+#page .list table a {
+    margin-right: 10px;
+    outline: none;
+    text-decoration: none;
+}
+
+#footer a {
+    color: #fff;
+    outline: none;
+    text-decoration: none;
+}
+
+#footer a:hover,
+#footer a:focus {
+    color: #BDBDBD;
+}
+
+#footer .audio-control,
+#footer .audio-adjust {
+    line-height: 60px;
+    font-size: 24px;
+    color: #fff;
+    vertical-align: middle;
+    text-align: center;
+}
+
+#footer .audio-adjust a:first-child {
+    margin-right: 20px;
+}
+
+@media (min-width: 768px) {
+    #footer .audio-control {
+        text-align: right;
+    }
+
+    #footer .audio-adjust {
+        text-align: left;
+    }
+}
+
+#footer .audio-body {
+    color: #fff;
+}
+
+#footer .audio-body .media-left,
+#footer .audio-body .media-body {
+    vertical-align: middle;
+    height: 60px;
+}
+
+#footer .audio-body .media-left a {
+    display: block;
+    width: 50px;
+}
+
+#footer .audio-body img {
+    width: 50px;
+    height: 50px;
+    vertical-align: middle;
+}
+
+#footer .audio-body .media-body .media-heading {
+    float: left;
+}
+
+#footer .audio-body .media-body .media-time {
+    float: right;
+}
+input[type="range"] {
+    -webkit-appearance: none;
+    border-radius: 4px;
+    background: #E7E7E7;
+}
+
+input[type="range"]::-webkit-slider-thumb{
+    -webkit-appearance: none;
+    height:12px;
+    width:12px;
+    border-radius:100%;
+    background: #5e5e5e;
+}
+#footer input[type="range"] {
+    -webkit-appearance: none;
+    -webkit-box-shadow: 0 1px 0 0px #424242,
+    0 1px 0 #060607 inset,
+    0px 2px 10px 0px black inset,
+    1px 0px 2px rgba(0, 0, 0, 0.4) inset,
+    0 0px 1px rgba(0, 0, 0, 0.6) inset;
+    margin-top: 2px;
+    background-color: #272728;
+    border-radius: 15px;
+}
+
+input[type="range"]:focus {
+    outline: none;
+}
+
+#footer .media-body input[type="range"]::-webkit-slider-thumb {
+    -webkit-appearance: none;
+    cursor: default;
+    top: 1px;
+    height: 9px;
+    width: 20px;
+    background: none repeat scroll 0 0 #777;
+    border-radius: 15px;
+    -webkit-box-shadow: 0 -1px 1px black inset;
+}
