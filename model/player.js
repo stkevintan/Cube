@@ -58,7 +58,6 @@ var player = {
             player.duration = Ao.duration;
             callback('loaded');
             console.log('loadedmetadata!');
-
         }
     }
 }

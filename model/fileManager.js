@@ -29,7 +29,8 @@ var scheme = {
 
 var fileManager = function () {
 }
-
+var schemeArray = [scheme.content];
+var schemeAll={};
 fileManager.prototype.SaveChanges = function (callback) {
     if (config.isChanged) {
         fs.writeFile(config.path,
@@ -37,7 +38,7 @@ fileManager.prototype.SaveChanges = function (callback) {
             function (err) {
                 callback(err);
             });
-    } else if (scheme.isChanged) {
+    } else if (schemeAll.isChanged||scheme.isChanged) {
         fs.writeFile(scheme.path,
             JSON.stringify(scheme.content),
             function (err) {
@@ -64,21 +65,36 @@ fileManager.prototype.getMusicDir = function () {
 }
 
 fileManager.prototype.getScheme = function () {
-    return scheme.content;
+    schemeAll = {content:{},isChanged:scheme.isChanged};
+    for (var k = 0; k < schemeArray.length; k++) {
+        var o = schemeArray[k];
+        for (var i in o) {
+            if (o.hasOwnProperty(i)) {
+                schemeAll.content[i] = o[i];
+            }
+        }
+    }
+    return schemeAll;
 }
 
 fileManager.prototype.getSchemeNames = function () {
     var ret = [];
-    for (var i in scheme.content) {
-        if (scheme.content.hasOwnProperty(i)) {
-            ret.push(i);
+    for (var k = 0; k < schemeArray.length; k++) {
+        var o = schemeArray[k];
+        for (var i in o) {
+            if (o.hasOwnProperty(i)) {
+                ret.push(i);
+            }
         }
     }
     return ret;
 }
+
 fileManager.prototype.setScheme = function (key, val) {
-    scheme.content[key] = val;
-    scheme.isChanged = 1;
+    if (key in scheme.content) {
+        scheme.content[key] = val;
+        scheme.isChanged = 1;
+    }
 }
 fileManager.prototype.loadMusicDir = function (callback) {
     var musicDir = this.getMusicDir();
@@ -124,8 +140,7 @@ fileManager.prototype.loadMusicDir = function (callback) {
         if (err) {
             console.log('get local file failed!', err);
         } else {
-            scheme.content["本地音乐"] = result;
-            scheme.isChanged = 1;
+            schemeArray.unshift({'本地音乐': result});
             console.log('update success!');
         }
         callback();

@@ -37,15 +37,16 @@
                         <div class="input-group">
                             <input id="search" type="text" class="form-control" placeholder="搜索音乐...">
                       <span class="input-group-btn">
-                        <a class="btn btn-default" href="javascript:nav.search()"><span class="glyphicon glyphicon-search"></span>
+                        <a class="btn btn-default" href="javascript:nav.search()"><span
+                                class="glyphicon glyphicon-search"></span>
                         </a>
                       </span>
                         </div>
                         <!-- /input-group -->
                     </form>
-                    <button id="refresh"
+                    <button id="dev"
                             data-loading-text="更新中..."
-                            class="btn btn-default navbar-btn">更新列表
+                            class="btn btn-default navbar-btn">开发人员工具
                     </button>
                     <!-- Single button -->
                     <div class="btn-group navbar-btn">
@@ -71,40 +72,28 @@
 
     <div id="page" class="container-fluid">
         <div id="main" class="row">
-            <div class="col-sm-2 sidebar">
-                <div class="nav-sidebar user-head">
+            <div class="col-sm-3 sidebar">
+                <div class="user-head">
                     <div class="avater">
                         <a href="javascript:void(0);">
                             <img class="img-thumbnail" ,
-                                 src="assets/img/avater.jpg",alt="...">
+                                 src="assets/img/avater.jpg" ,alt="...">
                         </a>
                     </div>
                     <div class="title">
-                        <h4>MisayaFeng0xfff</h4>
-                        <span id="totsong" class="label label-primary">歌曲：0</span>
-                        <span id="totlist" class="label label-success">播放列表：4</span>
+                        <h4>未登录</h4>
+                        <span id="totsong" class="label label-primary"></span>&nbsp;
+                        <span id="totlist" class="label label-success"></span>
                     </div>
                 </div>
                 <ul class="nav nav-sidebar">
-                    <li class="active"><a href="#">
-                        <span class="name">本地音乐</span>
-                        <span class="badge">0</span>
-                        <span class="clearfix"></span>
-                    </a>
-                    </li>
-                    <li><a href="#">
-                        <span class="name">网络音乐</span>
-                        <span class="badge">0</span>
-                        <span class="clearfix"></span>
-                    </a></li>
-                    <li><a href="#">
-                        <span class="name">FM电台</span>
-                        <span class="badge">0</span>
-                        <span class="clearfix"></span>
-                    </a></li>
                 </ul>
+                <div class="nav-plus">
+                    <span id="refresh" title="更新列表" class="glyphicon glyphicon-refresh"></span>
+                    <span id="addlist" title="添加自定义列表" class="glyphicon glyphicon-plus"></span>
+                </div>
             </div>
-            <div class="col-sm-10 list">
+            <div class="col-sm-9 list">
                 <table class="table table-hover">
                     <thead>
                     <tr>
@@ -152,9 +141,10 @@
             <div class="panel panel-default">
                 <div class="panel-body">
                     <h3>设计&&实现：Kevin</h3>
+
                     <p>Email:stkevintan@foxmail.com</p>
                 </div>
-                </div>
+            </div>
         </div>
     </div>
     <div id="footer">
@@ -216,9 +206,41 @@
         </div>
     </div>
     <audio></audio>
-    <script src="assets/js/jquery.min.js"></script>
-    <script src="assets/js/bootstrap.min.js"></script>
-    <script src="controller/index.js"></script>
 </div>
+<div id="inputListName" class="modal fade">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span
+                        aria-hidden="true">&times;</span></button>
+                <h4 class="modal-title">添加自定义播放列表</h4>
+            </div>
+            <div class="modal-body">
+                <form>
+                    <label class="control-label" style="color:red" >糟糕，输入为空或者重名了！</label>
+                    <input class="form-control" type="text" placeholder="输入自定义播放列表名"/>
+                </form>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-default" data-dismiss="modal">撤销</button>
+                <button type="button" id="submit-name"class="btn btn-primary">确定</button>
+            </div>
+        </div>
+        <!-- /.modal-content -->
+    </div>
+    <!-- /.modal-dialog -->
+</div>
+<!-- /.modal -->
+<script src="assets/js/jquery.min.js"></script>
+<script src="assets/js/bootstrap.min.js"></script>
+<script>
+    var component = ['nav', 'category', 'controls', 'list', 'progress', 'settings', 'index'];
+    for (var i = 0; i < component.length; i++) {
+        var d = document.createElement('script');
+        d.src = 'controller/' + component[i] + '.js';
+        d.type = 'text/javascript';
+        document.body.appendChild(d);
+    }
+</script>
 </body>
 </html>
