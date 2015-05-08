@@ -9,13 +9,14 @@ var settings = {
         settings.listen();
     },
     listen: function () {
+        var that=this;
         $('button#openDialog').click(function () {
             $('#fileDialog').trigger('click');
         });
         $('#fileDialog').change(function () {
             var newDir = $(this).val();
             console.log('newDir', newDir);
-            if (this.fm.setMusicDir(newDir)) {
+            if (that.fm.setMusicDir(newDir)) {
                 $('#music-dir').val(newDir);
                 $('#refresh').trigger('click');
             }

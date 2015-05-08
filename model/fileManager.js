@@ -23,14 +23,11 @@ var config = {
 
 var scheme = {
     path: toAbsolute('data/scheme.json'),
-    content: require('../data/scheme'),
-    isChanged: 0
+    content: require('../data/scheme')
 }
 
 var fileManager = function () {
 }
-var schemeArray = [scheme.content];
-var schemeAll={};
 fileManager.prototype.SaveChanges = function (callback) {
     if (config.isChanged) {
         fs.writeFile(config.path,
@@ -38,16 +35,13 @@ fileManager.prototype.SaveChanges = function (callback) {
             function (err) {
                 callback(err);
             });
-    } else if (schemeAll.isChanged||scheme.isChanged) {
-        fs.writeFile(scheme.path,
-            JSON.stringify(scheme.content),
-            function (err) {
-                callback(err);
-            });
     }
-    else {
-        callback();
-    }
+    delete scheme.content['本地音乐'];
+    fs.writeFile(scheme.path,
+        JSON.stringify(scheme.content),
+        function (err) {
+            callback(err);
+        });
 }
 
 fileManager.prototype.setMusicDir = function (dir) {
@@ -65,35 +59,26 @@ fileManager.prototype.getMusicDir = function () {
 }
 
 fileManager.prototype.getScheme = function () {
-    schemeAll = {content:{},isChanged:scheme.isChanged};
-    for (var k = 0; k < schemeArray.length; k++) {
-        var o = schemeArray[k];
-        for (var i in o) {
-            if (o.hasOwnProperty(i)) {
-                schemeAll.content[i] = o[i];
-            }
-        }
-    }
-    return schemeAll;
+    return scheme.content;
 }
 
 fileManager.prototype.getSchemeNames = function () {
-    var ret = [];
-    for (var k = 0; k < schemeArray.length; k++) {
-        var o = schemeArray[k];
-        for (var i in o) {
-            if (o.hasOwnProperty(i)) {
-                ret.push(i);
-            }
-        }
+    var ret = ['本地音乐'];
+    for (var i in scheme.content) {
+        if (i != '本地音乐')ret.push(i);
     }
     return ret;
+
 }
 
 fileManager.prototype.setScheme = function (key, val) {
-    if (key in scheme.content) {
+    if (key != '本地音乐') {
         scheme.content[key] = val;
-        scheme.isChanged = 1;
+    }
+}
+fileManager.prototype.removeScheme = function (key) {
+    if (key in scheme.content) {
+        delete scheme.content[key];
     }
 }
 fileManager.prototype.loadMusicDir = function (callback) {
@@ -140,7 +125,7 @@ fileManager.prototype.loadMusicDir = function (callback) {
         if (err) {
             console.log('get local file failed!', err);
         } else {
-            schemeArray.unshift({'本地音乐': result});
+            scheme.content['本地音乐'] = result;
             console.log('update success!');
         }
         callback();

@@ -30,17 +30,6 @@ var list = {
     },
     addItem: function (title, artist, album, index) {
         index = index || this.items.length;
-        var allName = category.name;
-        var menuStuff = '';
-        for (var i = 0; i < allName.length; i++) {
-            var cur = allName[i];
-            if (cur != this.name) {
-                menuStuff += '<li role="presentation">'
-                    + '<a role="menuitem" tabindex="-1" href="javascript:0">'
-                    + cur
-                    + '</a></li>';
-            }
-        }
         var str = '<tr>';
         str += '<td>' + index + '</td>';
 
@@ -54,8 +43,6 @@ var list = {
             + '<a data-toggle="dropdown" href="javascript:0">'
             + '<span class="glyphicon glyphicon-plus"></span></a>'
             + '<ul class="dropdown-menu" role="menu">'
-            + menuStuff
-            + '<li role="presentation"><a role="menuitem" tabindex="-1" href=""></a></li>'
             + '</ul></span>'
             + '<a href="javascript:void(0);"><span class="glyphicon glyphicon-heart"></span></a>'
             + '<a href="javascript:void(0);"><span class="glyphicon glyphicon-trash"></span></a></td>';
@@ -64,25 +51,44 @@ var list = {
         this.self.append(str);
         var that = this;
         var newo = this.self.children('tr:last-child');
+
         newo.dblclick(function () {//双击播放音乐
             var old = controls.playlist;
             if (old)old.setState(-1);
             var data = that.next(0, $(this).index());
             controls.play(data, 1);
         });
-        //var spans = newo.children('td:last-children span');
-        newo.find('span.dropdown ul li').click(function () {
-            var itName = $(this).text();
-            var itID = category.name.indexOf(itName);
-            var itList = category.getList(itID);
-            if (itList != null) {
-                itList.items.push(that.items[index - 1]);
-                itList.addItem(title, artist, album);
-                category.setbadge();
-                //通知修改
-                category.scheme.isChanged = 1;
+
+        newo.find('span.glyphicon-plus').click(function () {
+            var menuStuff = '';
+            var allName = category.name;
+            var obj = newo.find('ul.dropdown-menu');
+            for (var i = 0; i < allName.length; i++) {
+                var cur = allName[i];
+                if (cur != that.name && cur != '本地音乐') {
+                    menuStuff += '<li role="presentation">'
+                        + '<a role="menuitem" tabindex="-1" href="javascript:0">'
+                        + cur
+                        + '</a></li>';
+                }
             }
-            console.log(itName);
+            if (menuStuff == '') {
+                obj.remove();
+                return;
+            }
+            obj.html(menuStuff);
+
+            obj.children('li').click(function () {
+                var itName = $(this).text();
+                var itID = category.name.indexOf(itName);
+                var itList = category.getList(itID);
+                if (itList != null) {
+                    itList.items.push(that.items[index - 1]);
+                    itList.addItem(title, artist, album);
+                    category.setbadge();
+                }
+                console.log(itName);
+            });
         });
     },
     setState: function (id) {

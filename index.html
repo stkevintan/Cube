@@ -217,13 +217,13 @@
             </div>
             <div class="modal-body">
                 <form>
-                    <label class="control-label" style="color:red" >糟糕，输入为空或者重名了！</label>
+                    <label class="control-label" style="color:red">糟糕，输入为空或者重名了！</label>
                     <input class="form-control" type="text" placeholder="输入自定义播放列表名"/>
                 </form>
             </div>
             <div class="modal-footer">
                 <button type="button" class="btn btn-default" data-dismiss="modal">撤销</button>
-                <button type="button" id="submit-name"class="btn btn-primary">确定</button>
+                <button type="button" id="submit-name" class="btn btn-primary">确定</button>
             </div>
         </div>
         <!-- /.modal-content -->
@@ -233,14 +233,21 @@
 <!-- /.modal -->
 <script src="assets/js/jquery.min.js"></script>
 <script src="assets/js/bootstrap.min.js"></script>
-<script>
-    var component = ['nav', 'category', 'controls', 'list', 'progress', 'settings', 'index'];
-    for (var i = 0; i < component.length; i++) {
-        var d = document.createElement('script');
-        d.src = 'controller/' + component[i] + '.js';
-        d.type = 'text/javascript';
-        document.body.appendChild(d);
-    }
-</script>
+<script src="controller/nav.js" type="text/javascript"></script>
+<script src="controller/category.js" type="text/javascript"></script>
+<script src="controller/controls.js" type="text/javascript"></script>
+<script src="controller/list.js" type="text/javascript"></script>
+<script src="controller/progress.js" type="text/javascript"></script>
+<script src="controller/settings.js" type="text/javascript"></script>
+<script src="controller/index.js" type="text/javascript"></script>
+<!--<script>-->
+    <!--var component = ['nav', 'category', 'controls', 'list', 'progress', 'settings', 'index'];-->
+    <!--for (var i = 0; i < component.length; i++) {-->
+        <!--var d = document.createElement('script');-->
+        <!--d.src = 'controller/' + component[i] + '.js';-->
+        <!--d.type = 'text/javascript';-->
+        <!--document.body.appendChild(d);-->
+    <!--}-->
+<!--</script>-->
 </body>
 </html>

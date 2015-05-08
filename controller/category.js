@@ -22,7 +22,6 @@ var category = {
         if (id < 0 || id > this.name.length)return;
         var li = this.self.siderbar.children('li');
         $(li[id]).addClass('active');
-        console.log(id, this.list[id]);
         this.list[id].show();
         if (this.ID >= 0) {
             $(li[this.ID]).removeClass('active');
@@ -62,12 +61,16 @@ var category = {
             + '</a></li>';
         this.self.siderbar.append(str);
         var that = this;
-        this.self.siderbar.children('li:last-child').click(function () {
+        var newli = this.self.siderbar.children('li:last-child');
+
+        newli.click(function () {
             that.setState($(this).index());
+        });
+        newli.find('span.glyphicon-trash').click(function () {
+            that.removeItem(newli.index());
         })
         T.append('<tbody style="display:none"></tbody>');
         var o = this.createList(this.list.length)
-        console.log(this.list.length, o);
         this.list.push(o);
     },
     removeItem: function (id) {
@@ -75,19 +78,30 @@ var category = {
             console.log('remove play list failed!');
             return;
         }
+        this.self.siderbar.children('li').eq(id).remove();
+        if (this.getList() == controls.playlist) {
+            controls.setState(null, -1);
+        }
+        this.fm.removeScheme(this.name[id]);
         this.name.splice(id, 1);
-
+        this.data.splice(id, 1);
+        this.list.splice(id, 1);
+        console.log(id, this.ID);
+        if (id == this.ID) {
+            this.ID = -1;
+            this.setState();
+        } else if (id < this.ID) {
+            this.ID--;
+        }
     },
     load: function (name, value) {
         this.ID = -1;
         this.name = name;
         this.list = [];
         this.data = [];
-        this.scheme = value;
         for (var i = 0; i < this.name.length; i++) {
-            this.data.push(this.scheme.content[this.name[i]]);
+            this.data.push(value[this.name[i]]);
         }
-
         this.self.siderbar.empty();
         T.children('tbody').remove();
         for (var i = 0; i < this.name.length; i++) {
@@ -135,8 +149,6 @@ var category = {
                 that.name.push(val);
                 that.data.push([]);
                 that.addItem(val, 0);
-                console.log('通知修改');
-                this.scheme.isChanged = 1;
                 model.modal('hide');
             } else {
                 model.find('label').fadeIn();
