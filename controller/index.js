@@ -1,7 +1,6 @@
 /**
  * Created by kevin on 15-5-4.
  */
-var P = $('#progress');
 var T = $('.list table');
 var S = $('ul.nav-sidebar');
 var gui = require('nw.gui');
@@ -12,10 +11,6 @@ var player = require('./model/player');
 var fm = new fileManager();
 //侧栏歌单行为
 var category = {
-    ID: -1,
-    name: [],
-    data: [],
-    list: [],
     init: function () {
         this.ID = -1;
         this.name = [];
@@ -49,9 +44,13 @@ var category = {
     },
     getList: function (id) {
         id = id || this.ID;
-        console.log(id, this.list);
         if (id < 0) id = 0;
         return this.list[id];
+    },
+    createList: function (id) {
+        var o = list.init;
+        o.prototype = list;
+        return new o(id);
     },
     addItem: function () {
         S.empty();
@@ -64,7 +63,7 @@ var category = {
                 + '</a></li>';
             S.append(str);
             T.append('<tbody></tbody>');
-            var o = new list(i);
+            var o = this.createList(i);
             this.list.push(o);
         }
     },
@@ -79,196 +78,108 @@ var category = {
         this.setLabel();
     },
     listen: function () {
+        var that = this;
         S.children('li').on('click', function () {
-            category.setState($(this).index());
+            that.setState($(this).index());
         });
     }
 }
 
 //播放列表行为
-function list(cid) {
-    cid = cid || 0;
-    this.self = $(T.children('tbody')[cid]);
-    this.items = category.data[cid];
-    this.ID = -1;
-    this.addItem();
-    this.listen();
-    console.log(this.items);
-}
-list.prototype.show = function () {
-    this.self.fadeIn();
-}
-list.prototype.hide = function () {
-    this.self.fadeOut();
-}
-list.prototype.addItem = function () {
-    this.self.empty();
-    var data = this.items;
-    for (var i = 0; i < data.length; i++) {
-        var str = '<tr>';
-        str += '<td>' + (i + 1) + '</td>';
-        str += '<td>' + data[i].title + '</td>';
-        str += '<td>' + (data[i].artist ? data[i].artist : '未知') + '</td>';
-        str += '<td>' + (data[i].album ? data[i].album : '未知') + '</td>';
-        str += '<td><a href="javascript:void(0);"><span class="glyphicon glyphicon-heart"></span></a>';
-        str += '<a href="javascript:void(0);"><span class="glyphicon glyphicon-trash"></span></a></td>';
-        str += '</tr>';
-        this.self.append(str);
-    }
-}
+var list = {
+    init: function (cid) {
+        cid = cid || 0;
+        this.self = $(T.children('tbody')[cid]);
+        this.items = category.data[cid];
+        this.ID = -1;
+        this.addItem();
+        this.listen();
+    },
+    show: function () {
+        this.self.fadeIn();
+    },
+    hide: function () {
+        this.self.fadeOut();
+    },
+    addItem: function () {
+        this.self.empty();
+        var data = this.items;
+        for (var i = 0; i < data.length; i++) {
+            var str = '<tr>';
+            str += '<td>' + (i + 1) + '</td>';
+            str += '<td>' + data[i].title + '</td>';
+            str += '<td>' + (data[i].artist ? data[i].artist : '未知') + '</td>';
+            str += '<td>' + (data[i].album ? data[i].album : '未知') + '</td>';
+            str += '<td><a href="javascript:void(0);"><span class="glyphicon glyphicon-heart"></span></a>';
+            str += '<a href="javascript:void(0);"><span class="glyphicon glyphicon-trash"></span></a></td>';
+            str += '</tr>';
+            this.self.append(str);
+        }
+    },
+    setState: function (id) {
+        //list
+        if (id == this.ID)return;
+        if (id < 0 || id >= this.items.length)return;
 
-list.prototype.setState = function (id) {
-    //list
-    if (id == this.ID)return;
-    if (id < 0 || id >= this.items.length)return;
-
-    var Tr = this.self.children('tr');
-    var Trl = [Tr[id]];
-    var content = ['<span class="glyphicon glyphicon-play"></span>'];
-    if (this.ID != -1) {
-        Trl.push(Tr[this.ID]);
-        content.push(this.ID + 1);
-    }
-    var Tdl = $(Trl).children("td:first-child");
-    $(Trl).toggleClass('active');
-    for (var i = 0; i < Tdl.length; i++) {
-        $(Tdl[i]).html(content[i]);
-    }
-    this.ID = id;
-}
-
-list.prototype.next = function (type, id) {
-    var len = this.items.length;
-    switch (type) {
-        case -1:
-            id = (this.ID - 1 + len) % len;
-            break;
-        case 1:
-            id = (this.ID + 1) % len;
-            break;
-        case 3:
-            id = Math.round(Math.random() * len);
-            break;
-        case 2:
-        {
-            id = this.ID + 1;
-            if (id == len) {
-                controls.stop();
-                return;
+        var Tr = this.self.children('tr');
+        var Trl = [Tr[id]];
+        var content = ['<span class="glyphicon glyphicon-play"></span>'];
+        if (this.ID != -1) {
+            Trl.push(Tr[this.ID]);
+            content.push(this.ID + 1);
+        }
+        var Tdl = $(Trl).children("td:first-child");
+        $(Trl).toggleClass('active');
+        for (var i = 0; i < Tdl.length; i++) {
+            $(Tdl[i]).html(content[i]);
+        }
+        this.ID = id;
+    },
+    next: function (type, id) {
+        var len = this.items.length;
+        switch (type) {
+            case -1:
+                id = (this.ID - 1 + len) % len;
+                break;
+            case 1:
+                id = (this.ID + 1) % len;
+                break;
+            case 3:
+                id = Math.round(Math.random() * len);
+                break;
+            case 2:
+            {
+                id = this.ID + 1;
+                if (id == len) {
+                    controls.stop();
+                    return;
+                }
             }
         }
+        this.setState(id);
+        return this.items[id];
+    },
+    listen: function () {
+        var Tr = this.self.children('tr');
+        var that = this;
+        $(Tr).dblclick(function () {//双击播放音乐
+            var data = that.next(0, $(this).index());
+            controls.play(data, 1);
+        });
+        Tr.on('selectstart', function (e) {//屏蔽选中
+            e.preventDefault();
+        });
     }
-    this.setState(id);
-    return this.items[id];
 }
-
-list.prototype.listen = function () {
-    var Tr = this.self.children('tr');
-    $(Tr).dblclick(function () {//双击播放音乐
-        var nowList = category.getList();
-        var data = nowList.next(0, $(this).index());
-        controls.play(data, 1);
-    });
-    Tr.on('selectstart', function (e) {//屏蔽选中
-        e.preventDefault();
-    });
-}
-//var list = {
-//    ID: -1,
-//    items: [],
-//    Ob: null,
-//    init: function (cid, id) {
-//        this.Ob = T[cid];//得到当前列表对象
-//        this.Ob.empty();
-//        list.items = category.data[category.ID];
-//        var len = list.items.length;
-//        for (var i = 0; i < len; i++) {
-//            list.addItem($.extend({id: i + 1}, list.items[i]));
-//        }
-//        list.listen();
-//        //set id-th songs as default
-//        if (typeof id === 'number') {
-//            list.setState(id);
-//            player.setState(list.items[id].src, 1);
-//        } else {
-//            list.ID = -1;
-//        }
-//    },
-//    addItem: function (song) {
-//        var str = '<tr>';
-//        str += '<td>' + song.id + '</td>';
-//        str += '<td>' + song.title + '</td>';
-//        str += '<td>' + (song.artist ? song.artist : '未知') + '</td>';
-//        str += '<td>' + (song.album ? song.album : '未知') + '</td>';
-//        str += '<td><a href="javascript:void(0);"><span class="glyphicon glyphicon-heart"></span></a>';
-//        str += '<a href="javascript:void(0);"><span class="glyphicon glyphicon-trash"></span></a></td>';
-//        str += '</tr>';
-//        this.Ob.append(str);
-//    },
-//    setState: function (cid, id) {
-//        //list
-//        if (id == list.ID)return;
-//        if (id < 0 || id >= list.items.length)return;
-//
-//        var Tr = this.obj.children('tr');
-//        var Trl = [Tr[id]];
-//        var content = ['<span class="glyphicon glyphicon-play"></span>'];
-//        if (list.ID != -1) {
-//            Trl.push(Tr[list.ID]);
-//            content.push(list.ID + 1);
-//        }
-//        var Tdl = $(Trl).children("td:first-child");
-//        $(Trl).toggleClass('active');
-//        for (var i = 0; i < Tdl.length; i++) {
-//            $(Tdl[i]).html(content[i]);
-//        }
-//        list.ID = id;
-//        // change audio title
-//        $('h4.media-heading').text(list.items[id].title);
-//    },
-//    next: function (type, id) {
-//        var len = list.items.length;
-//        switch (type) {
-//            case -1:
-//                id = (list.ID - 1 + len) % len;
-//                break;
-//            case 1:
-//                id = (list.ID + 1) % len;
-//                break;
-//            case 3:
-//                id = Math.round(Math.random() * len);
-//                break;
-//            case 2:
-//            {
-//                id = list.ID + 1;
-//                if (id == len) {
-//                    controls.stop();
-//                    return;
-//                }
-//            }
-//        }
-//        list.setState(id);
-//        controls.play(list.items[id].src, 1);
-//    },
-//    listen: function () {
-//        var Tr = this.Ob.children('tr');
-//        Tr.dblclick(function () {//双击播放音乐
-//            list.next(0, $(this).ID());
-//        });
-//        Tr.on('selectstart', function (e) {//屏蔽选中
-//            e.preventDefault();
-//        });
-//    }
-//}
-
 //播放进度条行为
 var progress = {
-    ID: 0,
     init: function (start, duration) {
+        this.self = $('#progress');
         start = start || 0;
         duration = duration || 0;
-        progress.setState(start, duration);
-        progress.listen();
+        this.ID = null;
+        this.setState(start, duration);
+        this.listen();
     },
     setState: function () {
         /*
@@ -280,17 +191,17 @@ var progress = {
         // console.log(arguments, arguments.length);
         var start = 0, duration = 0;
         if (arguments.length == 0) {
-            start = Number(P.val()) + 1;
+            start = Number(this.self.val()) + 1;
         } else {
             start = arguments[0];
         }
         if (arguments.length >= 2) {
             duration = arguments[1];
-            P.attr('max', duration);
+            this.self.attr('max', duration);
             $('#tot-time').text(progress.format(duration));
         }
         $('#cur-time').text(progress.format(start));
-        P.val(start);
+        this.self.val(start);
     },
     format: function (val) {
         var num = Math.ceil(val);
@@ -301,55 +212,56 @@ var progress = {
         return strm + ':' + strs;
     },
     move: function () {
-        if (progress.ID)return;
-        progress.ID = setInterval(function () {
-            progress.setState();
-        }, 1000);
+        var that = this;
+        this.ID = !this.ID && setInterval(function () {
+                that.setState();
+            }, 1000);
     },
     halt: function () {
-        if (progress.ID) {
+        if (this.ID) {
             clearInterval(this.ID);
-            progress.ID = 0;
+            this.ID = 0;
         }
     },
     listen: function () {
-        P.on('change', function () {//滑块定位
-            controls.play(P.val());
+        var that = this;
+        this.self.on('click', function () {//滑块定位
+            controls.play(that.self.val());
         });
     }
 }
 
 //播放栏行为
 var controls = {
-    _play: $('#play'),
-    _pause: $('#pause'),
-    _order: $('#order span'),
-    _volIcon: $('#vol-icon'),
-    _volPop: $('#vol-pop'),
     orderList: ['repeat', 'refresh', 'align-justify', 'random'],
-    ID: 0,
-    playlist: null,
     init: function () {
         //初始化播放器
+        this.self = {
+            play: $('#play'),
+            pause: $('#pause'),
+            order: $('#order span'),
+            volIcon: $('#vol-icon'),
+            volPop: $('#vol-pop')
+        }
         this.ID = 0;
+        this.playlist = null;
         player.init(document.getElementsByTagName('audio')[0]);
         this.setState(null, -1);
-        controls.listen();
+        this.listen();
     },
     play: function () {
         this.playlist = category.getList();
         if (this.playlist.ID != -1) {
-            controls._play.hide();
-            controls._pause.show();
+            this.self.play.hide();
+            this.self.pause.show();
             if (arguments.length)
-                controls.setState.apply(this, arguments);
-
+                this.setState.apply(this, arguments);
             player.play();
         }
     },
     pause: function () {
-        controls._play.show();
-        controls._pause.hide();
+        this.self.play.show();
+        this.self.pause.hide();
         player.pause();
     },
     stop: function () {
@@ -363,14 +275,14 @@ var controls = {
         this.play(-1, 2);
     },
     order: function (mode) {
-        var len = controls.orderList.length;
+        var len = this.orderList.length;
         if (typeof mode === 'undefined') {
-            controls.ID = (controls.ID + 1) % len;
-            var icon = controls.orderList[controls.ID];
-            controls._order.attr('class', 'glyphicon glyphicon-' + icon);
+            this.ID = (this.ID + 1) % len;
+            var icon = this.orderList[controls.ID];
+            this.self.order.attr('class', 'glyphicon glyphicon-' + icon);
         } else {
-            controls.ID = (mode - 1 + len) % len;
-            controls.order();
+            this.ID = (mode - 1 + len) % len;
+            this.order();
         }
     },
     setState: function (data, type) {
@@ -391,7 +303,7 @@ var controls = {
         if (type == 2) {
             var _data = this.playlist.next(data);
             console.log(_data);
-            controls.setState(_data, 1);
+            this.setState(_data, 1);
         }
         else if (type == 1) {
             player.setSrc(data.src);
@@ -401,6 +313,7 @@ var controls = {
             progress.setState(data);
             player.setTime(data);
         } else {
+            this.stop();
             $('h4.media-heading').text('未选择歌曲');
             $('#tot-time').text(progress.format(0));
             $('#cur-time').text(progress.format(0));
@@ -408,19 +321,20 @@ var controls = {
     },
     volIcon: function () {
         var offs = controls._volIcon.offset();
-        controls._volPop.css("top", (offs.top - 40) + 'px');
-        controls._volPop.css("left", (offs.left - 70) + 'px');
+        this.self.volPop.css("top", (offs.top - 40) + 'px');
+        this.self.volPop.css("left", (offs.left - 70) + 'px');
         //controls._volPop.offset({top: offs.top - 50, left: offs.left - 70});
-        controls._volPop.fadeIn(100);
+        this.self.volPop.fadeIn(100);
         $('#volume').focus();
     },
     listen: function () {
+        var that = this;
         $('#volume').on('focusout', function () {
-            controls._volPop.fadeOut(200);
+            that.self.volPop.fadeOut(200);
         });
         $(window).resize(function () {
-            if (controls._volPop.css('display') == 'block') {
-                controls._volPop.fadeOut(200);
+            if (that.self.volPop.css('display') == 'block') {
+                that.self.volPop.fadeOut(200);
             }
         });
         $('#volume').on('change', function () {
@@ -432,11 +346,7 @@ var controls = {
                 case 'ended':
                 {
                     progress.halt();
-                    if (controls.ID) {
-                        controls.play(controls.ID, 2);
-                    } else {
-                        controls.play(0);
-                    }
+                    that.play(that.ID, that.ID ? 2 : 0);
                     break;
                 }
                 case 'play':
@@ -446,7 +356,7 @@ var controls = {
                 }
                 case 'error':
                 {
-                    controls.stop();
+                    that.stop();
                     break;
                 }
                 case 'pause':
@@ -500,7 +410,6 @@ var nav = {
             var $btn = $(this).button('loading');
             fm.loadMusicDir(function () {
                 category.init();
-                controls.stop();
                 controls.setState(null, -1);
                 $btn.button('reset');
             });
@@ -538,6 +447,7 @@ $(function () {
     fm.loadMusicDir(function () {
         category.init();
     });
+
     //save changes on close
     win.on('close', function () {
         win.hide();
