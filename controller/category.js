@@ -71,8 +71,10 @@ var category = {
         }
         var str = '<li><a href="javascript:void(0)">'
             + '<span class="name">' + name + '</span>'
+            + '<div style="float:right">'
             + (name == '本地音乐' ? '' : '<span class="glyphicon glyphicon-trash"></span>')
             + '<span class="badge">' + data.length + '</span>'
+            +'</div>'
             + '<span class="clearfix"></span>'
             + '</a></li>';
         this.self.siderbar.append(str);

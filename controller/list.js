@@ -120,11 +120,16 @@ var list = {
                 controls.setState(null, -1);
             }
             if (this.ID > id)this.ID--;
-            this.self.children('tr').eq(id).remove();
+            var Tr=this.self.children('tr');
+            Tr.eq(id).remove();
 
             //将之后的歌曲编号-1
-            var mark = this.self.children('tr').slice(id).children('td:first-child');
-            mark.text(mark.text() - 1);
+            var mark = Tr.slice(id + 1);
+            mark.each(function () {
+                var o = $(this).children('td').first();
+                var t=o.text();
+                o.text(Number(t) - 1);
+            });
             this.items.splice(id, 1);
             category.setbadge();
         }
@@ -153,6 +158,7 @@ var list = {
         this.ID = id;
     },
     next: function (type, id) {
+
         var len = this.items.length;
         switch (type) {
             case -1:

@@ -121,6 +121,7 @@ var controls = {
                 case 'ended':
                 {
                     progress.halt();
+                    console.log('cuurrent play mode', this.ID);
                     that.play(that.ID, that.ID ? 2 : 0);
                     break;
                 }

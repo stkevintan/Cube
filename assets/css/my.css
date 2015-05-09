@@ -155,7 +155,9 @@ a {
 #page .list table a:focus {
     color: #d9534f;
 }
-
+#page .list table>tbody>tr>td:last-child{
+    width:81px;
+}
 #page .list table .dropdown-menu {
     right: 0;
     left: inherit;
