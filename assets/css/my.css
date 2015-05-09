@@ -140,7 +140,7 @@ a {
 
 #settings .panel,
 #about .panel {
-    margin: 100px auto 0 auto;
+    margin: 50px auto 0 auto;
     width: 80%;
 }
 
@@ -228,6 +228,9 @@ a {
 #footer .audio-body img {
     width: 50px;
     height: 50px;
+    background: none;
+    border-width: 0;
+    padding: 0;
     vertical-align: middle;
 }
 

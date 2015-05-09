@@ -6,6 +6,7 @@ var player = {
     duration: -1,
     init: function (_Ao) {
         Ao = _Ao;
+        this.setVolume();
         this.duration = -1;
     },
     play: function () {
@@ -20,7 +21,7 @@ var player = {
     getTime: function () {
         return Ao.currentTime;
     },
-    getDuration:function(){
+    getDuration: function () {
         return this.duration;
     },
     setTime: function (time) {
@@ -30,8 +31,7 @@ var player = {
         Ao.pause();
     },
     setVolume: function (val) {
-        console.log('adjust volume!');
-        val = val || 0.2;
+        val = val || 0.5;
         Ao.volume = val;
     },
     getState: function (callback) {

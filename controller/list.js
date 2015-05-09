@@ -125,12 +125,13 @@ var list = {
             var Tr = this.self.children('tr');
             Tr.eq(id).remove();
 
-            //将之后的歌曲编号-1
+            //将之后的歌曲编号-1 ,注意不要覆盖正在播放那一项
             var mark = Tr.slice(id + 1);
             mark.each(function () {
                 var o = $(this).children('td').first();
                 var t = o.text();
-                o.text(Number(t) - 1);
+                if (t)
+                    o.text(Number(t) - 1);
             });
 
             this.items.splice(id, 1);
