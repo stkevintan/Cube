@@ -19,14 +19,18 @@ var category = {
     setState: function (id) {
         id = id || 0;
         if (this.ID == id)return;
-        if (id < 0 || id > this.name.length)return;
+        if (id < 0 || id > this.name.length) {
+            throw "index out of range";
+            return;
+        }
         var li = this.self.siderbar.children('li');
-        $(li[id]).addClass('active');
-        this.list[id].show();
         if (this.ID >= 0) {
-            $(li[this.ID]).removeClass('active');
+            li.eq(this.ID).removeClass('active');
             this.list[this.ID].hide();
         }
+        li.eq(id).addClass('active');
+        this.list[id].show();
+
         this.ID = id;
     },
     setLabel: function () {
@@ -50,7 +54,10 @@ var category = {
         if (id !== 0) {
             id = id || this.ID;
         }
-        if (id < 0) return null;
+        if (id < 0 || id > this.list.length) {
+            throw "index out of range";
+            return null;
+        }
         return this.list[id];
     },
     createList: function (id) {
@@ -74,7 +81,7 @@ var category = {
             + '<div style="float:right">'
             + (name == '本地音乐' ? '' : '<span class="glyphicon glyphicon-trash"></span>')
             + '<span class="badge">' + data.length + '</span>'
-            +'</div>'
+            + '</div>'
             + '<span class="clearfix"></span>'
             + '</a></li>';
         this.self.siderbar.append(str);
@@ -90,7 +97,8 @@ var category = {
         T.append('<tbody style="display:none"></tbody>');
         if (!flag) {
             //如果不是被load调用，则需要更新数据
-            if (!unsave)that.fm.setScheme(name, data);
+            // if (!unsave)
+            that.fm.setScheme(name, data);
             this.name.push(name);
             this.data.push(data);
         }
@@ -104,6 +112,7 @@ var category = {
     },
     removeItem: function (id) {
         if (id < 0 || id > this.data.length) {
+            throw "index out of range";
             console.log('remove play list failed!');
             return;
         }
@@ -111,6 +120,7 @@ var category = {
         this.list[id].self.remove();
         if (this.getList(id) == controls.playlist) {
             controls.setState(null, -1);
+            controls.playlist = null;
         }
         this.fm.removeScheme(this.name[id]);
         this.name.splice(id, 1);

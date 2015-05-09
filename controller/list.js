@@ -7,7 +7,6 @@ var T = $('.list table');
 var list = {
     init: function (cid) {
         cid = cid || 0;
-        this.index = cid;
         this.self = $(T.children('tbody')[cid]);
         this.items = category.data[cid];
         this.name = category.name[cid];
@@ -60,7 +59,7 @@ var list = {
             //如果不是被list.load调用，那么需要将该data添加到list.items中
             this.items.push(data);
             //更新标记
-            category.setbadge(this.index);
+            category.setbadge(category.name.indexOf(this.name));
         }
 
         //双击播放音乐
@@ -70,10 +69,12 @@ var list = {
             if (old && old != that)old.setState(-1);
             //获取要播放歌曲的数据
             var data = that.next(0, $(this).index());
+            //更新controls的playlist
+            controls.playlist = that;
             controls.play(data, 1);
         });
         //单击‘+’符号，添加到其他播放列表
-        newo.find('span.glyphicon-plus').click(function () {
+        newo.find('span.glyphicon-plus').click(function (e) {
             //形成下拉列表
             var menuStuff = '';
             var allName = category.name;
@@ -88,14 +89,12 @@ var list = {
                 }
             }
             if (menuStuff == '') {
-                dropdown.remove();
+                e.stopPropagation();
                 return;
             }
             dropdown.html(menuStuff);
-
             //绑定新生成的菜单项的单击行为
             dropdown.children('li').click(function () {
-
                 //获得目标播放列表对象
                 var itName = $(this).text();
                 var itID = category.name.indexOf(itName);
@@ -104,7 +103,6 @@ var list = {
                     //添加当前歌曲到指定播放列表
                     itList.addItem(data);
                 }
-                console.log(itName);
             });
         });
 
@@ -114,24 +112,29 @@ var list = {
         });
     },
     removeItem: function (id) {
+        if (id < 0 || id > this.items.length) {
+            throw 'index out of range';
+            return;
+        }
         if (this.name != '本地音乐') {
             if (id == this.ID) {
                 this.ID = -1;
                 controls.setState(null, -1);
             }
             if (this.ID > id)this.ID--;
-            var Tr=this.self.children('tr');
+            var Tr = this.self.children('tr');
             Tr.eq(id).remove();
 
             //将之后的歌曲编号-1
             var mark = Tr.slice(id + 1);
             mark.each(function () {
                 var o = $(this).children('td').first();
-                var t=o.text();
+                var t = o.text();
                 o.text(Number(t) - 1);
             });
+
             this.items.splice(id, 1);
-            category.setbadge();
+            category.setbadge(category.name.indexOf(this.name));
         }
     },
     setState: function (id) {
@@ -158,7 +161,6 @@ var list = {
         this.ID = id;
     },
     next: function (type, id) {
-
         var len = this.items.length;
         switch (type) {
             case -1:

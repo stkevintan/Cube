@@ -13,7 +13,8 @@ var controls = {
             order: $('#order span'),
             volIcon: $('#vol-icon'),
             volPop: $('#vol-pop'),
-            volume: $('#volume')
+            volume: $('#volume'),
+            songPic: $('#song-pic')
         }
         this.ID = 0;
         this.playlist = null;
@@ -22,14 +23,15 @@ var controls = {
         this.listen();
     },
     play: function () {
-        this.playlist = category.getList();
-        if (this.playlist.ID != -1) {
-            this.self.play.hide();
-            this.self.pause.show();
-            if (arguments.length)
-                this.setState.apply(this, arguments);
-            player.play();
+        if (this.playlist == null || this.playlist.ID == -1) {
+            //如果当前列表没有选中
+            return;
         }
+        this.self.play.hide();
+        this.self.pause.show();
+        if (arguments.length)
+            this.setState.apply(this, arguments);
+        player.play();
     },
     pause: function () {
         this.self.play.show();
@@ -80,9 +82,9 @@ var controls = {
             progress.setState(0, 0, data.title);
             player.setSrc(data.src);
             if (data.pic) {
-                $('#song-pic').attr('src', data.pic);
+                this.self.songPic.attr('src', data.pic);
             } else {
-                $('#song-pic').attr('src', 'assets/img/Ever%20Eternity.jpg');
+                this.self.songPic.attr('src', 'assets/img/Ever%20Eternity.jpg');
             }
         } else if (type == 0) {
             progress.setState(data);
@@ -90,7 +92,7 @@ var controls = {
         } else {
             this.stop();
             data = data || "未选择歌曲";
-            $('#song-pic').attr('src', 'assets/img/Ever%20Eternity.jpg');
+            this.self.songPic.attr('src', 'assets/img/Ever%20Eternity.jpg');
             progress.setState(0, 0, data);
         }
     },
