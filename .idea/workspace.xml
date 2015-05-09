@@ -2,12 +2,6 @@
 <project version="4">
   <component name="ChangeListManager">
     <list default="true" id="33b96038-7367-4a55-b2b6-bc8669658acb" name="Default" comment="">
-      <change type="DELETED" beforePath="$PROJECT_DIR$/data/config.json" afterPath="" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/data/response.js" afterPath="" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/data/scheme.json" afterPath="" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/.gitignore" afterPath="$PROJECT_DIR$/.gitignore" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/model/fileManager.js" afterPath="$PROJECT_DIR$/model/fileManager.js" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/controller/settings.js" afterPath="$PROJECT_DIR$/controller/settings.js" />
       <change type="MODIFICATION" beforePath="$PROJECT_DIR$/.idea/workspace.xml" afterPath="$PROJECT_DIR$/.idea/workspace.xml" />
     </list>
     <ignored path="untitled1.iws" />
@@ -400,12 +394,18 @@
       <option name="project" value="LOCAL" />
       <updated>1431162561242</updated>
     </task>
-    <option name="localTasksCounter" value="5" />
+    <task id="LOCAL-00005" summary="optimize file manager">
+      <created>1431164822103</created>
+      <option name="number" value="00005" />
+      <option name="project" value="LOCAL" />
+      <updated>1431164822103</updated>
+    </task>
+    <option name="localTasksCounter" value="6" />
     <servers />
   </component>
   <component name="ToolWindowManager">
-    <frame x="0" y="25" width="1366" height="743" extended-state="6" />
-    <editor active="true" />
+    <frame x="0" y="25" width="1366" height="743" extended-state="7" />
+    <editor active="false" />
     <layout>
       <window_info id="Messages" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.33" sideWeight="0.5" order="10" side_tool="false" content_ui="tabs" />
       <window_info id="Terminal" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.33" sideWeight="0.5" order="7" side_tool="false" content_ui="tabs" />
@@ -441,7 +441,8 @@
   <component name="VcsManagerConfiguration">
     <MESSAGE value="refactor index.js" />
     <MESSAGE value="add search music" />
-    <option name="LAST_COMMIT_MESSAGE" value="add search music" />
+    <MESSAGE value="optimize file manager" />
+    <option name="LAST_COMMIT_MESSAGE" value="optimize file manager" />
   </component>
   <component name="XDebuggerManager">
     <breakpoint-manager>
