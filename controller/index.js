@@ -6,11 +6,7 @@
     var gui = require('nw.gui');
     // Get the current window
     var win = gui.Window.get();
-    //
-    var fileManager = require('./model/fileManager');
-
-    var fm = new fileManager();
-
+    var fm = require('./model/fileManager');
     nav.init();
     progress.init();
     controls.init();

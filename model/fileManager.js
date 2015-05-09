@@ -12,21 +12,34 @@ function toAbsolute(dir) {
     if (path.isAbsolute(dir))return dir;
     return path.resolve(__dirname, '../' + dir);
 }
+DefaultMusicDir = toAbsolute('music');
+DefaultSearchLimit = 20;
 
-var DefaultMusicDir = toAbsolute('music');
-console.log(toAbsolute('data/config.json'));
 var config = {
     path: toAbsolute('data/config.json'),
-    content: require('../data/config'),
+    content: {},
     isChanged: 0
 };
 
 var scheme = {
     path: toAbsolute('data/scheme.json'),
-    content: require('../data/scheme')
+    content: {}
 }
 
 var fileManager = function () {
+    try {
+        config.content = JSON.parse(fs.readFileSync(config.path), 'utf-8');
+    } catch (e) {
+        config.isChanged = 1;
+        console.log(e);
+    }
+
+    try {
+        scheme.content = JSON.parse(fs.readFileSync(scheme.path), 'utf-8');
+    }
+    catch (e) {
+        console.log(e);
+    }
 }
 fileManager.prototype.SaveChanges = function (callback) {
     if (config.isChanged) {
@@ -37,6 +50,7 @@ fileManager.prototype.SaveChanges = function (callback) {
             });
     }
     delete scheme.content['本地音乐'];
+
     fs.writeFile(scheme.path,
         JSON.stringify(scheme.content),
         function (err) {
@@ -58,6 +72,16 @@ fileManager.prototype.getMusicDir = function () {
     return config.content.musicDir || DefaultMusicDir;
 }
 
+fileManager.prototype.getSearchLimit = function () {
+    return config.content.searchLimit || DefaultSearchLimit;
+}
+fileManager.prototype.setSearchLimit = function (limit) {
+    if (typeof limit === 'number' && limit >= 0) {
+        config.content.searchLimit = limit;
+        config.isChanged = 1;
+    }
+}
+
 fileManager.prototype.getScheme = function () {
     return scheme.content;
 }
@@ -76,11 +100,13 @@ fileManager.prototype.setScheme = function (key, val) {
         scheme.content[key] = val;
     }
 }
+
 fileManager.prototype.removeScheme = function (key) {
     if (key in scheme.content) {
         delete scheme.content[key];
     }
 }
+
 fileManager.prototype.loadMusicDir = function (callback) {
     var musicDir = this.getMusicDir();
     async.waterfall([
@@ -131,5 +157,5 @@ fileManager.prototype.loadMusicDir = function (callback) {
         callback();
     });
 }
-
-module.exports = fileManager;
+var fm = new fileManager();//单实例
+module.exports = fm;

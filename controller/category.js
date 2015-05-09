@@ -33,11 +33,17 @@ var category = {
         this.self.totSong.text("歌曲：" + this.data[0].length);
         this.self.totlist.text("歌单：" + category.name.length);
     },
-    setbadge: function () {
+    setbadge: function (id) {
+        //更新播放列表左侧的数目标记,如果id为空，那么更新所有列表。
         var badge = this.self.siderbar.find('.badge');
-        for (var i = 0; i < this.data.length; i++) {
-            var o = this.data[i];
-            $(badge[i]).text(o.length);
+        if (typeof id === 'number') {
+            if (id >= 0 && id < this.data.length)
+                badge.eq(id).text(this.data[id].length);
+        } else {
+            for (var i = 0; i < this.data.length; i++) {
+                var o = this.data[i];
+                $(badge[i]).text(o.length);
+            }
         }
     },
     getList: function (id) {
@@ -48,15 +54,25 @@ var category = {
         return this.list[id];
     },
     createList: function (id) {
+        //以name[id]和data[id]构建新的list对象
         var o = list.init;
         o.prototype = list;
         return new o(id);
     },
-    addItem: function (name, num) {
+    addItem: function (name, data, id, unsave) {
+        //name-添加列表名
+        //data-该列表代表包含的歌曲数组
+        //id-如果存在，则表示为category初始化被load调用
+        // unsave-是否存入配置中,0-存入，1-不存入。
+        var flag = true;//是否被load调用
+        if (typeof id !== 'number') {
+            flag = false;
+            id = this.list.length;
+        }
         var str = '<li><a href="javascript:void(0)">'
             + '<span class="name">' + name + '</span>'
             + (name == '本地音乐' ? '' : '<span class="glyphicon glyphicon-trash"></span>')
-            + '<span class="badge">' + num + '</span>'
+            + '<span class="badge">' + data.length + '</span>'
             + '<span class="clearfix"></span>'
             + '</a></li>';
         this.self.siderbar.append(str);
@@ -70,8 +86,19 @@ var category = {
             that.removeItem(newli.index());
         })
         T.append('<tbody style="display:none"></tbody>');
-        var o = this.createList(this.list.length)
+        if (!flag) {
+            //如果不是被load调用，则需要更新数据
+            if (!unsave)that.fm.setScheme(name, data);
+            this.name.push(name);
+            this.data.push(data);
+        }
+        var o = this.createList(id)
         this.list.push(o);
+        this.setLabel();
+
+        if (!flag) {
+            this.setState(id);
+        }
     },
     removeItem: function (id) {
         if (id < 0 || id > this.data.length) {
@@ -79,14 +106,14 @@ var category = {
             return;
         }
         this.self.siderbar.children('li').eq(id).remove();
-        if (this.getList() == controls.playlist) {
+        this.list[id].self.remove();
+        if (this.getList(id) == controls.playlist) {
             controls.setState(null, -1);
         }
         this.fm.removeScheme(this.name[id]);
         this.name.splice(id, 1);
         this.data.splice(id, 1);
         this.list.splice(id, 1);
-        console.log(id, this.ID);
         if (id == this.ID) {
             this.ID = -1;
             this.setState();
@@ -105,9 +132,8 @@ var category = {
         this.self.siderbar.empty();
         T.children('tbody').remove();
         for (var i = 0; i < this.name.length; i++) {
-            this.addItem(this.name[i], this.data[i].length);
+            this.addItem(this.name[i], this.data[i], i);
         }
-        this.setLabel();
         this.setState();
     },
     listen: function () {
@@ -122,6 +148,7 @@ var category = {
                 $span.text(origin);
             });
         });
+
         var model = $('#inputListName');
         var input = $('#inputListName input');
         var submit = $('#submit-name');
@@ -130,6 +157,7 @@ var category = {
             model.removeClass('has-error');
             model.modal('show');
         });
+
         submit.click(function () {
             var val = input.val();
             val = val.trim();
@@ -145,10 +173,7 @@ var category = {
             }
             if (flag) {
                 //添加列表
-                that.fm.setScheme(val, []);
-                that.name.push(val);
-                that.data.push([]);
-                that.addItem(val, 0);
+                that.addItem(val, []);
                 model.modal('hide');
             } else {
                 model.find('label').fadeIn();

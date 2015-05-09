@@ -3,17 +3,22 @@
  */
 //导航栏行为
 var T = $('.list table');
+var NetEaseMusicAPI = require('./model/NetEaseMusicAPI');
+var api = new NetEaseMusicAPI();
 var nav = {
-    ID: 0,
-    items: ['#main', '#settings', '#about'],
     init: function () {
+        this.ID = 0;
+        this.self = {
+            tabs: ['#main', '#settings', '#about'],
+            search: '#search'
+        };
         this.listen();
     },
     go: function (id) {
         id = id || 0;
         if (id == this.ID)return;
-        var Old = this.items[this.ID];
-        var New = this.items[id];
+        var Old = this.self.tabs[this.ID];
+        var New = this.self.tabs[id];
         $(Old).fadeOut(100, function () {
             $(New).fadeIn(100);
         });
@@ -21,17 +26,25 @@ var nav = {
         this.ID = id;
     },
     search: function () {
-        var key = $('#search').val();
-        T.children('tr').each(function () {
-            var word = $(this).children('td:eq(1)').text();
-            if (word.indexOf(key) < 0) {
-                $(this).hide();
-            } else {
-                $(this).show();
+        var key = $(this.self.search).val();
+        api.search(key, function (err, results) {
+            if (err) {
+                console.log(err);
+                return;
             }
+            console.log(results);
+            var name = '"' + key + '"的搜索结果';
+            var data = results;
+            category.addItem(name, data, null, 1);
         })
     },
     listen: function () {
-
+        var that = this;
+        $(this.self.search).keydown(function (e) {
+            if (e.which == 13) {
+                e.preventDefault();
+                that.search();
+            }
+        })
     }
 }

@@ -4,22 +4,47 @@
 //设置页面行为
 var settings = {
     init: function (fm) {
-        this.fm=fm;
-        $('#music-dir').val(fm.getMusicDir());
-        settings.listen();
+        this.fm = fm;
+        this.self = {
+            musicDir: $('#music-dir'),
+            dialog: $('#dialog'),
+            btnOpen: $('button#openDialog'),
+            searchLimit: $('#search-limit')
+        };
+        console.log('dialog', this.self.dialog);
+        this.self.searchLimit.val(fm.getSearchLimit());
+        this.self.musicDir.val(fm.getMusicDir());
+        this.listen();
     },
     listen: function () {
-        var that=this;
-        $('button#openDialog').click(function () {
-            $('#fileDialog').trigger('click');
+        var that = this;
+        this.self.btnOpen.click(function () {
+            that.self.dialog.trigger('click');
         });
-        $('#fileDialog').change(function () {
+
+        this.self.dialog.change(function () {
             var newDir = $(this).val();
             console.log('newDir', newDir);
             if (that.fm.setMusicDir(newDir)) {
-                $('#music-dir').val(newDir);
-                $('#refresh').trigger('click');
+                that.musicDir.val(newDir);
+                category.self.refresh.trigger('click');
             }
         });
+        this.self.searchLimit.change(function () {
+            var limit = $(this).val();
+            limit = limit.trim();
+            //判断limit是否是数字
+            console.log('limit', limit);
+            var regex = /^[1-9]\d*$/;
+            if (regex.test(limit)) {
+                $(this).parent().removeClass('has-error');
+                that.fm.setSearchLimit(Number(limit) || 0);
+            } else {
+                $(this).parent().addClass('has-error');
+                return;
+            }
+
+        });
+
     }
 }

@@ -167,9 +167,11 @@ a {
 }
 
 #page .list table a {
-    margin-right: 10px;
     outline: none;
     text-decoration: none;
+}
+#page .list table td>a {
+    margin-left:10px;
 }
 
 #footer a {

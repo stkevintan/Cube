@@ -79,12 +79,19 @@ var controls = {
         else if (type == 1) {
             progress.setState(0, 0, data.title);
             player.setSrc(data.src);
+            if (data.pic) {
+                $('#song-pic').attr('src', data.pic);
+            } else {
+                $('#song-pic').attr('src', 'assets/img/Ever%20Eternity.jpg');
+            }
         } else if (type == 0) {
             progress.setState(data);
             player.setTime(data);
         } else {
             this.stop();
-            progress.setState(0, 0, "未选择歌曲");
+            data = data || "未选择歌曲";
+            $('#song-pic').attr('src', 'assets/img/Ever%20Eternity.jpg');
+            progress.setState(0, 0, data);
         }
     },
     volIcon: function () {
@@ -124,7 +131,7 @@ var controls = {
                 }
                 case 'error':
                 {
-                    that.stop();
+                    that.setState('糟糕，该文件路径失效了！', -1);
                     break;
                 }
                 case 'pause':
