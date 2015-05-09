@@ -7,8 +7,8 @@ var async = require('async');
 
 var sup = ['.mp3', '.ogg', '.wav'];
 
-function toAbsolute(dir) {
-    dir = dir || '';
+function toAbsolute() {
+    dir = path.join.apply(null, arguments);
     if (path.isAbsolute(dir))return dir;
     return path.resolve(__dirname, '../' + dir);
 }
@@ -16,13 +16,13 @@ DefaultMusicDir = toAbsolute('music');
 DefaultSearchLimit = 20;
 
 var config = {
-    path: toAbsolute('data/config.json'),
+    path: toAbsolute('data', 'config.json'),
     content: {},
     isChanged: 0
 };
 
 var scheme = {
-    path: toAbsolute('data/scheme.json'),
+    path: toAbsolute('data', 'scheme.json'),
     content: {}
 }
 
@@ -31,14 +31,27 @@ var fileManager = function () {
         config.content = JSON.parse(fs.readFileSync(config.path), 'utf-8');
     } catch (e) {
         config.isChanged = 1;
-        console.log(e);
+        if (e.errno = -2) {//data目录不存在
+            fs.mkdir(toAbsolute('data'), function (err) {
+                console.log(err);
+            });
+        } else {
+            console.log(e, e.message);
+        }
     }
 
     try {
         scheme.content = JSON.parse(fs.readFileSync(scheme.path), 'utf-8');
     }
     catch (e) {
-        console.log(e);
+        config.isChanged = 1;
+        if (e.errno = -2) {//data目录不存在
+            fs.mkdir(toAbsolute('data'), function (err) {
+                console.log(err);
+            });
+        } else {
+            console.log(e, e.message);
+        }
     }
 }
 fileManager.prototype.SaveChanges = function (callback) {

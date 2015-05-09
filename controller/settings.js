@@ -26,7 +26,7 @@ var settings = {
             var newDir = $(this).val();
             console.log('newDir', newDir);
             if (that.fm.setMusicDir(newDir)) {
-                that.musicDir.val(newDir);
+                that.self.musicDir.val(newDir);
                 category.self.refresh.trigger('click');
             }
         });
