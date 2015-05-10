@@ -28,6 +28,7 @@ var scheme = {
 
 var fileManager = function () {
     try {
+        console.log('config', config.path);
         config.content = JSON.parse(fs.readFileSync(config.path), 'utf-8');
     } catch (e) {
         config.isChanged = 1;

@@ -2,9 +2,6 @@
  * Created by kevin on 15-5-8.
  */
 //导航栏行为
-var T = $('.list table');
-var NetEaseMusicAPI = require('./model/NetEaseMusicAPI');
-var api = new NetEaseMusicAPI();
 var nav = {
     init: function () {
         this.ID = 0;
@@ -38,6 +35,9 @@ var nav = {
             category.addItem(name, data, null, 1);
         })
     },
+    MenuGo: function (index) {
+        if (index == 0)login.showlogin();
+    },
     listen: function () {
         var that = this;
         $(this.self.search).keydown(function (e) {
@@ -45,6 +45,6 @@ var nav = {
                 e.preventDefault();
                 that.search();
             }
-        })
+        });
     }
 }

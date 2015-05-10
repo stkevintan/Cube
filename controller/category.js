@@ -148,6 +148,22 @@ var category = {
         }
         this.setState();
     },
+    getUserPlaylist: function () {
+        var that = this;
+        api.userPlaylist(function (err, rawdata) {
+            if (err) {
+                throw err;
+            }
+            //console.log('user playlist', data);
+
+            for (var i = 1; i < rawdata.length; i++) {
+                var o = rawdata[i];
+                api.playlistDetail(o.id, function (err, res) {
+                    that.addItem(o.name, res);
+                });
+            }
+        })
+    },
     listen: function () {
         var that = this;
         this.self.refresh.click(function () {

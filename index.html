@@ -55,8 +55,8 @@
                             账户
                         </button>
                         <ul class="dropdown-menu" role="menu">
-                            <li><a href="#">登录</a></li>
-                            <li><a href="#">注册</a></li>
+                            <li><a href="javascript:nav.MenuGo(0)">登录</a></li>
+                            <li><a href="javascript:nav.MenuGo(1)">注册</a></li>
                             <li><a href="#"></a></li>
                             <li class="divider"></li>
                             <li><a href="#">功能尚未实现</a></li>
@@ -227,6 +227,7 @@
     </div>
     <audio></audio>
 </div>
+
 <div id="inputListName" class="modal fade">
     <div class="modal-dialog">
         <div class="modal-content">
@@ -251,9 +252,42 @@
     <!-- /.modal-dialog -->
 </div>
 <!-- /.modal -->
+
+<div id="login" class="modal fade">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span
+                        aria-hidden="true">&times;</span></button>
+                <h4 class="modal-title">手机登录</h4>
+            </div>
+            <div class="modal-body">
+                <form>
+                    <label class="control-label" style="color:red">糟糕！登录失败了！</label>
+
+                    <div class="form-group">
+                        <input class="form-control" name="phone" type="text" placeholder="手机号"/>
+                    </div>
+                    <div class="form-group">
+                        <input class="form-control" name="password" type="password" placeholder="密码"/>
+                    </div>
+                </form>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-default" data-dismiss="modal">撤销</button>
+                <button type="button" class="btn btn-primary submit">确定</button>
+            </div>
+        </div>
+        <!-- /.modal-content -->
+    </div>
+    <!-- /.modal-dialog -->
+</div>
+<!-- /.modal -->
 <script src="assets/js/jquery.min.js"></script>
 <script src="assets/js/bootstrap.min.js"></script>
 <script src="controller/nav.js" type="text/javascript"></script>
+<script src="controller/userinfo.js" type="text/javascript"></script>
+<script src="controller/login.js" type="text/javascript"></script>
 <script src="controller/category.js" type="text/javascript"></script>
 <script src="controller/controls.js" type="text/javascript"></script>
 <script src="controller/list.js" type="text/javascript"></script>

@@ -1,6 +1,9 @@
 var request = require('superagent');
-var utils = require('./utils');
+var crypto = require('crypto');
 var fm = require('./fileManager');
+var hasher = crypto.createHash('md5');
+
+var userData = null;
 var NetEaseMusicAPI = function () {
     this.header = {
         'Accept': '*/*',
@@ -18,25 +21,100 @@ var NetEaseMusicAPI = function () {
 }
 NetEaseMusicAPI.prototype = {
     httpRequest: function (method, url, data, callback) {
+        var header = this.header;
         if (method == 'post') {
-            var header = this.header;
-            console.log(url, header, data);
             request.post(url).set(header).send(data).end(callback);
 
         } else {
-            request.get(url).set(this.header).query(data).end(callback);
+            request.get(url).set(header).query(data).end(callback);
         }
+    },
+    login: function (username, password) {
+        var url = 'http://music.163.com/api/login/';
+        var data = {
+            'username': username,
+            'password': password,
+            'rememberLogin': 'true'
+        }
+        this.httpRequest('post', url, data, function (err, res) {
+            console.log('login:', err, res);
+        });
+    },
+    phoneLogin: function (phone, password, callback) {
+        //对password加密
+        hasher.update(password);
+        password = hasher.digest('hex');
+        var url = 'http://music.163.com/api/login/cellphone';
+        var data = {
+            'phone': phone,
+            'password': password,
+            'rememberLogin': 'true'
+        };
+        this.httpRequest('post', url, data, function (err, res) {
+            if (err) {
+                console.log("login request error!");
+                callback("http请求出错!");
+            } else {
+                var data = JSON.parse(res.text);
+                if (data.code != 200) {
+                    //登录失败
+                    callback("用户名或密码错误");
+                }
+                userData = data.account;
+                callback(null, data.profile);
+            }
+        });
+    },
+    userPlaylist: function () {
+        // [uid],[offset],[limit],callback
+        var argv = [].reverse.call(arguments);
+        var uid = argv[3] || userData.id;
+        var offset = argv[2] || 0;
+        var limit = argv[1] || 100;
+        var callback = argv[0];
+        var url = 'http://music.163.com/api/user/playlist/';
+        var data = {
+            "offset": offset,
+            "limit": limit,
+            "uid": uid
+        }
+        this.httpRequest('get', url, data, function (err, res) {
+            if (err) {
+                console.log('user play list http get error!');
+                callback('http请求出错!');
+            } else {
+                var data = JSON.parse(res.text);
+                if (data.code != 200)callback('获取失败！');
+                else {
+                    callback(null, data.playlist);
+                }
+            }
+        })
+    },
+    playlistDetail: function (id, callback) {
+        var url = 'http://music.163.com/api/playlist/detail';
+        var data = {
+            "id": id
+        }
+        this.httpRequest('get', url, data, function (err, res) {
+            if (err)callback('http请求出错！');
+            else {
+                if (res.code != 200)callback('playlist详情失败');
+                else callback(null, this.transfer(res.tracks));
+            }
+        });
+
     },
     // 搜索单曲(1)，歌手(100)，专辑(10)，歌单(1000)，用户(1002) *(type)*
     search: function () {
         //s, stype, offset, total, limit,callback;
         var argv = [].reverse.call(arguments);
-        var callback = argv[0];
-        var s = argv[1];
-        var stype = argv[2] || 1;
+        var s = argv[5];
+        var stype = argv[4] || 1;
         var offset = argv[3] || 0;
-        var total = argv[4] || 'true';
-        var limit = argv[5] || fm.getSearchLimit();
+        var total = argv[2] || 'true';
+        var limit = argv[1] || fm.getSearchLimit();
+        var callback = argv[0];
         var url = 'http://music.163.com/api/search/get/web';
         var data = {
             's': s,
