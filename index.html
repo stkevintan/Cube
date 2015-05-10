@@ -56,10 +56,8 @@
                         </button>
                         <ul class="dropdown-menu" role="menu">
                             <li><a href="javascript:nav.MenuGo(0)">登录</a></li>
-                            <li><a href="javascript:nav.MenuGo(1)">注册</a></li>
-                            <li><a href="#"></a></li>
                             <li class="divider"></li>
-                            <li><a href="#">功能尚未实现</a></li>
+                            <li><a href="javascript:nav.MenuGo(1)">注册</a></li>
                         </ul>
                     </div>
                 </ul>
@@ -72,22 +70,24 @@
 
     <div id="page" class="container-fluid">
         <div id="main" class="row">
-            <div class="col-sm-3 sidebar">
-                <div class="user-head">
-                    <div class="avater">
-                        <a href="javascript:void(0);">
-                            <img class="img-thumbnail" ,
-                                 src="assets/img/avater.jpg" ,alt="...">
-                        </a>
+            <div class="col-sm-3" style="height:100%">
+                <div class="sidebar">
+                    <div class="user-head">
+                        <div class="avater">
+                            <a href="javascript:void(0);">
+                                <img class="img-thumbnail" ,
+                                     src="assets/img/avater.jpg" ,alt="...">
+                            </a>
+                        </div>
+                        <div class="title">
+                            <h4>未登录</h4>
+                            <span id="totsong" class="label label-primary"></span>&nbsp;
+                            <span id="totlist" class="label label-success"></span>
+                        </div>
                     </div>
-                    <div class="title">
-                        <h4>未登录</h4>
-                        <span id="totsong" class="label label-primary"></span>&nbsp;
-                        <span id="totlist" class="label label-success"></span>
-                    </div>
+                    <ul class="nav nav-sidebar">
+                    </ul>
                 </div>
-                <ul class="nav nav-sidebar">
-                </ul>
                 <div class="nav-plus">
                     <span id="refresh" title="更新列表" class="glyphicon glyphicon-refresh"></span>
                     <span id="addlist" title="添加自定义列表" class="glyphicon glyphicon-plus"></span>

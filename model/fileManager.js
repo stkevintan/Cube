@@ -28,7 +28,6 @@ var scheme = {
 
 var fileManager = function () {
     try {
-        console.log('config', config.path);
         config.content = JSON.parse(fs.readFileSync(config.path), 'utf-8');
     } catch (e) {
         config.isChanged = 1;
@@ -55,7 +54,7 @@ var fileManager = function () {
         }
     }
 }
-fileManager.prototype.SaveChanges = function (callback) {
+fileManager.prototype.SaveChanges = function (record, data, callback) {
     if (config.isChanged) {
         fs.writeFile(config.path,
             JSON.stringify(config.content),
@@ -63,8 +62,10 @@ fileManager.prototype.SaveChanges = function (callback) {
                 callback(err);
             });
     }
-    delete scheme.content['本地音乐'];
-
+    scheme.content = {};
+    for (var i = 0; i < record.length; i++) {
+        scheme.content[record[i]] = data[record[i]];
+    }
     fs.writeFile(scheme.path,
         JSON.stringify(scheme.content),
         function (err) {

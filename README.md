@@ -1,10 +1,12 @@
 # NetEaseMusic
-目前还不支持帐号登录
 
-###功能
-1. 设定本地音乐文件夹，播放本地音乐  
-2. 搜索播放网络音乐  
-3. 设置自定义播放列表，可以同时加入网络音乐和本地音乐  
+目前bug还比较多。
+
+###基本功能
+1. 设定本地音乐文件夹，播放本地音乐
+2. 搜索播放网络音乐
+3. 设置自定义播放列表，可以同时加入网络音乐和本地音乐
+4. 手机帐号登录
 
 ###安装
 1.首先安装[nw.js](https://github.com/nwjs/nw.js)  
@@ -18,8 +20,9 @@
 ###截图  
 <img src="http://7xiyak.com1.z0.glb.clouddn.com/s10.png" />  
 <img src="http://7xiyak.com1.z0.glb.clouddn.com/s11.png" />  
-<img src="http://7xiyak.com1.z0.glb.clouddn.com/s12.png" />  
-
+<img src="http://7xiyak.com1.z0.glb.clouddn.com/s12.png" />
+<img src="http://7xiyak.com1.z0.glb.clouddn.com/s14.png" />
+<img src="http://7xiyak.com1.z0.glb.clouddn.com/s15.png" />
 ###troubleshooting
 遇到什么问题可以尝试一下删除项目主目录中data目录再重启。  
 ####没有声音  

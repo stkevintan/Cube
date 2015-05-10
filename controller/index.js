@@ -27,7 +27,7 @@ $('#dev').click(function () {
 win.on('close', function () {
     win.hide();
     console.log('save the config changes...');
-    fm.SaveChanges(function (err) {
+    fm.SaveChanges(category.record, category.data, function (err) {
         if (err)console.log('save failed', err);
         else console.log('saved');
         win.close(true);

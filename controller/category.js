@@ -66,11 +66,11 @@ var category = {
         o.prototype = list;
         return new o(id);
     },
-    addItem: function (name, data, id, unsave) {
+    addItem: function (name, data, id, temp) {
         //name-添加列表名
         //data-该列表代表包含的歌曲数组
         //id-如果存在，则表示为category初始化被load调用
-        // unsave-是否存入配置中,0-存入，1-不存入。
+        // temp-是否存入配置中,0-存入，1-不存入。
         var flag = true;//是否被load调用
         if (typeof id !== 'number') {
             flag = false;
@@ -93,19 +93,17 @@ var category = {
         });
         newli.find('span.glyphicon-trash').click(function () {
             that.removeItem(newli.index());
-        })
+        });
         T.append('<tbody style="display:none"></tbody>');
         if (!flag) {
             //如果不是被load调用，则需要更新数据
-            // if (!unsave)
-            that.fm.setScheme(name, data);
+            if (!temp && name != '本地音乐')this.record(name);
             this.name.push(name);
             this.data.push(data);
         }
         var o = this.createList(id)
         this.list.push(o);
         this.setLabel();
-
         if (!flag) {
             this.setState(id);
         }
@@ -122,7 +120,10 @@ var category = {
             controls.setState(null, -1);
             controls.playlist = null;
         }
-        this.fm.removeScheme(this.name[id]);
+        var index = this.record.indexOf(this.name[id]);
+        if (index != -1) {
+            this.record.splice(index, 1);
+        }
         this.name.splice(id, 1);
         this.data.splice(id, 1);
         this.list.splice(id, 1);
@@ -138,6 +139,7 @@ var category = {
         this.name = name;
         this.list = [];
         this.data = [];
+        this.record = [];//记录要保存的列表
         for (var i = 0; i < this.name.length; i++) {
             this.data.push(value[this.name[i]]);
         }
@@ -150,16 +152,15 @@ var category = {
     },
     getUserPlaylist: function () {
         var that = this;
-        api.userPlaylist(function (err, rawdata) {
+        api.userPlaylist(function (err, raw) {
             if (err) {
                 throw err;
             }
-            //console.log('user playlist', data);
-
-            for (var i = 1; i < rawdata.length; i++) {
-                var o = rawdata[i];
-                api.playlistDetail(o.id, function (err, res) {
-                    that.addItem(o.name, res);
+            for (var i = 0; i < raw.length; i++) {
+                var o = raw[i];
+                api.playlistDetail(o.name, o.id, function (err, res) {
+                    if (err)throw err;
+                    that.addItem(res.name, res.data, null, 1);
                 });
             }
         })

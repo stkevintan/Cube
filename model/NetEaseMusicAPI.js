@@ -91,19 +91,20 @@ NetEaseMusicAPI.prototype = {
             }
         })
     },
-    playlistDetail: function (id, callback) {
+    playlistDetail: function (name, id, callback) {
         var url = 'http://music.163.com/api/playlist/detail';
         var data = {
             "id": id
         }
+        var that = this;
         this.httpRequest('get', url, data, function (err, res) {
             if (err)callback('http请求出错！');
             else {
+                res = JSON.parse(res.text);
                 if (res.code != 200)callback('playlist详情失败');
-                else callback(null, this.transfer(res.tracks));
+                else callback(null, {name: name, data: that.transfer(res.result.tracks)});
             }
         });
-
     },
     // 搜索单曲(1)，歌手(100)，专辑(10)，歌单(1000)，用户(1002) *(type)*
     search: function () {
@@ -161,6 +162,7 @@ NetEaseMusicAPI.prototype = {
                 data[index].pic = songs[i].album.picUrl;
             }
         });
+        console.log('data', data);
         return data;
     },
     songsDetail: function (ids, callback) {
