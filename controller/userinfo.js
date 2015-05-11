@@ -11,7 +11,7 @@ var userinfo = {
             sidebar: $('.sidebar')
         }
         this.setState();
-        this.self.sidebar.height($('.userinfo').height() - $('.userhead').height() - $('nav-plus').height() - 180);
+        this.self.sidebar.height($('.userinfo').height() - $('.user-head').height() - $('.nav-plus').height());
         this.listen();
     },
     setState: function (name, src) {
@@ -23,7 +23,7 @@ var userinfo = {
     listen: function () {
         var that = this;
         $(window).resize(function () {
-            that.self.sidebar.height($('.userinfo').height() - $('.userhead').height() - $('nav-plus').height() - 180);
+            that.self.sidebar.height($('.userinfo').height() - $('.user-head').height() - $('.nav-plus').height());
         })
     }
 

@@ -36,7 +36,11 @@ var nav = {
         })
     },
     MenuGo: function (index) {
-        if (index == 0)login.showlogin();
+        if (index == 0){
+            login.showlogin();
+        }else{
+            login.unsign();
+        }
     },
     listen: function () {
         var that = this;

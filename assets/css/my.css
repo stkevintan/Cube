@@ -72,11 +72,6 @@ a {
         overflow-y: auto; /* Scrollable contents if viewport is shorter than content. */
     }
 
-    /* Sidebar navigation */
-    .nav-sidebar {
-
-    }
-
     .nav-sidebar > li > a {
         line-height: 16px;
         padding-right: 16px;
@@ -95,8 +90,19 @@ a {
         color: #767676;
     }
 
-    .nav-sidebar a span.name {
-        float: left;
+    .nav-siderbar a {
+        position: relative;
+    }
+
+    .nav-sidebar a div.name {
+        margin-right: 62px;
+    }
+
+    .nav-sidebar a div.limark {
+        position: absolute;
+        right: 20px;
+        top: 8px;
+        width: 100%;
     }
 
     .nav-sidebar a span.glyphicon {

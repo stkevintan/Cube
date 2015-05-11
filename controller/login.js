@@ -12,6 +12,10 @@ var login = {
         }
         this.listen();
     },
+    unsign: function () {
+        fm.setUserData(null);
+        category.self.refresh.trigger('click');
+    },
     showlogin: function () {
         this.self.label.hide();
         this.self.login.modal('show');
