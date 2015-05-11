@@ -3,7 +3,7 @@
 使用html5和node.js构建的网易云音乐的跨平台第三方客户端。
 
 项目刚开始，尚在完善。
-##播放音乐之前，请确定是否将chrome的`libffmpegsumo`拷贝到了nw.js文件夹中！否则无法正常播放音乐！
+##播放音乐之前，请确定是否将chrome的`libffmpegsumo`拷贝到了nw.js文件夹中！
 
 ###Feature  
 1. 设定本地音乐文件夹，播放本地音乐
@@ -20,7 +20,7 @@
 
 ###Install  
 1.首先安装[nw.js](https://github.com/nwjs/nw.js)  
-2.拷贝chromium或者chrome安装目录下的`libffmpegsumo.so`(windows下是`libffmpegsumo.dll`)至nw.js的安装目录下。 
+2.拷贝chrome安装目录下的`libffmpegsumo.so`(windows下是`libffmpegsumo.dll`)至nw.js的安装目录下。 
 3.下载项目：`git clone https://github.com/stkevintan/NetEaseMusic.git`    
 4. 运行： `nw /path/to/NetEaseMusic/`  
 
