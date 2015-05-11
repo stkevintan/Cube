@@ -30,8 +30,13 @@ a {
     padding-bottom: 60px;
 }
 
+.userinfo {
+    display: none;
+
+}
+
 .user-head {
-    margin: 0 -11px 20px -10px;
+    margin: 0 0 20px 0;
 }
 
 .user-head .avater {
@@ -48,30 +53,28 @@ a {
     height: 90px;
 }
 
-.sidebar {
-    display: none;
-}
-
 @media (min-width: 768px) {
-    .sidebar {
+    .userinfo {
+        background-color: #f5f5f5;
         display: block;
         padding: 20px;
-        margin-left: -15px;
-        margin-right: -16px;
         height: 100%;
         min-height: 100%;
         overflow-x: hidden;
-        overflow-y: auto; /* Scrollable contents if viewport is shorter than content. */
-        background-color: #f5f5f5;
         border-right: 1px solid #eee;
         position: relative;
     }
 
+    .sidebar {
+        margin-left: -20px;
+        margin-right: -21px;
+        border-top: 1px solid #dddddd;
+        overflow-y: auto; /* Scrollable contents if viewport is shorter than content. */
+    }
+
     /* Sidebar navigation */
     .nav-sidebar {
-        margin-right: -21px;
-        margin-left: -20px;
-        border-top: 1px solid #ddd;
+
     }
 
     .nav-sidebar > li > a {
@@ -119,15 +122,14 @@ a {
         position: absolute;
         background: #eee;
         width: 100%;
+        bottom: 0;
         z-index: 1000;
-        bottom: 0px;
         padding-left: 15px;
         padding-right: 16px;
         text-align: right;
         color: #767676;
         line-height: 30px;
-        margin-left: -15px;
-        margin-right: -16px;
+        margin-left: -20px;
     }
 
     .nav-plus span {

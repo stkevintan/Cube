@@ -109,17 +109,12 @@ fileManager.prototype.getSchemeNames = function () {
     return ret;
 
 }
-
-fileManager.prototype.setScheme = function (key, val) {
-    if (key != '本地音乐') {
-        scheme.content[key] = val;
-    }
+fileManager.prototype.setUserData = function (data) {
+    config.content.userData = data;
+    config.isChanged = 1;
 }
-
-fileManager.prototype.removeScheme = function (key) {
-    if (key in scheme.content) {
-        delete scheme.content[key];
-    }
+fileManager.prototype.getUserData = function () {
+    return config.content.userData;
 }
 
 fileManager.prototype.loadMusicDir = function (callback) {

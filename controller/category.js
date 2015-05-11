@@ -34,7 +34,7 @@ var category = {
         this.ID = id;
     },
     setLabel: function () {
-        this.self.totSong.text("歌曲：" + this.data[0].length);
+        this.self.totSong.text("本地歌曲：" + this.data[0].length);
         this.self.totlist.text("歌单：" + category.name.length);
     },
     setbadge: function (id) {
@@ -96,11 +96,11 @@ var category = {
         });
         T.append('<tbody style="display:none"></tbody>');
         if (!flag) {
-            //如果不是被load调用，则需要更新数据
-            if (!temp && name != '本地音乐')this.record(name);
             this.name.push(name);
             this.data.push(data);
         }
+        //如果不是被load调用，则需要更新数据
+        if (!temp && name != '本地音乐')this.record.push(name);
         var o = this.createList(id)
         this.list.push(o);
         this.setLabel();

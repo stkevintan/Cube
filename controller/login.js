@@ -31,7 +31,6 @@ var login = {
         this.self.submit.click(function () {
             var phone = that.self.phone.val();
             var password = that.self.password.val();
-            console.log(phone, password);
             api.phoneLogin(phone, password, function (err, data) {
                 if (err) {
                     that.loginErr(err);

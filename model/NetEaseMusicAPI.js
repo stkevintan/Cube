@@ -1,9 +1,8 @@
 var request = require('superagent');
 var crypto = require('crypto');
 var fm = require('./fileManager');
-var hasher = crypto.createHash('md5');
+var userData = fm.getUserData();
 
-var userData = null;
 var NetEaseMusicAPI = function () {
     this.header = {
         'Accept': '*/*',
@@ -42,6 +41,7 @@ NetEaseMusicAPI.prototype = {
     },
     phoneLogin: function (phone, password, callback) {
         //对password加密
+        var hasher = crypto.createHash('md5');
         hasher.update(password);
         password = hasher.digest('hex');
         var url = 'http://music.163.com/api/login/cellphone';
@@ -60,18 +60,19 @@ NetEaseMusicAPI.prototype = {
                     //登录失败
                     callback("用户名或密码错误");
                 }
-                userData = data.account;
+                userData = data;
+                fm.setUserData(data);
                 callback(null, data.profile);
             }
         });
     },
     userPlaylist: function () {
         // [uid],[offset],[limit],callback
-        var argv = [].reverse.call(arguments);
-        var uid = argv[3] || userData.id;
-        var offset = argv[2] || 0;
-        var limit = argv[1] || 100;
-        var callback = argv[0];
+        var argv = [].slice.call(arguments);
+        var callback = argv.pop();
+        var uid = argv[0] || userData.account.id;
+        var offset = argv[1] || 0;
+        var limit = argv[2] || 100;
         var url = 'http://music.163.com/api/user/playlist/';
         var data = {
             "offset": offset,
@@ -109,13 +110,14 @@ NetEaseMusicAPI.prototype = {
     // 搜索单曲(1)，歌手(100)，专辑(10)，歌单(1000)，用户(1002) *(type)*
     search: function () {
         //s, stype, offset, total, limit,callback;
-        var argv = [].reverse.call(arguments);
-        var s = argv[5];
-        var stype = argv[4] || 1;
-        var offset = argv[3] || 0;
-        var total = argv[2] || 'true';
-        var limit = argv[1] || fm.getSearchLimit();
-        var callback = argv[0];
+        var argv = [].slice.call(arguments);
+        var callback = argv.pop();
+        var s = argv[0];
+        var stype = argv[1] || 1;
+        var offset = argv[2] || 0;
+        var total = argv[3] || 'true';
+        var limit = argv[4] || fm.getSearchLimit();
+
         var url = 'http://music.163.com/api/search/get/web';
         var data = {
             's': s,
@@ -132,7 +134,7 @@ NetEaseMusicAPI.prototype = {
             }
             var doc = JSON.parse(res.text);
             if (doc.code != 200)callback('server return a error code:' + doc.code);
-            else {//callback(null, transfer(doc.result.songs));
+            else {
                 var results = doc.result.songs;
                 var data = that.transfer(results);
                 callback(null, data);
@@ -178,4 +180,5 @@ NetEaseMusicAPI.prototype = {
         });
     }
 }
+
 module.exports = NetEaseMusicAPI;
