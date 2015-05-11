@@ -60,7 +60,7 @@ a {
         padding: 20px;
         height: 100%;
         min-height: 100%;
-        overflow-x: hidden;
+        overflow: hidden;
         border-right: 1px solid #eee;
         position: relative;
     }

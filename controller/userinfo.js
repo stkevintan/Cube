@@ -7,14 +7,24 @@ var userinfo = {
         this.src = 'assets/img/avater.jpg';
         this.self = {
             img: $('.avater img'),
-            name: $('.title h4')
+            name: $('.title h4'),
+            sidebar: $('.sidebar')
         }
         this.setState();
+        this.self.sidebar.height($('.userinfo').height() - $('.userhead').height() - $('nav-plus').height() - 180);
+        this.listen();
     },
     setState: function (name, src) {
         this.name = name || this.name;
         this.src = src || this.src;
         this.self.name.text(name);
         this.self.img.attr('src', src);
+    },
+    listen: function () {
+        var that = this;
+        $(window).resize(function () {
+            that.self.sidebar.height($('.userinfo').height() - $('.userhead').height() - $('nav-plus').height() - 180);
+        })
     }
+
 }
