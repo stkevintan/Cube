@@ -20,7 +20,7 @@
 
 ###Install  
 1.首先安装[nw.js](https://github.com/nwjs/nw.js)  
-2.拷贝chrome安装目录下的`libffmpegsumo.so`(windows下是`libffmpegsumo.dll`)至nw.js的安装目录下。 
+2.拷贝chrome安装目录下的`libffmpegsumo.so`(windows下是`libffmpegsumo.dll`)至nw.js的安装目录下。        
 3.下载项目：`git clone https://github.com/stkevintan/NetEaseMusic.git`    
 4. 运行： `nw /path/to/NetEaseMusic/`  
 
