@@ -95,12 +95,15 @@ a {
     }
 
     .nav-sidebar a div.name {
-        margin-right: 62px;
+         margin-right: 62px;
+        white-space: nowrap;
+        overflow: hidden;
+        text-overflow: ellipsis;
     }
 
     .nav-sidebar a div.limark {
         position: absolute;
-        right: 20px;
+        right: 5px;
         top: 8px;
         width: 100%;
     }
