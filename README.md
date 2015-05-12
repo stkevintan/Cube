@@ -9,11 +9,12 @@
 1. 设定本地音乐文件夹，播放本地音乐
 2. 搜索播放网络音乐
 3. 设置自定义播放列表，可以同时加入网络音乐和本地音乐
-4. 手机帐号登录
+4. 手机帐号或邮箱帐号登录
 
 ###TO DO    
-1. 其他方式登录  
+~~1. 其他方式登录~~  
 2. UI响应式布局优化，实现mini模式  
+3. 托盘图标  
 3. 列表项目的自由拖动排序    
 3. 私人fm  
 4. 歌词  
@@ -28,11 +29,7 @@
 `cd /path/to/NetEaseMusic/ && git pull`  
 
 ###Screenshots    
-<img src="http://7xiyak.com1.z0.glb.clouddn.com/s10.png" />  
-<img src="http://7xiyak.com1.z0.glb.clouddn.com/s11.png" />  
-<img src="http://7xiyak.com1.z0.glb.clouddn.com/s12.png" />
-<img src="http://7xiyak.com1.z0.glb.clouddn.com/s14.png" />
-<img src="http://7xiyak.com1.z0.glb.clouddn.com/s15.png" />
+<img src="http://7xiyak.com1.z0.glb.clouddn.com/s16.png" />  
 
 ###troubleshooting  
 遇到什么问题可以尝试一下删除项目主目录中data目录再重启。  
