@@ -30,7 +30,8 @@
 
 ###Screenshots    
 <img src="http://7xiyak.com1.z0.glb.clouddn.com/s17.png" />  
-
+响应式布局:  
+<img src="http://7xiyak.com1.z0.glb.clouddn.com/s18.png" /> 
 ###troubleshooting  
 遇到什么问题可以尝试一下删除项目主目录中data目录再重启。  
 
