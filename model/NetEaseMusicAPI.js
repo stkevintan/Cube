@@ -159,7 +159,7 @@ NetEaseMusicAPI.prototype = {
             data.push(o);
         }
         // >100时分批查询
-        var num = idArray.length % 100;
+        var num = Math.ceil(idArray.length / 100);
         for (var k = 0; k < num; k++) {
             var idTmp = idArray.slice(k * 100, Math.min((k + 1) * 100, idArray.length));
             this.songsDetail(idTmp, function (err, songs) {
