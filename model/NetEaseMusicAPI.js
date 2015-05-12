@@ -28,28 +28,28 @@ NetEaseMusicAPI.prototype = {
             request.get(url).set(header).query(data).end(callback);
         }
     },
-    login: function (username, password) {
-        var url = 'http://music.163.com/api/login/';
-        var data = {
-            'username': username,
-            'password': password,
-            'rememberLogin': 'true'
+    login: function (username, password, callback) {
+        var url, name, pattern = /^0\d{2,3}\d{7,8}$|^1[34578]\d{9}$/
+        if (pattern.test(username)) {
+            //手机登录
+            name = 'phone';
+            url = 'http://music.163.com/api/login/cellphone';
+
+        } else {
+            //邮箱登录
+            name = 'username';
+            url = 'http://music.163.com/api/login/';
         }
-        this.httpRequest('post', url, data, function (err, res) {
-            console.log('login:', err, res);
-        });
-    },
-    phoneLogin: function (phone, password, callback) {
         //对password加密
         var hasher = crypto.createHash('md5');
         hasher.update(password);
         password = hasher.digest('hex');
-        var url = 'http://music.163.com/api/login/cellphone';
         var data = {
-            'phone': phone,
             'password': password,
             'rememberLogin': 'true'
         };
+        data[name] = username;
+        console.log(data);
         this.httpRequest('post', url, data, function (err, res) {
             if (err) {
                 console.log("login request error!");
@@ -59,10 +59,11 @@ NetEaseMusicAPI.prototype = {
                 if (data.code != 200) {
                     //登录失败
                     callback("用户名或密码错误");
+                } else {
+                    userData = data;
+                    fm.setUserData(data);
+                    callback(null, data.profile);
                 }
-                userData = data;
-                fm.setUserData(data);
-                callback(null, data.profile);
             }
         });
     },

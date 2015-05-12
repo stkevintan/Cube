@@ -15,10 +15,10 @@ var userinfo = {
         this.listen();
     },
     setState: function (name, src) {
-        this.name = name || this.name;
-        this.src = src || this.src;
-        this.self.name.text(name);
-        this.self.img.attr('src', src);
+        this.name = name || "未登录";
+        this.src = src || 'assets/img/avater.jpg';
+        this.self.name.text( this.name);
+        this.self.img.attr('src', this.src);
     },
     listen: function () {
         var that = this;

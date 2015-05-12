@@ -11,15 +11,19 @@ var api = new NetEaseMusicAPI();
 
 nav.init();
 userinfo.init();
-login.init();
+account.init();
 progress.init();
 controls.init();
 category.init(fm);
 settings.init(fm);
 var data = fm.getUserData();
 if (data) {
+    nav.setMenuState(1);
     userinfo.setState(data.profile.nickname, data.profile.avatarUrl);
     category.getUserPlaylist();
+} else {
+    nav.setMenuState();
+    userinfo.setState();
 }
 $(document).on('selectstart', function (e) {//屏蔽选中
     e.preventDefault();
@@ -38,4 +42,3 @@ win.on('close', function () {
         win.close(true);
     });
 });
-

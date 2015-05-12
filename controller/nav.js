@@ -35,11 +35,20 @@ var nav = {
             category.addItem(name, data, null, 1);
         })
     },
+    setMenuState:function(type){
+        if(type){
+            $('#menugo-0').hide();
+            $('#menugo-1').show();
+        }else{
+            $('#menugo-1').hide();
+            $('#menugo-0').show();
+        }
+    },
     MenuGo: function (index) {
         if (index == 0){
-            login.showlogin();
+            account.showlogin();
         }else{
-            login.unsign();
+            account.unsign();
         }
     },
     listen: function () {

@@ -1,7 +1,7 @@
 /**
  * Created by kevin on 15-5-10.
  */
-var login = {
+var account = {
     init: function () {
         this.self = {
             login: $('#login'),
@@ -14,6 +14,8 @@ var login = {
     },
     unsign: function () {
         fm.setUserData(null);
+        userinfo.setState();
+        nav.setMenuState();
         category.self.refresh.trigger('click');
     },
     showlogin: function () {
@@ -28,6 +30,7 @@ var login = {
         //设置用户头像
         userinfo.setState(data.nickname, data.avatarUrl);
         this.self.label.text('');
+        nav.setMenuState(1);
         this.self.login.modal('hide');
     },
     listen: function () {
@@ -35,7 +38,7 @@ var login = {
         this.self.submit.click(function () {
             var phone = that.self.phone.val();
             var password = that.self.password.val();
-            api.phoneLogin(phone, password, function (err, data) {
+            api.login(phone, password, function (err, data) {
                 if (err) {
                     that.loginErr(err);
                 } else {
