@@ -15,9 +15,9 @@
 ~~1. 其他方式登录~~  
 2. UI响应式布局优化，实现mini模式  
 3. 托盘图标  
-3. 列表项目的自由拖动排序    
-3. 私人fm  
-4. 歌词  
+4. 列表项目的自由拖动排序    
+5. 私人fm  
+6. 歌词  
 
 ###Install  
 1.首先安装[nw.js](https://github.com/nwjs/nw.js)  
@@ -29,7 +29,7 @@
 `cd /path/to/NetEaseMusic/ && git pull`  
 
 ###Screenshots    
-<img src="http://7xiyak.com1.z0.glb.clouddn.com/s16.png" />  
+<img src="http://7xiyak.com1.z0.glb.clouddn.com/s17.png" />  
 
 ###troubleshooting  
 遇到什么问题可以尝试一下删除项目主目录中data目录再重启。  
