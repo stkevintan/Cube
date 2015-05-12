@@ -158,13 +158,18 @@ NetEaseMusicAPI.prototype = {
             }).join();
             data.push(o);
         }
-        this.songsDetail(idArray, function (err, songs) {
-            for (var i = 0; i < songs.length; i++) {
-                var index = idMap[songs[i].id];
-                data[index].src = songs[i].mp3Url;
-                data[index].pic = songs[i].album.picUrl;
-            }
-        });
+        // >100时分批查询
+        var num = idArray.length % 100;
+        for (var k = 0; k < num; k++) {
+            var idTmp = idArray.slice(k * 100, Math.min((k + 1) * 100, idArray.length));
+            this.songsDetail(idTmp, function (err, songs) {
+                for (var i = 0; i < songs.length; i++) {
+                    var index = idMap[songs[i].id];
+                    data[index].src = songs[i].mp3Url;
+                    data[index].pic = songs[i].album.picUrl;
+                }
+            });
+        }
         console.log('data', data);
         return data;
     },
