@@ -49,8 +49,8 @@ a {
 }
 
 .user-head .avater img {
-    width: 90px;
-    height: 90px;
+    width: 70px;
+    height: 70px;
 }
 
 @media (min-width: 768px) {
@@ -66,6 +66,7 @@ a {
     }
 
     .sidebar {
+        height: 100%;
         margin-left: -20px;
         margin-right: -21px;
         border-top: 1px solid #dddddd;
@@ -73,7 +74,8 @@ a {
     }
 
     .nav-sidebar > li > a {
-        line-height: 16px;
+        font-size: 13px;
+        line-height: 13px;
         padding-right: 16px;
         padding-left: 20px;
     }
@@ -120,6 +122,7 @@ a {
         margin-left: 5px;
         margin-right: 5px;
         color: #fff;
+        padding: 2px 7px;
     }
 
     .nav-sidebar li.active a span.badge {
