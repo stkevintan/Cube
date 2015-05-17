@@ -1,65 +1,56 @@
 /**
- * Created by kevin on 15-5-7.
+ * Created by kevin on 15-5-16.
  */
-var Ao;//Audio对象
-var player = {
-    duration: -1,
-    init: function (_Ao) {
-        Ao = _Ao;
-        this.setVolume();
-        this.duration = -1;
-    },
-    play: function () {
-        Ao.play();
-    },
-    setSrc: function (src) {
-        Ao.src = src;
-    },
-    getSrc: function () {
-        return Ao.src;
-    },
-    getTime: function () {
-        return Ao.currentTime;
-    },
-    getDuration: function () {
-        return this.duration;
-    },
-    setTime: function (time) {
-        Ao.currentTime = time;
-    },
-    pause: function () {
-        Ao.pause();
-    },
-    setVolume: function (val) {
-        val = val || 0.5;
-        Ao.volume = val;
-    },
-    getState: function (callback) {
-        Ao.onended = function () {
-            console.log('player ended!');
-            callback('ended');
-
-        }
-        Ao.onplay = function () {
-            callback('play');
-            console.log('player play!');
-
-        }
-        Ao.onerror = function () {
-            callback('error');
-            console.log('player error!');
-
-        }
-        Ao.onpause = function () {
-            callback('pause');
-            console.log('player pause!');
-        }
-        Ao.onloadedmetadata = function () {
-            player.duration = Ao.duration;
-            callback('loaded');
-            console.log('loadedmetadata!');
+module.exports = function (howler) {
+    var player = new howler({});
+    var duration = -1;
+    return {
+        play: function () {
+            player.play();
+        },
+        pause: function () {
+            player.pause();
+        },
+        setSrc: function (src) {
+            player.urls([src]);
+        },
+        getSrc: function () {
+            return player.urls();
+        },
+        setVolume: function (v) {
+            player.volume(v);
+        },
+        getTime: function () {
+            console.log('getTime', player.pos());
+            return player.pos();
+        },
+        setTime: function (t) {
+            player.pos(t);
+        },
+        getDuration: function () {
+            return duration;
+        },
+        event: function (callback) {
+            player.on('end', function () {
+                console.log('player ended!');
+                callback('ended');
+            });
+            player.on('play', function () {
+                callback('play');
+                console.log('player play!');
+            });
+            player.on('loaderror', function () {
+                callback('error');
+                console.log('player error!');
+            });
+            player.on('pause', function () {
+                callback('pause');
+                console.log('player pause!');
+            });
+            player.on('load', function () {
+                duration = player._duration;
+                callback('loaded');
+            });
         }
     }
 }
-
-module.exports = player;

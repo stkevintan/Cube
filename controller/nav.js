@@ -1,7 +1,11 @@
 /**
- * Define the action of the top navigation bar
- *
  * Created by kevin on 15-5-8.
+ * @description define the action of the top navigation bar
+ *
+ * @author Kevin Tan
+ *
+ * @constructor nav.init
+ *
  */
 var nav = {
     init: function () {
@@ -10,12 +14,12 @@ var nav = {
             tabs: ['#main', '#settings', '#about'],
             search: '#search'
         };
-        this.listen();
+        this.listen(this);
     },
     /**
-     * Switch to "id"th tab
+     * @description switch to "id"th tab
      *
-     * @param id - the index of tab to switch
+     * @param {number} id - the index of tab to switch
      */
     setState: function (id) {
         id = id || 0;
@@ -29,21 +33,25 @@ var nav = {
         this.ID = id;
     },
     /**
-     * Search keywords from arguments or UI,add result to category
+     * @description search keywords from UI,add result playlist to category
+     *
+     * @throw search api returns an error
      */
     search: function () {
-        var _key = [].join.call(arguments);
-        var key = _key || $(this.$.search).val();
+        var key = $(this.$.search).val();
         api.search(key, function (err, results) {
-            if (err) throw 'api returns an error:' + err;
+            if (err) throw 'search api returns an error:' + err;
             var name = '"' + key + '"的搜索结果';
             var data = results;
-            category.addItem(name, data, null, 1);
-        })
+            category.addItem({
+                name: name,
+                data: data
+            });
+        });
     },
 
     /**
-     * Set menu state
+     * @description set menu display state
      *
      * @param type  0 - unsigned, 1 - signed
      */
@@ -57,7 +65,7 @@ var nav = {
         }
     },
     /**
-     * Define the action after click a MenuItem
+     * @description define the action after click a MenuItem
      *
      * @param index - the index of the MenuItem
      */
@@ -68,8 +76,12 @@ var nav = {
             account.unsign();
         }
     },
-    listen: function () {
-        var that = this;
+    /**
+     * @description attach handler to events
+     *
+     * @param {object} that - the reference of the outer object
+     */
+    listen: function (that) {
         $(this.$.search).keydown(function (e) {
             if (e.which == 13) {
                 e.preventDefault();

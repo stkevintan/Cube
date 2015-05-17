@@ -1,13 +1,19 @@
 /**
  * Created by kevin on 15-5-8.
+ * @description define the action of control bar
+ *
+ * @author Kevin Tan
+ *
+ * @constructor controls.init
  */
 //播放栏行为
-var player = require('./model/player');
+var Player = require('./model/player');
 var controls = {
     orderList: ['repeat', 'refresh', 'align-justify', 'random'],
     init: function () {
         //初始化播放器
-        this.$ = {
+        this.player = Player(Howl);
+        this.self = {
             play: $('#play'),
             pause: $('#pause'),
             order: $('#order span'),
@@ -18,7 +24,6 @@ var controls = {
         }
         this.ID = 0;
         this.playlist = null;
-        player.init(document.getElementsByTagName('audio')[0]);
         this.setState(null, -1);
         this.listen();
     },
@@ -27,16 +32,17 @@ var controls = {
             //如果当前列表没有选中
             return;
         }
-        this.$.play.hide();
-        this.$.pause.show();
+        this.self.play.hide();
+        this.self.pause.show();
         if (arguments.length)
             this.setState.apply(this, arguments);
-        player.play();
+        console.log('playcccc');
+        this.player.play();
     },
     pause: function () {
-        this.$.play.show();
-        this.$.pause.hide();
-        player.pause();
+        this.self.play.show();
+        this.self.pause.hide();
+        this.player.pause();
     },
     stop: function () {
         this.pause();
@@ -53,7 +59,7 @@ var controls = {
         if (typeof mode === 'undefined') {
             this.ID = (this.ID + 1) % len;
             var icon = this.orderList[this.ID];
-            this.$.order.attr('class', 'glyphicon glyphicon-' + icon);
+            this.self.order.attr('class', 'glyphicon glyphicon-' + icon);
         } else {
             this.ID = (mode - 1 + len) % len;
             this.order();
@@ -80,45 +86,45 @@ var controls = {
         }
         else if (type == 1) {
             progress.setState(0, 0, data.title);
-            player.setSrc(data.src);
+            this.player.setSrc(data.src);
             if (data.pic) {
-                this.$.songPic.attr('src', data.pic);
+                this.self.songPic.attr('src', data.pic);
             } else {
-                this.$.songPic.attr('src', 'assets/img/Ever%20Eternity.jpg');
+                this.self.songPic.attr('src', 'assets/img/Ever%20Eternity.jpg');
             }
         } else if (type == 0) {
             progress.setState(data);
-            player.setTime(data);
+            this.player.setTime(data);
         } else {
             this.stop();
             data = data || "未选择歌曲";
-            this.$.songPic.attr('src', 'assets/img/Ever%20Eternity.jpg');
+            this.self.songPic.attr('src', 'assets/img/Ever%20Eternity.jpg');
             progress.setState(0, 0, data);
         }
     },
     volIcon: function () {
-        var offs = this.$.volIcon.offset();
-        this.$.volPop.css("top", (offs.top - 40) + 'px');
-        this.$.volPop.css("left", (offs.left - 70) + 'px');
+        var offs = this.self.volIcon.offset();
+        this.self.volPop.css("top", (offs.top - 40) + 'px');
+        this.self.volPop.css("left", (offs.left - 70) + 'px');
         //controls._volPop.offset({top: offs.top - 50, left: offs.left - 70});
-        this.$.volPop.fadeIn(100);
-        this.$.volume.focus();
+        this.self.volPop.fadeIn(100);
+        this.self.volume.focus();
     },
     listen: function () {
         var that = this;
-        this.$.volume.on('focusout', function () {
-            that.$.volPop.fadeOut(200);
+        this.self.volume.on('focusout', function () {
+            that.self.volPop.fadeOut(200);
         });
         $(window).resize(function () {
-            if (that.$.volPop.css('display') == 'block') {
-                that.$.volPop.fadeOut(200);
+            if (that.self.volPop.css('display') == 'block') {
+                that.self.volPop.fadeOut(200);
             }
         });
-        this.$.volume.on('change', function () {
-            player.setVolume($(this).val());
+        this.self.volume.on('change', function () {
+            that.player.setVolume($(this).val());
         });
 
-        player.getState(function (msg) {
+        this.player.event(function (msg) {
             switch (msg) {
                 case 'ended':
                 {
@@ -144,7 +150,7 @@ var controls = {
                 default:
                 {
                     //音频元数据加载完成，初始化progress
-                    progress.setState(player.getTime(), player.getDuration());
+                    progress.setState(that.player.getTime(), that.player.getDuration());
                 }
             }
 

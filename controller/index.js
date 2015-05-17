@@ -8,6 +8,7 @@ var win = gui.Window.get();
 var fm = require('./model/fileManager');
 var NetEaseMusicAPI = require('./model/NetEaseMusicAPI');
 var api = new NetEaseMusicAPI();
+var utils = require('./model/utils');
 
 //定义开发者工具
 $('#dev').click(function () {

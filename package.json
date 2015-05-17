@@ -4,7 +4,7 @@
   "version": "0.1.0",
   "window": {
     "title": "NetEaseMusic",
-    "toolbar": false,
+    "toolbar": true,
     "frame": true,
     "width": 1122,
     "height": 600,
@@ -13,6 +13,7 @@
   "dependencies": {
     "async": "^0.9.0",
     "av": "^0.4.4",
+    "howler": "^1.1.26",
     "mp3": "^0.1.0",
     "superagent": "^1.2.0"
   }

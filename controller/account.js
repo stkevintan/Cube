@@ -1,5 +1,9 @@
 /**
- * Created by kevin on 15-5-10.
+ * @description define the login action.
+ *
+ * @author Kevin Tan
+ *
+ * @constructor account.init
  */
 var account = {
     init: function () {
@@ -10,12 +14,12 @@ var account = {
             phone: $('#login').find('input[name="phone"]'),
             password: $('#login').find('input[name="password"]')
         }
-        this.listen();
+        this.isLogin = false;
+        this.listen(this);
     },
     unsign: function () {
         fm.setUserData(null);
-        userinfo.setState();
-        nav.setMenu();
+        this.setState();
         category.$.refresh.trigger('click');
     },
     showlogin: function () {
@@ -27,29 +31,32 @@ var account = {
         this.$.label.show();
     },
     loginSuccess: function (data) {
-
         this.$.label.text('');
         this.$.login.modal('hide');
         this.setState(data);
     },
     /**
-     * Load User Profile from "data"
+     * @description set the User Profile by "data"
      *
-     *@param {Object} data - include nickname && avatarUrl property
+     * @param {object} [data] - contains nickname && avatarUrl property
      */
     setState: function (data) {
+        data = data || {};
         //设置用户头像
         var nickname = data.nickname;
         var avatarUrl = data.avatarUrl;
         userinfo.setState(nickname, avatarUrl);
         if (nickname) {
+            this.isLogin = true;
             nav.setMenu(1);
-            category.getUserPlaylist();
+            category.loadPlts.net();
         }
-        else nav.setMenu(0);
+        else {
+            this.isLogin = false;
+            nav.setMenu(0);
+        }
     },
-    listen: function () {
-        var that = this;
+    listen: function (that) {
         this.$.submit.click(function () {
             var phone = that.$.phone.val();
             var password = that.$.password.val();

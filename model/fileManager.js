@@ -23,7 +23,7 @@ var config = {
 
 var scheme = {
     path: toAbsolute('data', 'scheme.json'),
-    content: {}
+    content: []
 }
 
 var fileManager = function () {
@@ -40,19 +40,7 @@ var fileManager = function () {
         }
     }
 
-    try {
-        scheme.content = JSON.parse(fs.readFileSync(scheme.path), 'utf-8');
-    }
-    catch (e) {
-        config.isChanged = 1;
-        if (e.errno = -2) {//data目录不存在
-            fs.mkdir(toAbsolute('data'), function (err) {
-                console.log(err);
-            });
-        } else {
-            console.log(e, e.message);
-        }
-    }
+    scheme.content = JSON.parse(fs.readFileSync(scheme.path), 'utf-8');
 }
 fileManager.prototype.SaveChanges = function (record, data, callback) {
     if (config.isChanged) {
@@ -99,15 +87,6 @@ fileManager.prototype.setSearchLimit = function (limit) {
 
 fileManager.prototype.getScheme = function () {
     return scheme.content;
-}
-
-fileManager.prototype.getSchemeNames = function () {
-    var ret = ['本地音乐'];
-    for (var i in scheme.content) {
-        if (i != '本地音乐')ret.push(i);
-    }
-    return ret;
-
 }
 fileManager.prototype.setUserData = function (data) {
     config.content.userData = data;
@@ -161,7 +140,11 @@ fileManager.prototype.loadMusicDir = function (callback) {
         if (err) {
             console.log('get local file failed!', err);
         } else {
-            scheme.content['本地音乐'] = result;
+            scheme.push({
+                timestamp: 0,
+                name: '本地音乐',
+                data: result
+            });
             console.log('update success!');
         }
         callback();
