@@ -9,30 +9,12 @@ var fm = require('./model/fileManager');
 var NetEaseMusicAPI = require('./model/NetEaseMusicAPI');
 var api = new NetEaseMusicAPI();
 
-nav.init();
-userinfo.init();
-account.init();
-progress.init();
-controls.init();
-category.init(fm);
-settings.init(fm);
-var data = fm.getUserData();
-if (data) {
-    nav.setMenuState(1);
-    userinfo.setState(data.profile.nickname, data.profile.avatarUrl);
-    category.getUserPlaylist();
-} else {
-    nav.setMenuState();
-    userinfo.setState();
-}
-$(document).on('selectstart', function (e) {//屏蔽选中
-    e.preventDefault();
-});
+//定义开发者工具
 $('#dev').click(function () {
     win.showDevTools(0);
 });
 
-//save changes on close
+//关闭程序时候保存修改
 win.on('close', function () {
     win.hide();
     console.log('save the config changes...');
@@ -42,3 +24,23 @@ win.on('close', function () {
         win.close(true);
     });
 });
+
+category.init();
+nav.init();
+userinfo.init();
+account.init();
+progress.init();
+controls.init();
+
+settings.init();
+
+
+//获得登录信息
+var userData = fm.getUserData().profile;
+account.setState(userData);
+
+//table屏蔽选中
+$('table').on('selectstart', function (e) {
+    e.preventDefault();
+});
+

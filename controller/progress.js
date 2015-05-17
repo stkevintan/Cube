@@ -4,7 +4,7 @@
 //播放进度条行为
 var progress = {
     init: function (start, duration) {
-        this.self = {
+        this.$ = {
             progress: $('#progress'),
             totTime: $('#tot-time'),
             curTime: $('#cur-time'),
@@ -26,20 +26,20 @@ var progress = {
          */
         var start = 0, duration = 0;
         if (arguments.length == 0) {
-            start = Number(this.self.progress.val()) + 1;
+            start = Number(this.$.progress.val()) + 1;
         } else {
             start = arguments[0];
         }
         if (arguments.length >= 2) {
             duration = arguments[1];
-            this.self.progress.attr('max', duration);
-            this.self.totTime.text(progress.format(duration));
+            this.$.progress.attr('max', duration);
+            this.$.totTime.text(progress.format(duration));
         }
         if (arguments.length >= 3) {
-            this.self.title.text(arguments[2]);
+            this.$.title.text(arguments[2]);
         }
-        this.self.curTime.text(progress.format(start));
-        this.self.progress.val(start);
+        this.$.curTime.text(progress.format(start));
+        this.$.progress.val(start);
     },
     format: function (val) {
         var num = Math.ceil(val);
@@ -64,8 +64,8 @@ var progress = {
     },
     listen: function () {
         var that = this;
-        this.self.progress.on('click', function () {//滑块定位
-            controls.play(that.self.progress.val());
+        this.$.progress.on('click', function () {//滑块定位
+            controls.play(that.$.progress.val());
         });
     }
 }

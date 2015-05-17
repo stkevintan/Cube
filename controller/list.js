@@ -7,7 +7,7 @@ var T = $('.list table');
 var list = {
     init: function (cid) {
         cid = cid || 0;
-        this.self = $(T.children('tbody')[cid]);
+        this.$ = $(T.children('tbody')[cid]);
         this.items = category.data[cid];
         this.name = category.name[cid];
         this.ID = -1;
@@ -15,13 +15,13 @@ var list = {
         this.listen();
     },
     show: function () {
-        this.self.fadeIn();
+        this.$.fadeIn();
     },
     hide: function () {
-        this.self.hide();
+        this.$.hide();
     },
     load: function () {
-        this.self.empty();
+        this.$.empty();
         var data = this.items;
         for (var i = 0; i < data.length; i++) {
             this.addItem(data[i], i);
@@ -51,10 +51,10 @@ var list = {
             + '<a href="javascript:void(0);"><span class="glyphicon glyphicon-trash"></span></a></td>';
 
         str += '</tr>';
-        this.self.append(str);
+        this.$.append(str);
 
         var that = this;
-        var newo = this.self.children('tr:last-child');
+        var newo = this.$.children('tr:last-child');
         if (!flag) {
             //如果不是被list.load调用，那么需要将该data添加到list.items中
             this.items.push(data);
@@ -122,7 +122,7 @@ var list = {
                 controls.setState(null, -1);
             }
             if (this.ID > id)this.ID--;
-            var Tr = this.self.children('tr');
+            var Tr = this.$.children('tr');
             Tr.eq(id).remove();
 
             //将之后的歌曲编号-1 ,注意不要覆盖正在播放那一项
@@ -142,7 +142,7 @@ var list = {
         //list
         if (id == this.ID)return;
         if (id >= this.items.length)return;
-        var Tr = this.self.children('tr');
+        var Tr = this.$.children('tr');
         var Trl = [];
         var content = [];
         if (id >= 0) {

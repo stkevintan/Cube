@@ -30,31 +30,13 @@ a {
     padding-bottom: 60px;
 }
 
-.userinfo {
+.sidebar {
     display: none;
 
 }
 
-.user-head {
-    margin: 0 0 20px 0;
-}
-
-.user-head .avater {
-    display: inline-block;
-}
-
-.user-head .title {
-    display: inline-block;
-    vertical-align: top;
-}
-
-.user-head .avater img {
-    width: 70px;
-    height: 70px;
-}
-
 @media (min-width: 768px) {
-    .userinfo {
+    .sidebar {
         background-color: #f5f5f5;
         display: block;
         padding: 20px;
@@ -65,7 +47,25 @@ a {
         position: relative;
     }
 
-    .sidebar {
+    .userinfo {
+        margin: 0 0 20px 0;
+    }
+
+    .userinfo .avater {
+        display: inline-block;
+    }
+
+    .userinfo .title {
+        display: inline-block;
+        vertical-align: top;
+    }
+
+    .userinfo .avater img {
+        width: 70px;
+        height: 70px;
+    }
+
+    .nav-sidebar {
         height: 100%;
         margin-left: -20px;
         margin-right: -21px;
@@ -97,7 +97,7 @@ a {
     }
 
     .nav-sidebar a div.name {
-         margin-right: 62px;
+        margin-right: 62px;
         white-space: nowrap;
         overflow: hidden;
         text-overflow: ellipsis;
@@ -237,17 +237,19 @@ a {
 
 #footer .audio-body .media-left,
 #footer .audio-body .media-body {
-    display:block;
+    display: block;
     height: 60px;
 }
-#footer .audio-body .media-left{
+
+#footer .audio-body .media-left {
     position: absolute;
     top: 6px;
 }
-#footer .audio-body .media-body{
-   width: 100%;
-  padding-left: 60px;
-  position: relative;
+
+#footer .audio-body .media-body {
+    width: 100%;
+    padding-left: 60px;
+    position: relative;
 }
 
 #footer .audio-body .media-left a {
@@ -265,21 +267,21 @@ a {
 }
 
 #footer .audio-body .media-body .media-heading {
-      margin-top: 10px;
-  margin-bottom: 5px;
-  white-space: nowrap;
-  display: inline-block;
-  overflow: hidden;
-  text-overflow: ellipsis;
-  width: 100%;
-  padding-right: 76px;
+    margin-top: 10px;
+    margin-bottom: 5px;
+    white-space: nowrap;
+    display: inline-block;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    width: 100%;
+    padding-right: 76px;
 }
 
 #footer .audio-body .media-body .media-time {
-     display: block;
-  position: absolute;
-  right: 0;
-  top: 10px;
+    display: block;
+    position: absolute;
+    right: 0;
+    top: 10px;
 }
 
 input[type="range"] {

@@ -27,9 +27,9 @@
             <!-- Collect the nav links, forms, and other content for toggling -->
             <div class="collapse navbar-collapse" id="bs-example-navbar-collapse-1">
                 <ul class="nav navbar-nav">
-                    <li id="main-nav" class="active"><a href="javascript:nav.go(0)">首页</a></li>
-                    <li id="settings-nav"><a href="javascript:nav.go(1)">设置</a></li>
-                    <li id="about-nav"><a href="javascript:nav.go(2)">关于</a></li>
+                    <li id="main-nav" class="active"><a href="javascript:nav.setState(0)">首页</a></li>
+                    <li id="settings-nav"><a href="javascript:nav.setState(1)">设置</a></li>
+                    <li id="about-nav"><a href="javascript:nav.setState(2)">关于</a></li>
                 </ul>
 
                 <ul class="nav navbar-nav navbar-right">
@@ -55,9 +55,9 @@
                             账户
                         </button>
                         <ul class="dropdown-menu" role="menu">
-                            <li id="menugo-0"><a href="javascript:nav.MenuGo(0)">登录</a></li>
+                            <li id="menugo-0"><a href="javascript:nav.clickMenu(0)">登录</a></li>
                             <!--<li class="divider"></li>-->
-                            <li id="menugo-1"><a href="javascript:nav.MenuGo(1)">注销</a></li>
+                            <li id="menugo-1"><a href="javascript:nav.clickMenu(1)">注销</a></li>
                         </ul>
                     </div>
                 </ul>
@@ -70,8 +70,8 @@
 
     <div id="page" class="container-fluid">
         <div id="main" class="row">
-            <div class="col-sm-3 userinfo">
-                <div class="user-head">
+            <div class="col-sm-3 sidebar">
+                <div class="userinfo">
                     <div class="avater">
                         <a href="javascript:void(0);">
                             <img class="img-thumbnail" ,
@@ -84,10 +84,9 @@
                         <span id="totlist" class="label label-success"></span>
                     </div>
                 </div>
-                <div class="sidebar">
+
                     <ul class="nav nav-sidebar">
                     </ul>
-                </div>
                 <div class="nav-plus">
                     <span id="refresh" title="更新列表" class="glyphicon glyphicon-refresh"></span>
                     <span id="addlist" title="添加自定义列表" class="glyphicon glyphicon-plus"></span>

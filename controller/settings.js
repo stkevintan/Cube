@@ -5,32 +5,32 @@
 var settings = {
     init: function (fm) {
         this.fm = fm;
-        this.self = {
+        this.$ = {
             musicDir: $('#music-dir'),
             dialog: $('#dialog'),
             btnOpen: $('button#openDialog'),
             searchLimit: $('#search-limit')
         };
-        console.log('dialog', this.self.dialog);
-        this.self.searchLimit.val(fm.getSearchLimit());
-        this.self.musicDir.val(fm.getMusicDir());
+        console.log('dialog', this.$.dialog);
+        this.$.searchLimit.val(fm.getSearchLimit());
+        this.$.musicDir.val(fm.getMusicDir());
         this.listen();
     },
     listen: function () {
         var that = this;
-        this.self.btnOpen.click(function () {
-            that.self.dialog.trigger('click');
+        this.$.btnOpen.click(function () {
+            that.$.dialog.trigger('click');
         });
 
-        this.self.dialog.change(function () {
+        this.$.dialog.change(function () {
             var newDir = $(this).val();
             console.log('newDir', newDir);
             if (that.fm.setMusicDir(newDir)) {
-                that.self.musicDir.val(newDir);
-                category.self.refresh.trigger('click');
+                that.$.musicDir.val(newDir);
+                category.$.refresh.trigger('click');
             }
         });
-        this.self.searchLimit.change(function () {
+        this.$.searchLimit.change(function () {
             var limit = $(this).val();
             limit = limit.trim();
             //判断limit是否是数字

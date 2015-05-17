@@ -1,45 +1,48 @@
 /**
+ * Define the action of nav-sidebar and nav-plus
+ *
  * Created by kevin on 15-5-8.
  */
 var T = $('.list table');
-//侧栏歌单行为
 var category = {
-    init: function (fm) {
-        this.fm = fm;
-        this.self = {
-            siderbar: $('ul.nav-sidebar'),
+    init: function () {
+        this.$ = {
+            container: $('ul.nav-sidebar'),
             totSong: $("#totsong"),
             totlist: $("#totlist"),
             refresh: $('#refresh'),
             addlist: $('#addlist')
         }
         this.listen();
-        this.self.refresh.trigger('click');
+        this.$.refresh.trigger('click');
     },
+    /**
+     * Switch to "id"th playlist.
+     * Throw "index out of range"
+     *
+     * @param id - the index of playlist to switch
+     */
     setState: function (id) {
         id = id || 0;
         if (this.ID == id)return;
-        if (id < 0 || id > this.name.length) {
-            throw "index out of range";
-            return;
-        }
-        var li = this.self.siderbar.children('li');
+        if (id < 0 || id > this.name.length) throw "index out of range";
+        var $playlist = this.$.container.children('li');
         if (this.ID >= 0) {
-            li.eq(this.ID).removeClass('active');
+            $playlist.eq(this.ID).removeClass('active');
             this.list[this.ID].hide();
         }
-        li.eq(id).addClass('active');
+        $playlist.eq(id).addClass('active');
         this.list[id].show();
 
         this.ID = id;
     },
     setLabel: function () {
-        this.self.totSong.text("本地歌曲：" + this.data[0].length);
-        this.self.totlist.text("歌单：" + category.name.length);
+        this.$.totSong.text("本地歌曲：" + this.data[0].length);
+        this.$.totlist.text("歌单：" + category.name.length);
     },
     setbadge: function (id) {
         //更新播放列表左侧的数目标记,如果id为空，那么更新所有列表。
-        var badge = this.self.siderbar.find('.badge');
+        var badge = this.$.container.find('.badge');
         if (typeof id === 'number') {
             if (id >= 0 && id < this.data.length)
                 badge.eq(id).text(this.data[id].length);
@@ -83,9 +86,9 @@ var category = {
             + '<span class="badge">' + data.length + '</span>'
             + '</div>'
             + '</a></li>';
-        this.self.siderbar.append(str);
+        this.$.container.append(str);
         var that = this;
-        var newli = this.self.siderbar.children('li:last-child');
+        var newli = this.$.container.children('li:last-child');
 
         newli.click(function () {
             that.setState($(this).index());
@@ -113,8 +116,8 @@ var category = {
             console.log('remove play list failed!');
             return;
         }
-        this.self.siderbar.children('li').eq(id).remove();
-        this.list[id].self.remove();
+        this.$.container.children('li').eq(id).remove();
+        this.list[id].$.remove();
         if (this.getList(id) == controls.playlist) {
             controls.setState(null, -1);
             controls.playlist = null;
@@ -142,7 +145,7 @@ var category = {
         for (var i = 0; i < this.name.length; i++) {
             this.data.push(value[this.name[i]]);
         }
-        this.self.siderbar.empty();
+        this.$.container.empty();
         T.children('tbody').remove();
         for (var i = 0; i < this.name.length; i++) {
             this.addItem(this.name[i], this.data[i], i);
@@ -166,12 +169,12 @@ var category = {
     },
     listen: function () {
         var that = this;
-        this.self.refresh.click(function () {
+        this.$.refresh.click(function () {
             var $span = $('#refresh');
             var origin = $span.text();
             $span.text(origin + '加载中...');
-            that.fm.loadMusicDir(function () {
-                category.load(that.fm.getSchemeNames(), that.fm.getScheme());
+            fm.loadMusicDir(function () {
+                category.load(fm.getSchemeNames(), fm.getScheme());
                 controls.setState(null, -1);
                 $span.text(origin);
             });
@@ -180,7 +183,7 @@ var category = {
         var model = $('#inputListName');
         var input = $('#inputListName input');
         var submit = $('#submit-name');
-        this.self.addlist.click(function () {
+        this.$.addlist.click(function () {
             model.find('label').hide();
             model.removeClass('has-error');
             model.modal('show');

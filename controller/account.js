@@ -3,7 +3,7 @@
  */
 var account = {
     init: function () {
-        this.self = {
+        this.$ = {
             login: $('#login'),
             submit: $('#login').find('button.submit'),
             label: $('#login').find('label'),
@@ -15,35 +15,49 @@ var account = {
     unsign: function () {
         fm.setUserData(null);
         userinfo.setState();
-        nav.setMenuState();
-        category.self.refresh.trigger('click');
+        nav.setMenu();
+        category.$.refresh.trigger('click');
     },
     showlogin: function () {
-        this.self.label.hide();
-        this.self.login.modal('show');
+        this.$.label.hide();
+        this.$.login.modal('show');
     },
     loginErr: function (msg) {
-        this.self.label.text(msg);
-        this.self.label.show();
+        this.$.label.text(msg);
+        this.$.label.show();
     },
     loginSuccess: function (data) {
+
+        this.$.label.text('');
+        this.$.login.modal('hide');
+        this.setState(data);
+    },
+    /**
+     * Load User Profile from "data"
+     *
+     *@param {Object} data - include nickname && avatarUrl property
+     */
+    setState: function (data) {
         //设置用户头像
-        userinfo.setState(data.nickname, data.avatarUrl);
-        this.self.label.text('');
-        nav.setMenuState(1);
-        this.self.login.modal('hide');
+        var nickname = data.nickname;
+        var avatarUrl = data.avatarUrl;
+        userinfo.setState(nickname, avatarUrl);
+        if (nickname) {
+            nav.setMenu(1);
+            category.getUserPlaylist();
+        }
+        else nav.setMenu(0);
     },
     listen: function () {
         var that = this;
-        this.self.submit.click(function () {
-            var phone = that.self.phone.val();
-            var password = that.self.password.val();
+        this.$.submit.click(function () {
+            var phone = that.$.phone.val();
+            var password = that.$.password.val();
             api.login(phone, password, function (err, data) {
                 if (err) {
                     that.loginErr(err);
                 } else {
                     that.loginSuccess(data);
-                    category.getUserPlaylist();
                 }
             });
         });
