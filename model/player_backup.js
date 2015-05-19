@@ -35,7 +35,7 @@ var player = {
         val = val || 0.5;
         Ao.volume = val;
     },
-    getState: function (callback) {
+    event: function (callback) {
         Ao.onended = function () {
             console.log('player ended!');
             callback('ended');

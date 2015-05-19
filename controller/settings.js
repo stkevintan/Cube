@@ -3,8 +3,7 @@
  */
 //设置页面行为
 var settings = {
-    init: function (fm) {
-        this.fm = fm;
+    init: function () {
         this.$ = {
             musicDir: $('#music-dir'),
             dialog: $('#dialog'),
@@ -25,7 +24,7 @@ var settings = {
         this.$.dialog.change(function () {
             var newDir = $(this).val();
             console.log('newDir', newDir);
-            if (that.fm.setMusicDir(newDir)) {
+            if (fm.setMusicDir(newDir)) {
                 that.$.musicDir.val(newDir);
                 category.$.refresh.trigger('click');
             }
@@ -38,12 +37,10 @@ var settings = {
             var regex = /^[1-9]\d*$/;
             if (regex.test(limit)) {
                 $(this).parent().removeClass('has-error');
-                that.fm.setSearchLimit(Number(limit) || 0);
+                fm.setSearchLimit(Number(limit) || 0);
             } else {
                 $(this).parent().addClass('has-error');
-                return;
             }
-
         });
 
     }

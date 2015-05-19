@@ -9,14 +9,19 @@
 var category = {
     init: function () {
         this.$ = {
-            container: $('ul.nav-sidebar'),
+            uls: $('ul.nav-sidebar'),
+            lis: function () {
+                return this.uls.children('li');
+            },
             totSong: $("#totsong"),
             totlist: $("#totlist"),
             refresh: $('#refresh'),
             addlist: $('#addlist'),
             table: $('.list table')
         }
+        this.length = 0;
         this.listen(this);
+        this.addGlobalEvent();
         this.$.refresh.trigger('click');
     },
     loadPlts: {
@@ -26,19 +31,18 @@ var category = {
          * @param {Array} value - data of playlists
          */
         local: function (value) {
-            this.ID = -1;
-            this.$plts = {};
+            category.ID = -1;
+            category.$plts = {};
             //通过时间戳排序
-            this.plts = value.sort(function (a, b) {
+            category.plts = value.sort(function (a, b) {
                 return a.timestamp < b.timestamp;
             });
-            this.recKey = [];//关闭时要保存的播放列表
-            this.$.container.empty();
-            this.$.table.children('tbody').remove();
-            for (var i = 0; i < this.plts.length; i++) {
-                this.addItem(this.plts[i]);
+            category.recKey = [];//关闭时要保存的播放列表
+            category.$.uls.empty();
+            category.$.table.children('tbody').remove();
+            for (var i = 0; i < category.plts.length; i++) {
+                category.addItem(category.plts[i]);
             }
-            this.setState();
         },
         /**
          * @description load NetEase Account's playlist of User after login
@@ -48,14 +52,13 @@ var category = {
          */
         net: function () {
             if (!account.isLogin) throw 'user current not login';
-            var that = this;
             api.userPlaylist(function (err, raw) {
                 if (err) throw 'load net playlist error:' + err;
                 for (var i = 0; i < raw.length; i++) {
                     var o = raw[i];
                     api.playlistDetail(o.name, o.id, function (err, res) {
                         if (err)throw err;
-                        that.addItem({
+                        category.addItem({
                             name: res.name,
                             data: res.data
                         }, true);
@@ -101,16 +104,16 @@ var category = {
             + (ts ? '<span class="glyphicon glyphicon-trash"></span>' : '')
             + '<span class="badge">' + stuff.data.length + '</span>'
             + '</div></a></li>';
-        this.$.container.append(str);
-        this.$.table.append('<tbody style="display:none" id="_"+ts></tbody>');
-
+        this.$.uls.append(str);
+        this.$.table.append('<tbody style="display:none" id="_'+ts+'"></tbody>');
+        this.length++;
         //bind event
         (function (that) {
-            var $li = that.$.container.children('li:last-child');
-            $li.click(function () {
+            var $lis = that.$.lis().last();
+            $lis.click(function () {
                 that.setState($(this).index());
             });
-            $li.find('span.glyphicon-trash').click(function () {
+            $lis.find('span.glyphicon-trash').click(function () {
                 that.removeItem($(this).index());
             });
         })(this);
@@ -119,34 +122,33 @@ var category = {
         if (!isTemp && ts) {
             this.recKey.push(ts);
         }
-
         var $o = this.create$plt(ts, stuff.data);
         this.$plts[ts] = $o;
-        this.rfshLabel();
+        global.emit('rfshLabel');
     },
     /**
-     * @description switch to 0 or "id"th playlist.
+     * @description switch to last or "id"th playlist.
      *
-     * @param {number} [id=0] - the index of playlist to switch
+     * @param {number} [id=lastIndex] - the index of playlist to switch,
      *
      * @throw index out of range
      */
     setState: function (id) {
-        id = id || 0;
-        if (this.ID == id)return;
-        if (id < 0 || id > this.name.length) {
-            throw "index out of range";
+        if (!utils.isNumber(id)) {
+            id = this.length - 1;
         }
-
-        var $li = this.$.container.children('li');
+        if (id < 0 || id >= this.length)throw 'index out of range';
+        var $lis = this.$.lis();
+        if (this.ID == id) return;
         if (this.ID >= 0) {
-            var old$li = $li.eq(this.ID);
+            var old$li = $lis.eq(this.ID);
             old$li.removeClass('active');
-            this.$plts[$.data(old$li, 'target')].hide();
+            this.$plts[old$li.data('target')].hide();
         }
-        var new$li = $li.eq(id);
+        var new$li = $lis.eq(id);
         new$li.addClass('active');
-        this.$plts[$.data(new$li, 'target')].show();
+        console.log(this.$plts[new$li.data('target')]);
+        this.$plts[new$li.data('target')].show();
         this.ID = id;
     },
     /**
@@ -159,14 +161,10 @@ var category = {
      * @throw index out of range
      */
     get$plt: function (id) {
-        if (id !== 0) {
-            id = id || this.ID;
-        }
-        if (id < 0 || id > this.list.length) {
-            throw "index out of range";
-        }
-        var $li = this.$.container.children('li').eq(id);
-        var target = $.data($li, 'target');
+        if (!utils.isNumber(id))id = this.ID;
+        if (id < 0 || id >= this.length)throw 'index out of range';
+        var $li = this.$.lis();
+        var target = $li.eq(id).data('target');
         return this.$plts[target];
     },
     /**
@@ -177,57 +175,31 @@ var category = {
      * @throw index out of range
      */
     removeItem: function (id) {
-        if (id < 0 || id > this.data.length) {
-            throw "index out of range";
-        }
-        this.$.container.children('li').eq(id).remove();
+        if (id < 0 || id >= this.length)throw 'index out of range';
+        var $lis = this.$.lis();
+        $lis.eq(id).remove();
         var now$plt = this.get$plt(id);
-        now$plt.$.remove();
+        now$plt.$.body.remove();
         if (now$plt == controls.playlist) {
-            controls.setState(null, -1);
-            controls.playlist = null;
+            global.emit('playerExit');
         }
         var index = utils.binarySearch(this.recKey, now$plt.ts);
         if (index != -1) {
-            this.recKey[index] = undefined;
+            this.recKey.splice(index, 1);
         }
         index = utils.binarySearch(this.plts, now$plt.ts, function (o) {
             return o.timestamp;
         });
         if (index != -1) {
-            this.plts[index] = undefined;
+            this.plts.splice(index, 1);
         }
         delete now$plt;
-
+        this.length--;
         if (id == this.ID) {
             this.ID = -1;
-            this.setState();
+            this.setState(0);
         } else if (id < this.ID) {
             this.ID--;
-        }
-    },
-    /**
-     * @description refresh the Labels on userInfo
-     */
-    rfshLabel: function () {
-        this.$.totSong.text("本地歌曲：" + this.plts[0].data.length);
-        this.$.totlist.text("歌单：" + this.plts.length);
-    },
-    /**
-     * @description refresh "id"th or all badge's number.
-     *
-     * @param {number} [id=-1] - the index of badge to refresh
-     */
-    rfshBadge: function (id) {
-        id = id || -1;
-        var badge = this.$.container.find('.badge');
-        if (id >= 0 && id < this.plts.length) {
-            badge.eq(id).text(this.plts[id].data.length);
-        } else {
-            for (var i = 0; i < this.data.length; i++) {
-                var o = this.data[i];
-                $(badge[i]).text(o.length);
-            }
         }
     },
     listen: function (that) {
@@ -237,8 +209,9 @@ var category = {
             $span.text(origin + '加载中...');
             fm.loadMusicDir(function () {
                 category.loadPlts.local(fm.getScheme());
+                that.setState(0);
                 account.isLogin && category.loadPlts.net();
-                controls.setState(null, -1);
+                global.emit('playerExit');
                 $span.text(origin);
             });
         });
@@ -257,7 +230,7 @@ var category = {
             val = val.trim();
             var flag = true;
             if (val == '')flag = false;
-            else flag = that.$.container.text().indexOf(val) == -1 ? false : true;
+            else flag = that.$.uls.text().indexOf(val) == -1 ? false : true;
             if (flag) {
                 //添加列表
                 that.addItem({
@@ -275,6 +248,32 @@ var category = {
                 e.preventDefault();
                 submit.trigger('click');
             }
-        })
+        });
+    },
+    addGlobalEvent: function () {
+        global.on('rfshLabel', function () {
+            /**
+             * @description refresh the Labels on userInfo
+             */
+            this.$.totSong.text("本地歌曲：" + this.plts[0].data.length);
+            this.$.totlist.text("歌单：" + this.plts.length);
+        }, this);
+        global.on('rfshBadge', function (id) {
+            /**
+             * @description refresh "id"th or all badge's number.
+             *
+             * @param {number} [id=-1] - the index of badge to refresh
+             */
+            id = id || -1;
+            var badge = this.$.uls.find('.badge');
+            if (id >= 0 && id < this.plts.length) {
+                badge.eq(id).text(this.plts[id].data.length);
+            } else {
+                for (var i = 0; i < this.data.length; i++) {
+                    var o = this.data[i];
+                    $(badge[i]).text(o.length);
+                }
+            }
+        }, this);
     }
 }

@@ -47,6 +47,7 @@ var nav = {
                 name: name,
                 data: data
             });
+            category.setState();
         });
     },
 

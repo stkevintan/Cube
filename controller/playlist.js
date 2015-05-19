@@ -15,22 +15,28 @@ var playlist = {
      */
     init: function (ts, data) {
         this.ts = ts;
-        this.$ = $(category.$.table.children('tbody#_' + ts)[0]);
+        this.$ = {
+            body: category.$.table.children('tbody#_' + ts).first(),
+            tr: function () {
+                return this.body.children('tr');
+            }
+        };
         this.data = data;
         this.ID = -1;
+        this.length = 0;
         this.load();
     },
     show: function () {
-        this.$.fadeIn();
+        this.$.body.fadeIn();
     },
     hide: function () {
-        this.$.hide();
+        this.$.body.hide();
     },
     /**
      * @description load songs of the playlist
      */
     load: function () {
-        this.$.empty();
+        this.$.body.empty();
         for (var i = 0; i < this.data.length; i++) {
             this.addItem(this.data[i]);
         }
@@ -44,7 +50,7 @@ var playlist = {
      * @param {string} [dataItem.album] - song's album
      */
     addItem: function (dataItem) {
-        var id = this.$.children('tr').length;
+        var id = this.length;
         var str = '<tr data-target="' + id + '">';
         str += '<td>' + (1 + id) + '</td>';
         str += '<td>' + dataItem.title + '</td>';
@@ -58,12 +64,13 @@ var playlist = {
         + '<a href="javascript:void(0);"><span class="glyphicon glyphicon-heart"></span></a>'
         + '<a href="javascript:void(0);"><span class="glyphicon glyphicon-trash"></span></a></td>';
         str += '</tr>';
-        this.$.append(str);
+        this.$.body.append(str);
         if (id >= this.data.length) {
             this.data.push(dataItem);
             //更新标记
-            category.rfshBadge();
+            global.emit('rfshBadge');
         }
+        this.length++;
         this.listen(this);
 
     },
@@ -76,16 +83,17 @@ var playlist = {
      * @throw local file cannot remove
      */
     removeItem: function (id) {
-        if (id < 0 || id > this.items.length)throw 'index out of range';
+
+        if (id < 0 || id > this.length)throw 'index out of range';
         if (!this.ts)throw 'local file cannot remove';
 
         if (id == this.ID) {
             this.ID = -1;
-            controls.setState(null, -1);
+            controls.setState(-1);
         }
-        if (this.ID > id)this.ID--;
+        if (this.ID > id) this.ID--;
         var Tr = this.$.children('tr');
-        var realID = $.data(Tr.eq(id), 'target');
+        var realID = Tr.eq(id).data('target');
         Tr.eq(id).remove();
         //将之后的歌曲编号-1 ,注意不要覆盖正在播放那一项
         var mark = Tr.slice(id + 1);
@@ -95,8 +103,9 @@ var playlist = {
             if (t)o.text(Number(t) - 1);
         });
 
-        this.data[realID] = undefined;
-        category.rfshBadge();
+        this.data.splice(realID, 1);
+        global.emit('rfshBadge');
+        this.length--;
     },
     /**
      * @description switch current playing song to "id"th
@@ -107,9 +116,10 @@ var playlist = {
      */
     setState: function (id) {
         //list
+        id = id || 0;
         if (id == this.ID)return;
-        if (id >= this.data.length)throw 'index out of range';
-        var Tr = this.$.children('tr');
+        if (id >= this.length)throw 'index out of range';
+        var Tr = this.$.tr();
         var Trl = [];
         var content = [];
         if (id >= 0) {
@@ -141,17 +151,19 @@ var playlist = {
      * @return {object|string} - song data or a msg of playlist state
      */
     next: function (type, id) {
-        var len = this.data.length;
         switch (type) {
             case -1:
-                id = (this.ID - 1 + len) % len;
+                id = (this.ID - 1 + this.length) % this.length;
                 break;
             case 1:
-                id = (this.ID + 1) % len;
+                id = (this.ID + 1) % this.length;
                 break;
             case 2:
                 id = this.ID + 1;
-                if (id == len)return 'End';
+                if (id == this.length) {
+                    global.emit('playerExit');
+                    return;
+                }
                 break;
             case 3:
                 id = Math.round(Math.random() * len);
@@ -159,13 +171,13 @@ var playlist = {
         }
         this.setState(id);
         //获得真实的序号
-        var $tr = this.$.children('tr').eq(id);
-        var realID = $.data($tr, 'target');
+        var $tr = this.$.tr().eq(id);
+        var realID = $tr.data('target');
         return this.data[realID];
     },
 
     listen: function (that) {
-        var $tr = this.$.children('tr:last-child');
+        var $tr = this.$.tr().last();
         //双击播放音乐
         $tr.dblclick(function () {
             //去掉之前播放列表的播放状态
@@ -175,7 +187,7 @@ var playlist = {
             var dataItem = that.next(0, $(this).index());
             //更新controls的playlist
             controls.playlist = that;
-            controls.play(dataItem, 1);
+            global.emit('playerPlay', 1, dataItem);
         });
         //单击‘+’符号，添加到其他播放列表
         $tr.find('span.glyphicon-plus').click(function (e) {
@@ -202,13 +214,13 @@ var playlist = {
                 //获得目标播放列表对象
                 var itName = $(this).text();
                 var itID = -1;
-                category.$.container.find('li a').each(function (i) {
-                    if ($(this).text() == itName) {
+                category.$.lis().each(function (i) {
+                    if ($(this).children('a').text() == itName) {
                         itID = i;
                     }
                 });
                 var itList = category.get$plt(itID);
-                var realID = $.data(it, 'target');
+                var realID = it.data('target');
                 if (itList != null) {
                     //添加当前歌曲到指定播放列表
                     itList.addItem(that.data[realID]);

@@ -14,3 +14,14 @@ exports.binarySearch = function (array, value, compare) {
     }
     return res;
 }
+var isType = function (name) {
+    return function (v) {
+        return typeof v === name;
+    }
+}
+exports.isNumber = isType('number');
+exports.isObject = isType('object');
+exports.isFunction = isType('function');
+exports.isString = isType('string');
+exports.isUndefined = isType('undefined');
+exports.isBoolean = isType('boolean');

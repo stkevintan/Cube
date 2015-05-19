@@ -29,6 +29,7 @@ var scheme = {
 var fileManager = function () {
     try {
         config.content = JSON.parse(fs.readFileSync(config.path), 'utf-8');
+        scheme.content = JSON.parse(fs.readFileSync(scheme.path), 'utf-8');
     } catch (e) {
         config.isChanged = 1;
         if (e.errno = -2) {//data目录不存在
@@ -39,8 +40,6 @@ var fileManager = function () {
             console.log(e, e.message);
         }
     }
-
-    scheme.content = JSON.parse(fs.readFileSync(scheme.path), 'utf-8');
 }
 fileManager.prototype.SaveChanges = function (record, data, callback) {
     if (config.isChanged) {
@@ -140,7 +139,7 @@ fileManager.prototype.loadMusicDir = function (callback) {
         if (err) {
             console.log('get local file failed!', err);
         } else {
-            scheme.push({
+            scheme.content.push({
                 timestamp: 0,
                 name: '本地音乐',
                 data: result

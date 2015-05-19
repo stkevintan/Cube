@@ -25,14 +25,25 @@ win.on('close', function () {
         win.close(true);
     });
 });
-
+var global = (function () {
+    var w = $(window);
+    return {
+        on: function (event, handler, _this) {
+            w.on(event, function () {
+                handler.apply(_this, [].slice.call(1, arguments));
+            });
+        },
+        emit: function (event) {
+            w.triggerHandler(event, [].slice.call(arguments, 1));
+        }
+    }
+})();
 category.init();
 nav.init();
 userinfo.init();
 account.init();
 progress.init();
 controls.init();
-
 settings.init();
 
 

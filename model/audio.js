@@ -9,9 +9,13 @@
 //player.on('error', function (err) {
 //    console.log(err);
 //});
-var http = require('http');
-http.get('http://m1.music.126.net/TBoKsx7h2bI3nNjHsATcLw==/2064882836976747.mp3', function(res) {
-    res.on('data', function(chunk) {
-        console.log(chunk.toString());
-    });
-});
+//var http = require('http');
+//http.get('http://m1.music.126.net/TBoKsx7h2bI3nNjHsATcLw==/2064882836976747.mp3', function(res) {
+//    res.on('data', function(chunk) {
+//        console.log(chunk.toString());
+//    });
+//});
+function f(a){
+    console.log(a);
+}
+f.apply(undefined,[1]);
