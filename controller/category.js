@@ -35,8 +35,9 @@ var category = {
             category.$plts = {};
             //通过时间戳排序
             category.plts = value.sort(function (a, b) {
-                return a.timestamp < b.timestamp;
+                return a.timestamp - b.timestamp;//不能用小于号
             });
+            console.log(category.plts);
             category.recKey = [];//关闭时要保存的播放列表
             category.$.uls.empty();
             category.$.table.children('tbody').remove();
@@ -105,7 +106,7 @@ var category = {
             + '<span class="badge">' + stuff.data.length + '</span>'
             + '</div></a></li>';
         this.$.uls.append(str);
-        this.$.table.append('<tbody style="display:none" id="_'+ts+'"></tbody>');
+        this.$.table.append('<tbody style="display:none" id="_' + ts + '"></tbody>');
         this.length++;
         //bind event
         (function (that) {
@@ -114,7 +115,7 @@ var category = {
                 that.setState($(this).index());
             });
             $lis.find('span.glyphicon-trash').click(function () {
-                that.removeItem($(this).index());
+                that.removeItem($(this).closest('li').index());
             });
         })(this);
 
@@ -147,7 +148,6 @@ var category = {
         }
         var new$li = $lis.eq(id);
         new$li.addClass('active');
-        console.log(this.$plts[new$li.data('target')]);
         this.$plts[new$li.data('target')].show();
         this.ID = id;
     },
@@ -177,8 +177,8 @@ var category = {
     removeItem: function (id) {
         if (id < 0 || id >= this.length)throw 'index out of range';
         var $lis = this.$.lis();
-        $lis.eq(id).remove();
         var now$plt = this.get$plt(id);
+        $lis.eq(id).remove();
         now$plt.$.body.remove();
         if (now$plt == controls.playlist) {
             global.emit('playerExit');
@@ -208,9 +208,9 @@ var category = {
             var origin = $span.text();
             $span.text(origin + '加载中...');
             fm.loadMusicDir(function () {
-                category.loadPlts.local(fm.getScheme());
+                that.loadPlts.local(fm.getScheme());
                 that.setState(0);
-                account.isLogin && category.loadPlts.net();
+                account.isLogin && that.loadPlts.net();
                 global.emit('playerExit');
                 $span.text(origin);
             });
@@ -230,7 +230,12 @@ var category = {
             val = val.trim();
             var flag = true;
             if (val == '')flag = false;
-            else flag = that.$.uls.text().indexOf(val) == -1 ? false : true;
+            else {
+                var $name = that.$.uls.find('div.name');
+                $name.each(function () {
+                    if ($(this).text() == val)flag = false;
+                });
+            }
             if (flag) {
                 //添加列表
                 that.addItem({

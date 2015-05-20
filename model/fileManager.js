@@ -29,7 +29,6 @@ var scheme = {
 var fileManager = function () {
     try {
         config.content = JSON.parse(fs.readFileSync(config.path), 'utf-8');
-        scheme.content = JSON.parse(fs.readFileSync(scheme.path), 'utf-8');
     } catch (e) {
         config.isChanged = 1;
         if (e.errno = -2) {//data目录不存在
@@ -41,7 +40,7 @@ var fileManager = function () {
         }
     }
 }
-fileManager.prototype.SaveChanges = function (record, data, callback) {
+fileManager.prototype.SaveChanges = function (recKey, plts, callback) {
     if (config.isChanged) {
         fs.writeFile(config.path,
             JSON.stringify(config.content),
@@ -49,10 +48,16 @@ fileManager.prototype.SaveChanges = function (record, data, callback) {
                 callback(err);
             });
     }
-    scheme.content = {};
-    for (var i = 0; i < record.length; i++) {
-        scheme.content[record[i]] = data[record[i]];
+    scheme.content = [];
+    console.log(recKey);
+    console.log(plts);
+    for (var i = 0, j = 0; i < recKey.length; i++) {
+        var tmpTs = recKey[i];
+        while (j < plts.length && plts[j].timestamp != tmpTs)j++;
+        if (j >= plts.length)break;
+        scheme.content.push(plts[j]);
     }
+    console.log(scheme.content);
     fs.writeFile(scheme.path,
         JSON.stringify(scheme.content),
         function (err) {
@@ -139,12 +144,12 @@ fileManager.prototype.loadMusicDir = function (callback) {
         if (err) {
             console.log('get local file failed!', err);
         } else {
+            scheme.content = JSON.parse(fs.readFileSync(scheme.path), 'utf-8');
             scheme.content.push({
                 timestamp: 0,
                 name: '本地音乐',
                 data: result
             });
-            console.log('update success!');
         }
         callback();
     });

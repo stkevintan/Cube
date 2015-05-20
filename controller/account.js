@@ -34,6 +34,7 @@ var account = {
         this.$.label.text('');
         this.$.login.modal('hide');
         this.setState(data);
+        category.loadPlts.net();
     },
     /**
      * @description set the User Profile by "data"
@@ -49,7 +50,6 @@ var account = {
         if (nickname) {
             this.isLogin = true;
             nav.setMenu(1);
-            category.loadPlts.net();
         }
         else {
             this.isLogin = false;

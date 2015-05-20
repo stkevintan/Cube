@@ -92,7 +92,7 @@ var playlist = {
             controls.setState(-1);
         }
         if (this.ID > id) this.ID--;
-        var Tr = this.$.children('tr');
+        var Tr = this.$.tr();
         var realID = Tr.eq(id).data('target');
         Tr.eq(id).remove();
         //将之后的歌曲编号-1 ,注意不要覆盖正在播放那一项

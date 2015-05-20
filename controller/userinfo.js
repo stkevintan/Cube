@@ -8,21 +8,21 @@ var userinfo = {
         this.$ = {
             img: $('.avater img'),
             name: $('.title h4'),
-            sidebar: $('.sidebar')
+            navSidebar: $('.nav-sidebar')
         }
-        this.setState();this.$.sidebar.height($('.userinfo').height() - $('.user-head').height() - $('.nav-plus').height());
-        this.listen();
+        this.setState();
+        this.$.navSidebar.height($('.sidebar').height() - $('.userinfo').height() - $('.nav-plus').height());
+        this.listen(this);
     },
     setState: function (name, src) {
         this.name = name || "未登录";
         this.src = src || 'assets/img/avater.jpg';
-        this.$.name.text( this.name);
+        this.$.name.text(this.name);
         this.$.img.attr('src', this.src);
     },
-    listen: function () {
-        var that = this;
+    listen: function (that) {
         $(window).resize(function () {
-           that.$.sidebar.height($('.userinfo').height() - $('.user-head').height() - $('.nav-plus').height());
+            that.$.navSidebar.height($('.sidebar').height() - $('.userinfo').height() - $('.nav-plus').height());
         })
     }
 

@@ -49,7 +49,6 @@ NetEaseMusicAPI.prototype = {
             'rememberLogin': 'true'
         };
         data[name] = username;
-        console.log(data);
         this.httpRequest('post', url, data, function (err, res) {
             if (err) {
                 console.log("login request error!");
@@ -170,7 +169,6 @@ NetEaseMusicAPI.prototype = {
                 }
             });
         }
-        console.log('data', data);
         return data;
     },
     songsDetail: function (ids, callback) {

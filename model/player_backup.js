@@ -13,7 +13,6 @@ var player = {
         Ao.play();
     },
     setSrc: function (src) {
-        console.log('src', src);
         Ao.src = src;
     },
     getSrc: function () {

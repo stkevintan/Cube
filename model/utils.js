@@ -19,6 +19,7 @@ var isType = function (name) {
         return typeof v === name;
     }
 }
+
 exports.isNumber = isType('number');
 exports.isObject = isType('object');
 exports.isFunction = isType('function');

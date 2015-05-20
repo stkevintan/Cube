@@ -2,7 +2,8 @@
 
 使用html5和node.js构建的网易云音乐的跨平台第三方客户端。
 
-项目刚开始，尚在完善。
+version 1.1.0
+
 ##播放音乐之前，请确定是否将chrome的`libffmpegsumo`拷贝到了nw.js文件夹中！
 
 ###Feature  
@@ -18,6 +19,7 @@
 4. 列表项目的自由拖动排序    
 5. 私人fm  
 6. 歌词  
+
 
 ###Install  
 1.首先安装[nw.js](https://github.com/nwjs/nw.js)  

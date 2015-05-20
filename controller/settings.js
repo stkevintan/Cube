@@ -10,7 +10,6 @@ var settings = {
             btnOpen: $('button#openDialog'),
             searchLimit: $('#search-limit')
         };
-        console.log('dialog', this.$.dialog);
         this.$.searchLimit.val(fm.getSearchLimit());
         this.$.musicDir.val(fm.getMusicDir());
         this.listen();

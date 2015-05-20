@@ -85,8 +85,8 @@
                     </div>
                 </div>
 
-                    <ul class="nav nav-sidebar">
-                    </ul>
+                <ul class="nav nav-sidebar">
+                </ul>
                 <div class="nav-plus">
                     <span id="refresh" title="更新列表" class="glyphicon glyphicon-refresh"></span>
                     <span id="addlist" title="添加自定义列表" class="glyphicon glyphicon-plus"></span>
@@ -174,10 +174,10 @@
                         <a id="backward" href="javascript:controls.backward();">
                             <span class="glyphicon glyphicon-step-backward"></span>
                         </a>
-                        <a id="play" href="javascript:controls.play();">
+                        <a id="play" href="javascript:global.emit('playerPlay');">
                             <span class="glyphicon glyphicon-play"></span>
                         </a>
-                        <a id="pause" style="display:none" href="javascript:controls.pause();">
+                        <a id="pause" style="display:none" href="javascript:global.emit('playerPause');">
                             <span class="glyphicon glyphicon-pause"></span>
                         </a>
                         <a id="forward" href="javascript:controls.forward();">
@@ -284,7 +284,6 @@
 <!-- /.modal -->
 <script src="assets/js/jquery.min.js"></script>
 <script src="assets/js/bootstrap.min.js"></script>
-<script src="http://cdn.bootcss.com/howler/1.1.26/howler.min.js"></script>
 <script src="controller/nav.js" type="text/javascript"></script>
 <script src="controller/userinfo.js" type="text/javascript"></script>
 <script src="controller/account.js" type="text/javascript"></script>

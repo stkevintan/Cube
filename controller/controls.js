@@ -34,6 +34,7 @@ var controls = {
                 //如果当前列表没有选中
                 return;
             }
+
             if (arguments.length)
                 this.setState.apply(this, arguments);
             this.$.play.hide();
@@ -49,9 +50,9 @@ var controls = {
             global.emit('playerPause');
             this.setState(0, 0);
         }, this);
-        global.on('playerExit', function () {
+        global.on('playerExit', function (msg) {
             global.emit('playerStop');
-            this.setState(-1);
+            this.setState(-1, msg);
             this.playlist = null;
         }, this);
     },
@@ -59,13 +60,13 @@ var controls = {
      * play next music on the playlist
      */
     forward: function () {
-        global.emit('Play', 2, 1);
+        global.emit('playerPlay', 2, 1);
     },
     /**
      * play pre music on the playlist
      */
     backward: function () {
-        global.emit('Play', 2, -1);
+        global.emit('playerPlay', 2, -1);
     },
     /**
      * set cur mode to the 'mode'th playMode:single-repeat->list-repeat->no-repeat->random
@@ -152,7 +153,7 @@ var controls = {
                     global.emit('progressMove');
                     break;
                 case 'error':
-                    that.setState(-1, '糟糕，该文件路径失效了！');
+                    global.emit('playerExit', '糟糕，该文件路径失效了！');
                     break;
                 case 'pause':
                     global.emit('progressHalt');

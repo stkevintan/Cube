@@ -19,7 +19,7 @@ $('#dev').click(function () {
 win.on('close', function () {
     win.hide();
     console.log('save the config changes...');
-    fm.SaveChanges(category.record, category.data, function (err) {
+    fm.SaveChanges(category.recKey, category.plts, function (err) {
         if (err)console.log('save failed', err);
         else console.log('saved');
         win.close(true);
@@ -30,7 +30,7 @@ var global = (function () {
     return {
         on: function (event, handler, _this) {
             w.on(event, function () {
-                handler.apply(_this, [].slice.call(1, arguments));
+                handler.apply(_this, [].slice.call(arguments, 1));
             });
         },
         emit: function (event) {
@@ -38,18 +38,23 @@ var global = (function () {
         }
     }
 })();
-category.init();
+
+
 nav.init();
 userinfo.init();
 account.init();
 progress.init();
 controls.init();
 settings.init();
-
-
+category.init();
 //获得登录信息
-var userData = fm.getUserData().profile;
-account.setState(userData);
+var userData = fm.getUserData();
+if (userData) {
+    var profile = userData.profile;
+    account.setState(profile);
+} else {
+    account.setState();
+}
 
 //table屏蔽选中
 $('table').on('selectstart', function (e) {
