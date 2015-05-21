@@ -36,7 +36,7 @@ version 1.1.0
 <img src="http://7xiyak.com1.z0.glb.clouddn.com/s23.png" />
 搜索音乐
 <img src="http://7xiyak.com1.z0.glb.clouddn.com/s24.png" />
-精简模式  
+简洁模式  
 <img src="http://7xiyak.com1.z0.glb.clouddn.com/s25.png" />
 ###troubleshooting  
 遇到什么问题可以尝试一下删除项目主目录中data目录再重启。  
