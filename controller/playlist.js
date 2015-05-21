@@ -57,12 +57,12 @@ var playlist = {
         str += '<td>' + (dataItem.artist ? dataItem.artist : '未知') + '</td>';
         str += '<td>' + (dataItem.album ? dataItem.album : '未知') + '</td>';
         str += '<td><span class="dropdown">'
-        + '<a data-toggle="dropdown" href="javascript:0">'
-        + '<span class="glyphicon glyphicon-plus"></span></a>'
-        + '<ul class="dropdown-menu" role="menu">'
-        + '</ul></span>'
-        + '<a href="javascript:void(0);"><span class="glyphicon glyphicon-heart"></span></a>'
-        + '<a href="javascript:void(0);"><span class="glyphicon glyphicon-trash"></span></a></td>';
+            + '<a data-toggle="dropdown" href="javascript:0">'
+            + '<span class="glyphicon glyphicon-plus"></span></a>'
+            + '<ul class="dropdown-menu" role="menu">'
+            + '</ul></span>'
+            + '<a href="javascript:void(0);"><span class="glyphicon glyphicon-heart"></span></a>'
+            + '<a href="javascript:void(0);"><span class="glyphicon glyphicon-trash"></span></a></td>';
         str += '</tr>';
         this.$.body.append(str);
         if (id >= this.data.length) {
@@ -89,7 +89,7 @@ var playlist = {
 
         if (id == this.ID) {
             this.ID = -1;
-            controls.setState(-1);
+            global.emit('playerExit');
         }
         if (this.ID > id) this.ID--;
         var Tr = this.$.tr();
@@ -102,10 +102,10 @@ var playlist = {
             var t = o.text();
             if (t)o.text(Number(t) - 1);
         });
-
-        this.data.splice(realID, 1);
-        global.emit('rfshBadge');
+        delete
         this.length--;
+        global.emit('rfshBadge');
+
     },
     /**
      * @description switch current playing song to "id"th
@@ -198,9 +198,9 @@ var playlist = {
                 var cur = category.plts[i];
                 if (cur.ts && cur.ts != that.ts) {
                     menuStuff += '<li role="presentation">'
-                    + '<a role="menuitem" tabindex="-1" href="javascript:0">'
-                    + cur.name
-                    + '</a></li>';
+                        + '<a role="menuitem" tabindex="-1" href="javascript:0">'
+                        + cur.name
+                        + '</a></li>';
                 }
             }
             if (menuStuff == '') {

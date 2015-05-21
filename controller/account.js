@@ -68,5 +68,15 @@ var account = {
                 }
             });
         });
+        this.$.phone.keydown(function (e) {
+            if (e.which == 13) {
+                that.$.password.focus();
+            }
+        });
+        this.$.password.keydown(function (e) {
+            if (e.which == 13) {
+                that.$.submit.trigger('click');
+            }
+        })
     }
 }

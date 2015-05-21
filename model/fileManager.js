@@ -49,8 +49,6 @@ fileManager.prototype.SaveChanges = function (recKey, plts, callback) {
             });
     }
     scheme.content = [];
-    console.log(recKey);
-    console.log(plts);
     for (var i = 0, j = 0; i < recKey.length; i++) {
         var tmpTs = recKey[i];
         while (j < plts.length && plts[j].timestamp != tmpTs)j++;
@@ -144,7 +142,12 @@ fileManager.prototype.loadMusicDir = function (callback) {
         if (err) {
             console.log('get local file failed!', err);
         } else {
-            scheme.content = JSON.parse(fs.readFileSync(scheme.path), 'utf-8');
+            try {
+                scheme.content = JSON.parse(fs.readFileSync(scheme.path), 'utf-8');
+            }
+            catch (e) {
+                scheme.content = [];
+            }
             scheme.content.push({
                 timestamp: 0,
                 name: '本地音乐',

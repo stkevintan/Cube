@@ -37,7 +37,6 @@ var category = {
             category.plts = value.sort(function (a, b) {
                 return a.timestamp - b.timestamp;//不能用小于号
             });
-            console.log(category.plts);
             category.recKey = [];//关闭时要保存的播放列表
             category.$.uls.empty();
             category.$.table.children('tbody').remove();
@@ -213,6 +212,18 @@ var category = {
                 account.isLogin && that.loadPlts.net();
                 global.emit('playerExit');
                 $span.text(origin);
+                var el = that.$.uls[0];
+                var sortable = Sortable.create(el, {
+                    onEnd: function (e) {
+                        var l = e.oldIndex;
+                        var r = e.newIndex;
+                        console.log(that.ID);
+                        if (l == that.ID)that.ID = r;
+                        else if (l < that.ID && r >= that.ID)that.ID--;
+                        else if (l > that.ID && r <= that.ID)that.ID++;
+                        console.log(l, r, that.ID);
+                    }
+                });
             });
         });
 
@@ -271,12 +282,11 @@ var category = {
              */
             id = id || -1;
             var badge = this.$.uls.find('.badge');
-            if (id >= 0 && id < this.plts.length) {
+            if (id >= 0 && id < this.length) {
                 badge.eq(id).text(this.plts[id].data.length);
             } else {
-                for (var i = 0; i < this.data.length; i++) {
-                    var o = this.data[i];
-                    $(badge[i]).text(o.length);
+                for (var i = 0; i < this.length; i++) {
+                    badge.eq(i).text(this.plts[i].data.length);
                 }
             }
         }, this);
