@@ -4,17 +4,18 @@
 
 version 1.1.0
 
-##播放音乐之前，请确定是否将chrome的`libffmpegsumo`拷贝到了nw.js文件夹中！
+####播放音乐之前，请确定是否将chrome的`libffmpegsumo`拷贝到了nw.js文件夹中！
 
 ###Feature  
 1. 设定本地音乐文件夹，播放本地音乐
 2. 搜索播放网络音乐
 3. 设置自定义播放列表，可以同时加入网络音乐和本地音乐
 4. 手机帐号或邮箱帐号登录
+5. UI响应式布局优化，实现mini模式
 
 ###TO DO    
 ~~1. 其他方式登录~~  
-2. UI响应式布局优化，实现mini模式  
+~~2. UI响应式布局优化，实现mini模式~~
 3. 托盘图标  
 4. 列表项目的自由拖动排序    
 5. 私人fm  
@@ -30,10 +31,13 @@ version 1.1.0
 ###Update  
 `cd /path/to/NetEaseMusic/ && git pull`  
 
-###Screenshots    
-<img src="http://7xiyak.com1.z0.glb.clouddn.com/s17.png" />  
-响应式布局:  
-<img src="http://7xiyak.com1.z0.glb.clouddn.com/s18.png" /> 
+###Screenshots
+主界面
+<img src="http://7xiyak.com1.z0.glb.clouddn.com/s23.png" />
+搜索音乐
+<img src="http://7xiyak.com1.z0.glb.clouddn.com/s24.png" />
+精简模式
+<img src="http://7xiyak.com1.z0.glb.clouddn.com/s25.png" />
 ###troubleshooting  
 遇到什么问题可以尝试一下删除项目主目录中data目录再重启。  
 

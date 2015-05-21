@@ -25,6 +25,11 @@ a {
     outline: none;
 }
 
+ul.win-control > li > a {
+    padding-left: 10px;
+    padding-right: 10px;
+}
+
 #page {
     padding-top: 50px;
     padding-bottom: 60px;
@@ -165,6 +170,7 @@ a {
 #footer {
     position: fixed;
     bottom: 0;
+    z-index: 1500;
     width: 100%;
     background: #262626;
 }
@@ -215,12 +221,15 @@ a {
     color: #fff;
     vertical-align: middle;
     text-align: center;
+    margin-top: 2px;
 }
 
 #footer .audio-adjust a:first-child {
     margin-right: 20px;
 }
-
+#vol-pop{
+    z-index:1501;
+}
 @media (min-width: 768px) {
     #footer .audio-control {
         text-align: right;
@@ -274,7 +283,7 @@ a {
     overflow: hidden;
     text-overflow: ellipsis;
     width: 100%;
-    padding-right: 76px;
+    padding-right: 85px;
 }
 
 #footer .audio-body .media-body .media-time {
@@ -282,6 +291,45 @@ a {
     position: absolute;
     right: 0;
     top: 10px;
+}
+
+#footer .mini-tool {
+    display: none;
+}
+
+/* 500*60 */
+@media (max-width: 550px) {
+    #page {
+        padding-top: 0;
+        padding-bottom: 0;
+    }
+
+    .navbar {
+        display: none;
+    }
+
+    #footer .mini-tool {
+        display: block;
+        float: left;
+        color: white;
+        margin-left: 20px;
+        line-height: 60px;
+        font-size: 16px;
+    }
+
+    #footer .audio-control {
+        float: left;
+    }
+
+    #footer .media {
+        float: left;
+        padding-left: 15px;
+        width: 350px;
+    }
+
+    #footer .audio-adjust {
+        display: none;
+    }
 }
 
 input[type="range"] {

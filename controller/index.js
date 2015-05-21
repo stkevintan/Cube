@@ -10,21 +10,6 @@ var NetEaseMusicAPI = require('./model/NetEaseMusicAPI');
 var api = new NetEaseMusicAPI();
 var utils = require('./model/utils');
 
-//定义开发者工具
-$('#dev').click(function () {
-    win.showDevTools(0);
-});
-
-//关闭程序时候保存修改
-win.on('close', function () {
-    win.hide();
-    console.log('save the config changes...');
-    fm.SaveChanges(category.recKey, category.plts, function (err) {
-        if (err)console.log('save failed', err);
-        else console.log('saved');
-        win.close(true);
-    });
-});
 var global = (function () {
     var w = $(window);
     return {
@@ -38,8 +23,7 @@ var global = (function () {
         }
     }
 })();
-
-
+win.setMinimumSize(510,60);
 nav.init();
 userinfo.init();
 account.init();

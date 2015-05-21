@@ -31,8 +31,21 @@
                     <li id="settings-nav"><a href="javascript:nav.setState(1)">设置</a></li>
                     <li id="about-nav"><a href="javascript:nav.setState(2)">关于</a></li>
                 </ul>
-
-                <ul class="nav navbar-nav navbar-right">
+                <!--<ul class="nav navbar-nav navbar-right win-control">-->
+                    <!--&lt;!&ndash;<li>&ndash;&gt;-->
+                        <!--&lt;!&ndash;<a href="javascript:nav.minimize()"><span class="glyphicon glyphicon-minus"></span></a>&ndash;&gt;-->
+                    <!--&lt;!&ndash;</li>&ndash;&gt;-->
+                    <!--<li>-->
+                        <!--<a href="javascript:nav.simplize()"><span class="glyphicon glyphicon-log-in"></span></a>-->
+                    <!--</li>-->
+                    <!--&lt;!&ndash;<li>&ndash;&gt;-->
+                        <!--&lt;!&ndash;<a href="javascript:nav.maximize()"><span class="glyphicon glyphicon-resize-full"></span></a>&ndash;&gt;-->
+                    <!--&lt;!&ndash;</li>&ndash;&gt;-->
+                    <!--&lt;!&ndash;<li>&ndash;&gt;-->
+                        <!--&lt;!&ndash;<a href="javascript:nav.close()"><span class="glyphicon glyphicon-remove"></span></a>&ndash;&gt;-->
+                    <!--&lt;!&ndash;</li>&ndash;&gt;-->
+                <!--</ul>-->
+                <div class="navbar-right">
                     <form class="navbar-form navbar-left" role="search">
                         <div class="input-group">
                             <input id="search" type="text" class="form-control" placeholder="搜索音乐...">
@@ -48,6 +61,9 @@
                             data-loading-text="更新中..."
                             class="btn btn-default navbar-btn">开发人员工具
                     </button>
+                    <a class="btn btn-default navbar-btn"href="javascript:nav.simplize()">
+                        简洁模式
+                    </a>
                     <!-- Single button -->
                     <div class="btn-group navbar-btn">
                         <button type="button" class="btn btn-default dropdown-toggle" data-toggle="dropdown"
@@ -60,7 +76,11 @@
                             <li id="menugo-1"><a href="javascript:nav.clickMenu(1)">注销</a></li>
                         </ul>
                     </div>
-                </ul>
+
+
+
+                </div>
+
             </div>
             <!-- /.navbar-collapse -->
         </div>
@@ -211,6 +231,9 @@
                             <span class="glyphicon glyphicon-repeat"></span>
                         </a>
                     </div>
+                </div>
+                <div class="mini-tool">
+                    <a href="javascript:nav.simplize()"><span class="glyphicon glyphicon-new-window"></span></a>
                 </div>
             </div>
         </div>

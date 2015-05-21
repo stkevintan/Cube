@@ -14,7 +14,13 @@ var nav = {
             tabs: ['#main', '#settings', '#about'],
             search: '#search'
         };
+        this.WinMode = {
+            isSimp: 0,
+            width: null,
+            height: null
+        }
         this.listen(this);
+        this.addGlobalEvent();
     },
     /**
      * @description switch to "id"th tab
@@ -50,7 +56,42 @@ var nav = {
             category.setState();
         });
     },
-
+    close: function () {
+        win.hide();
+        console.log('save the config changes...');
+        fm.SaveChanges(category.recKey, category.plts, function (err) {
+            if (err)console.log('save failed', err);
+            else console.log('saved');
+            win.close(true);
+        });
+    },
+    minimize: function () {
+        win.minimize();
+    },
+    maximize: function () {
+        if (this.WinMode.isMaxi) {
+            win.unmaximize();
+        } else {
+            win.maximize();
+        }
+        this.WinMode.isMaxi ^= 1;
+    },
+    //this is a bug of nw.js. temporary solution.
+    simplize: function () {
+        if (this.WinMode.isSimp) {
+            win.setMaximumSize(10000, 10000);
+            win.width = this.WinMode.width;
+            win.resizeTo(this.WinMode.width, this.WinMode.height);
+        } else {
+            win.unmaximize();
+            this.WinMode.width = win.width;
+            this.WinMode.height = win.height;
+            win.setMaximumSize(510, 60);
+            win.width = 510;
+            win.height = 60;
+        }
+        this.WinMode.isSimp ^= 1;
+    },
     /**
      * @description set menu display state
      *
@@ -89,5 +130,19 @@ var nav = {
                 that.search();
             }
         });
+        $('#dev').click(function () {
+            win.showDevTools(0);
+        });
+        win.on('close', function () {
+            win.hide();
+            console.log('save the config changes...');
+            fm.SaveChanges(category.recKey, category.plts, function (err) {
+                if (err)console.log('save failed', err);
+                else console.log('saved');
+                win.close(true);
+            });
+        });
+    },
+    addGlobalEvent: function () {
     }
 }
