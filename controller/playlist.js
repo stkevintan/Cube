@@ -103,7 +103,7 @@ var playlist = {
             if (t)o.text(Number(t) - 1);
         });
         delete
-        this.length--;
+            this.length--;
         global.emit('rfshBadge');
 
     },
@@ -166,9 +166,10 @@ var playlist = {
                 }
                 break;
             case 3:
-                id = Math.round(Math.random() * len);
+                id = Math.round(Math.random() * this.length);
                 break;
         }
+        console.log(id);
         this.setState(id);
         //获得真实的序号
         var $tr = this.$.tr().eq(id);

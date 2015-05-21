@@ -22,7 +22,8 @@ var controls = {
             volume: $('#volume'),
             songPic: $('#song-pic')
         }
-        this.ID = 0;
+        this.ID = 1;
+        this.order(this.ID);
         this.playlist = null;
         this.setState(-1);
         this.listen(this);
@@ -147,7 +148,7 @@ var controls = {
             switch (msg) {
                 case 'ended':
                     global.emit('progressHalt');
-                    global.emit('playerPlay', that.ID, that.ID ? 2 : 0);
+                    global.emit('playerPlay', that.ID ? 2 : 0, that.ID);
                     break;
                 case 'play':
                     global.emit('progressMove');
