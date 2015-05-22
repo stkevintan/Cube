@@ -4,8 +4,6 @@
 
 version 1.1.0
 
-####播放音乐之前，请确定是否将chrome的`libffmpegsumo`拷贝到了nw.js文件夹中！
-
 ###Feature  
 1. 设定本地音乐文件夹，播放本地音乐
 2. 搜索播放网络音乐
@@ -27,7 +25,10 @@ version 1.1.0
 2.拷贝chrome安装目录下的`libffmpegsumo.so`(windows下是`libffmpegsumo.dll`)至nw.js的安装目录下。        
 3.下载项目：`git clone https://github.com/stkevintan/NetEaseMusic.git`    
 4. 运行： `nw /path/to/NetEaseMusic/`  
-
+####Notice  
+<b>`libffmpegsumo`的版本一定要与nw.js版本对应，否则会出现问题。</b> 
+比如：nw.js v0.12.0对应chrome 41.0.2272.76
+近期考虑对其进行打包
 ###Update  
 `cd /path/to/NetEaseMusic/ && git pull`  
 
