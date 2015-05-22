@@ -22,8 +22,11 @@ version 1.1.0
 5. 私人fm  
 6. 歌词  
 
-
 ###Install  
+####Package
+Linux :[x64](http://7xiyak.com1.z0.dglb.clouddn.com/ReleasenwMusicBox_linux64.zip)   
+下载后解压，运行其中的install.sh
+####Manual
 1.首先安装[nw.js](https://github.com/nwjs/nw.js)  
 2.拷贝chrome安装目录下的`libffmpegsumo.so`(windows下是`libffmpegsumo.dll`)至nw.js的安装目录下。        
 3.下载项目：`git clone https://github.com/stkevintan/NetEaseMusic.git`    
