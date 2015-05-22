@@ -24,7 +24,7 @@ version 1.1.0
 
 ###Install  
 ####Package
-Linux :[x64](http://7xiyak.com1.z0.dglb.clouddn.com/ReleasenwMusicBox_linux64.zip)   
+Linux :[x64](http://7xiyak.com1.z0.glb.clouddn.com/ReleasenwMusicBox_linux64.zip)   
 下载后解压，运行其中的install.sh
 ####Manual
 1.首先安装[nw.js](https://github.com/nwjs/nw.js)  
