@@ -3,8 +3,11 @@
 使用html5和node.js构建的网易云音乐的跨平台第三方客户端。    
 
 欢迎大神一起开发。  
-
-version 1.1.0
+###Release  
+__version 1.1.0__  
+Linux :[x64](http://7xiyak.com1.z0.glb.clouddn.com/ReleasenwMusicBox_linux64.zip)   
+下载后解压，运行install.sh即可自动创建桌面图标    
+其他平台参考`Manual Install`  
 
 ###Feature  
 1. 设定本地音乐文件夹，播放本地音乐  
@@ -22,11 +25,7 @@ version 1.1.0
 5. 私人fm  
 6. 歌词  
 
-###Install  
-####Package
-Linux :[x64](http://7xiyak.com1.z0.glb.clouddn.com/ReleasenwMusicBox_linux64.zip)   
-下载后解压，运行其中的install.sh
-####Manual
+###Manual Install  
 1.首先安装[nw.js](https://github.com/nwjs/nw.js)  
 2.拷贝chrome安装目录下的`libffmpegsumo.so`(windows下是`libffmpegsumo.dll`)至nw.js的安装目录下。        
 3.下载项目：`git clone https://github.com/stkevintan/NetEaseMusic.git`    
@@ -34,7 +33,8 @@ Linux :[x64](http://7xiyak.com1.z0.glb.clouddn.com/ReleasenwMusicBox_linux64.zip
 ####Notice  
 <b>`libffmpegsumo`的版本一定要与nw.js版本对应，否则会出现问题。</b>   
 比如：nw.js v0.12.0对应chrome 41.0.2272.76  
-近期考虑对其进行打包
+
+
 ###Update  
 `cd /path/to/NetEaseMusic/ && git pull`  
 
