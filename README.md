@@ -26,8 +26,8 @@ version 1.1.0
 3.下载项目：`git clone https://github.com/stkevintan/NetEaseMusic.git`    
 4. 运行： `nw /path/to/NetEaseMusic/`  
 ####Notice  
-<b>`libffmpegsumo`的版本一定要与nw.js版本对应，否则会出现问题。</b> 
-比如：nw.js v0.12.0对应chrome 41.0.2272.76
+<b>`libffmpegsumo`的版本一定要与nw.js版本对应，否则会出现问题。</b>   
+比如：nw.js v0.12.0对应chrome 41.0.2272.76  
 近期考虑对其进行打包
 ###Update  
 `cd /path/to/NetEaseMusic/ && git pull`  
