@@ -5,7 +5,8 @@
 欢迎大神一起开发。  
 ###Release  
 __version 1.1.0__  
-Linux :[x64](http://7xiyak.com1.z0.glb.clouddn.com/appnwMusicBox_linux64.zip)   
+Linux :[x64](http://7xiyak.com1.z0.glb.clouddn.com/1.1.0nwMusicBox_linux64.zip)  
+Windows : [x64](http://7xiyak.com1.z0.glb.clouddn.com/1.1.0nwMusicBox_win64.zip)  
 下载后解压，运行install.sh即可自动创建桌面图标    
 其他平台参考`Manual Install`  
 
