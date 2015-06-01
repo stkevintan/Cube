@@ -2,7 +2,6 @@
 
 使用html5和node.js构建的网易云音乐的跨平台第三方客户端。    
 
-欢迎大神一起开发。  
 ###Release  
 __version 1.1.0__  
 Linux :[x64](http://7xiyak.com1.z0.glb.clouddn.com/1.1.0nwMusicBox_linux64.zip)  
