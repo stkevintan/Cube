@@ -1,3 +1,5 @@
 music/
 data/
 .idea/
+bin/
+*.exe

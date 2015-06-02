@@ -23,7 +23,6 @@ var global = (function () {
         }
     }
 })();
-win.setMinimumSize(510,60);
 nav.init();
 userinfo.init();
 account.init();
@@ -39,9 +38,9 @@ if (userData) {
 } else {
     account.setState();
 }
-
 //table屏蔽选中
 $('table').on('selectstart', function (e) {
     e.preventDefault();
 });
+win.setMinimumSize(510,60);
 

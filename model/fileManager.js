@@ -3,7 +3,6 @@
  */
 var fs = require('fs');
 var path = require('path');
-var async = require('async');
 
 var sup = ['.mp3', '.ogg', '.wav'];
 
@@ -33,7 +32,7 @@ var fileManager = function () {
         config.isChanged = 1;
         if (e.errno = -2) {//data目录不存在
             fs.mkdir(toAbsolute('data'), function (err) {
-                console.log(err);
+                console.log('mkdir "data" error', err);
             });
         } else {
             console.log(e, e.message);
@@ -55,7 +54,6 @@ fileManager.prototype.SaveChanges = function (recKey, plts, callback) {
         if (j >= plts.length)break;
         scheme.content.push(plts[j]);
     }
-    console.log(scheme.content);
     fs.writeFile(scheme.path,
         JSON.stringify(scheme.content),
         function (err) {
@@ -88,6 +86,18 @@ fileManager.prototype.setSearchLimit = function (limit) {
 }
 
 fileManager.prototype.getScheme = function () {
+    var data = this.loadMusicDir();
+    try {
+        scheme.content = JSON.parse(fs.readFileSync(scheme.path), 'utf-8');
+    }
+    catch (e) {
+        scheme.content = [];
+    }
+    scheme.content.push({
+        timestamp: 0,
+        name: '本地音乐',
+        data: data
+    });
     return scheme.content;
 }
 fileManager.prototype.setUserData = function (data) {
@@ -98,64 +108,42 @@ fileManager.prototype.getUserData = function () {
     return config.content.userData;
 }
 
-fileManager.prototype.loadMusicDir = function (callback) {
-    var musicDir = this.getMusicDir();
-    async.waterfall([
-        function (callback) {
-            fs.exists(musicDir, function (ok) {
-                callback(null, ok);
-            });
-        },
-        function (ok, callback) {
-            if (ok)callback();
-            else {
-                fs.mkdir(musicDir, function (err) {
-                    callback(err);
-                });
-            }
-        },
-        function (callback) {
-            fs.readdir(musicDir, function (err, files) {
-                err && callback(err);
-                files = files.filter(function (f) {
-                    var ext = path.extname(f);
-                    for (var i = 0; i < sup.length; i++) {
-                        if (ext == sup[i])return true;
-                    }
-                    return false;
-                });
-                var songList = [];
-                for (var i = 0; i < files.length; i++) {
-                    var file = files[i];
-                    var song = {
-                        "title": file.split('.')[0],
-                        "artist": "",
-                        "album": "",
-                        "src": path.join(musicDir, file)
-                    };
-                    songList.push(song);
-                }
-                callback(null, songList);
-            });
-        }
-    ], function (err, result) {
-        if (err) {
-            console.log('get local file failed!', err);
-        } else {
-            try {
-                scheme.content = JSON.parse(fs.readFileSync(scheme.path), 'utf-8');
-            }
-            catch (e) {
-                scheme.content = [];
-            }
-            scheme.content.push({
-                timestamp: 0,
-                name: '本地音乐',
-                data: result
-            });
-        }
-        callback();
+fileManager.prototype.loadMusicDir = function (musicDir) {
+    var musicDir = musicDir || this.getMusicDir();
+    var ret = [];
+    var files = [];
+    try {
+        files = fs.readdirSync(musicDir);
+    } catch (e) {
+        fs.mkdirSync(musicDir);
+    }
+    var that = this;
+    files = files.map(function (f) {
+        return path.join(musicDir, f);
     });
+    files = files.filter(function (f) {
+        var stat = fs.statSync(f);
+        if (stat && stat.isDirectory()) {
+            ret = ret.concat(that.loadMusicDir(f));
+            return false;
+        }
+        var ext = path.extname(f);
+        for (var i = 0; i < sup.length; i++) {
+            if (ext == sup[i])return true;
+        }
+        return false;
+    });
+    for (var i = 0; i < files.length; i++) {
+        var f = files[i];
+        var song = {
+            "title": path.basename(f, f.substr(f.lastIndexOf('.'))),
+            "artist": "",
+            "album": "",
+            "src": f
+        };
+        ret.push(song);
+    }
+    return ret;
 }
 var fm = new fileManager();//单实例
 module.exports = fm;

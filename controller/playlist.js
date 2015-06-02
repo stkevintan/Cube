@@ -65,14 +65,13 @@ var playlist = {
             + '<a href="javascript:void(0);"><span class="glyphicon glyphicon-trash"></span></a></td>';
         str += '</tr>';
         this.$.body.append(str);
+        this.length++;
         if (id >= this.data.length) {
             this.data.push(dataItem);
             //更新标记
             global.emit('rfshBadge');
         }
-        this.length++;
         this.listen(this);
-
     },
     /**
      * @description remove "id"th song from the playlist
@@ -169,7 +168,6 @@ var playlist = {
                 id = Math.round(Math.random() * this.length);
                 break;
         }
-        console.log(id);
         this.setState(id);
         //获得真实的序号
         var $tr = this.$.tr().eq(id);
@@ -197,7 +195,7 @@ var playlist = {
             var dropdown = $tr.find('ul.dropdown-menu');
             for (var i = 0; i < category.plts.length; i++) {
                 var cur = category.plts[i];
-                if (cur.ts && cur.ts != that.ts) {
+                if (cur.timestamp && cur.timestamp != that.timestamp) {
                     menuStuff += '<li role="presentation">'
                         + '<a role="menuitem" tabindex="-1" href="javascript:0">'
                         + cur.name
@@ -210,18 +208,17 @@ var playlist = {
             }
             dropdown.html(menuStuff);
             //绑定新生成的菜单项的单击行为
-            var it = $(this);
             dropdown.children('li').click(function () {
                 //获得目标播放列表对象
                 var itName = $(this).text();
                 var itID = -1;
-                category.$.lis().each(function (i) {
-                    if ($(this).children('a').text() == itName) {
+                category.$.lis().children('a').each(function (i) {
+                    if ($(this).children('div.name').text() == itName) {
                         itID = i;
                     }
                 });
                 var itList = category.get$plt(itID);
-                var realID = it.data('target');
+                var realID = $tr.data('target');
                 if (itList != null) {
                     //添加当前歌曲到指定播放列表
                     itList.addItem(that.data[realID]);

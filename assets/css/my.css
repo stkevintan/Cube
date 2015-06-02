@@ -179,6 +179,9 @@ ul.win-control > li > a {
 #page .list table a:focus {
     color: #d9534f;
 }
+#page .list table > thead {
+    white-space: nowrap;
+}
 
 #page .list table > tbody > tr > td:last-child {
     width: 81px;

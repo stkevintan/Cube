@@ -30,7 +30,8 @@ var category = {
          *
          * @param {Array} value - data of playlists
          */
-        local: function (value) {
+        local: function () {
+            var value=fm.getScheme();
             category.ID = -1;
             category.$plts = {};
             //通过时间戳排序
@@ -56,6 +57,11 @@ var category = {
                 if (err) throw 'load net playlist error:' + err;
                 for (var i = 0; i < raw.length; i++) {
                     var o = raw[i];
+                    if(category.plts.map(function(o){
+                            return o.name;
+                        }).indexOf(o.name)!=-1){
+                        o.name+='（网络）'
+                    }
                     api.playlistDetail(o.name, o.id, function (err, res) {
                         if (err)throw err;
                         category.addItem({
@@ -92,7 +98,7 @@ var category = {
     addItem: function (stuff, isTemp) {
         //change view (html)
         var ts = stuff.timestamp;
-        if (typeof ts === 'undefined') {
+        if (utils.isUndefined(ts)) {
             //没有时间戳
             ts = stuff.timestamp = (new Date()).getTime();
             this.plts.push(stuff);
@@ -206,24 +212,20 @@ var category = {
             var $span = $('#refresh');
             var origin = $span.text();
             $span.text(origin + '加载中...');
-            fm.loadMusicDir(function () {
-                that.loadPlts.local(fm.getScheme());
-                that.setState(0);
-                account.isLogin && that.loadPlts.net();
-                global.emit('playerExit');
-                $span.text(origin);
-                var el = that.$.uls[0];
-                var sortable = Sortable.create(el, {
-                    onEnd: function (e) {
-                        var l = e.oldIndex;
-                        var r = e.newIndex;
-                        console.log(that.ID);
-                        if (l == that.ID)that.ID = r;
-                        else if (l < that.ID && r >= that.ID)that.ID--;
-                        else if (l > that.ID && r <= that.ID)that.ID++;
-                        console.log(l, r, that.ID);
-                    }
-                });
+            that.loadPlts.local();
+            that.setState(0);
+            account.isLogin && that.loadPlts.net();
+            global.emit('playerExit');
+            $span.text(origin);
+            var el = that.$.uls[0];
+            Sortable.create(el, {
+                onEnd: function (e) {
+                    var l = e.oldIndex;
+                    var r = e.newIndex;
+                    if (l == that.ID)that.ID = r;
+                    else if (l < that.ID && r >= that.ID)that.ID--;
+                    else if (l > that.ID && r <= that.ID)that.ID++;
+                }
             });
         });
 

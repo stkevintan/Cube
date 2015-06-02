@@ -1,4 +1,5 @@
 var request = require('superagent');
+var process = require('process');
 var crypto = require('crypto');
 var fm = require('./fileManager');
 var userData = fm.getUserData();
@@ -157,18 +158,21 @@ NetEaseMusicAPI.prototype = {
             }).join();
             data.push(o);
         }
-        // >100时分批查询
-        var num = Math.ceil(idArray.length / 100);
-        for (var k = 0; k < num; k++) {
-            var idTmp = idArray.slice(k * 100, Math.min((k + 1) * 100, idArray.length));
-            this.songsDetail(idTmp, function (err, songs) {
-                for (var i = 0; i < songs.length; i++) {
-                    var index = idMap[songs[i].id];
-                    data[index].src = songs[i].mp3Url;
-                    data[index].pic = songs[i].album.picUrl;
-                }
-            });
-        }
+        var that= this;
+        process.nextTick(function(){
+            // >100时分批查询
+            var num = Math.ceil(idArray.length / 100);
+            for (var k = 0; k < num; k++) {
+                var idTmp = idArray.slice(k * 100, Math.min((k + 1) * 100, idArray.length));
+                that.songsDetail(idTmp, function (err, songs) {
+                    for (var i = 0; i < songs.length; i++) {
+                        var index = idMap[songs[i].id];
+                        data[index].src = songs[i].mp3Url;
+                        data[index].pic = songs[i].album.picUrl;
+                    }
+                });
+            }
+        });
         return data;
     },
     songsDetail: function (ids, callback) {
