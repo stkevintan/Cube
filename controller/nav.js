@@ -20,7 +20,6 @@ var nav = {
             height: null
         }
         this.listen(this);
-        this.addGlobalEvent();
     },
     /**
      * @description switch to "id"th tab
@@ -142,7 +141,5 @@ var nav = {
                 win.close(true);
             });
         });
-    },
-    addGlobalEvent: function () {
     }
 }

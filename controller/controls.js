@@ -27,10 +27,10 @@ var controls = {
         this.playlist = null;
         this.setState(-1);
         this.listen(this);
-        this.addGlobalEvent();
+        this.addEvents();
     },
-    addGlobalEvent: function () {
-        global.on('playerPlay', function () {
+    addEvents: function () {
+        Event.on('playerPlay', function () {
             if (this.playlist == null || this.playlist.ID == -1) {
                 //如果当前列表没有选中
                 return;
@@ -42,17 +42,17 @@ var controls = {
             this.$.pause.show();
             this.player.play();
         }, this);
-        global.on('playerPause', function () {
+        Event.on('playerPause', function () {
             this.$.play.show();
             this.$.pause.hide();
             this.player.pause();
         }, this);
-        global.on('playerStop', function () {
-            global.emit('playerPause');
+        Event.on('playerStop', function () {
+            Event.emit('playerPause');
             this.setState(0, 0);
         }, this);
-        global.on('playerExit', function (msg) {
-            global.emit('playerStop');
+        Event.on('playerExit', function (msg) {
+            Event.emit('playerStop');
             this.setState(-1, msg);
             this.playlist = null;
         }, this);
@@ -61,13 +61,13 @@ var controls = {
      * play next music on the playlist
      */
     forward: function () {
-        global.emit('playerPlay', 2, 1);
+        Event.emit('playerPlay', 2, 1);
     },
     /**
      * play pre music on the playlist
      */
     backward: function () {
-        global.emit('playerPlay', 2, -1);
+        Event.emit('playerPlay', 2, -1);
     },
     /**
      * set cur mode to the 'mode'th playMode:single-repeat->list-repeat->no-repeat->random
@@ -114,7 +114,7 @@ var controls = {
                 this.setState(1, _data);
                 break;
             default:
-                global.emit('playerStop');
+                Event.emit('playerStop');
                 data = data || "未选择歌曲";
                 this.$.songPic.attr('src', 'assets/img/Ever%20Eternity.jpg');
                 progress.setState(0, 0, data);
@@ -147,17 +147,17 @@ var controls = {
         this.player.event(function (msg) {
             switch (msg) {
                 case 'ended':
-                    global.emit('progressHalt');
-                    global.emit('playerPlay', that.ID ? 2 : 0, that.ID);
+                    Event.emit('progressHalt');
+                    Event.emit('playerPlay', that.ID ? 2 : 0, that.ID);
                     break;
                 case 'play':
-                    global.emit('progressMove');
+                    Event.emit('progressMove');
                     break;
                 case 'error':
-                    global.emit('playerExit', '糟糕，该文件路径失效了！');
+                    Event.emit('playerExit', '糟糕，该文件路径失效了！');
                     break;
                 case 'pause':
-                    global.emit('progressHalt');
+                    Event.emit('progressHalt');
                     break;
                 default:
                     //音频元数据加载完成，初始化progress

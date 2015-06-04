@@ -13,10 +13,10 @@ var playlist = {
      * @param {number} ts - timestamp of this playlist
      * @param {array} data - songs object array
      */
-    init: function (ts, data) {
-        this.ts = ts;
+    init: function (timestamp, data) {
+        this.timestamp = timestamp;
         this.$ = {
-            body: category.$.table.children('tbody#_' + ts).first(),
+            body: category.$.table.children('tbody#_' + timestamp).first(),
             tr: function () {
                 return this.body.children('tr');
             }
@@ -69,7 +69,7 @@ var playlist = {
         if (id >= this.data.length) {
             this.data.push(dataItem);
             //更新标记
-            global.emit('rfshBadge');
+            Event.emit('rfshBadge');
         }
         this.listen(this);
     },
@@ -84,11 +84,11 @@ var playlist = {
     removeItem: function (id) {
 
         if (id < 0 || id > this.length)throw 'index out of range';
-        if (!this.ts)throw 'local file cannot remove';
+        if (!this.timestamp)throw 'local file cannot remove';
 
         if (id == this.ID) {
             this.ID = -1;
-            global.emit('playerExit');
+            Event.emit('playerExit');
         }
         if (this.ID > id) this.ID--;
         var Tr = this.$.tr();
@@ -103,7 +103,7 @@ var playlist = {
         });
         delete
             this.length--;
-        global.emit('rfshBadge');
+        Event.emit('rfshBadge');
 
     },
     /**
@@ -160,7 +160,7 @@ var playlist = {
             case 2:
                 id = this.ID + 1;
                 if (id == this.length) {
-                    global.emit('playerExit');
+                    Event.emit('playerExit');
                     return;
                 }
                 break;
@@ -186,7 +186,7 @@ var playlist = {
             var dataItem = that.next(0, $(this).index());
             //更新controls的playlist
             controls.playlist = that;
-            global.emit('playerPlay', 1, dataItem);
+            Event.emit('playerPlay', 1, dataItem);
         });
         //单击‘+’符号，添加到其他播放列表
         $tr.find('span.glyphicon-plus').click(function (e) {

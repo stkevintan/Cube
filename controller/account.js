@@ -16,6 +16,17 @@ var account = {
         }
         this.isLogin = false;
         this.listen(this);
+        this.load();
+    },
+    load: function () {
+        //获得登录信息
+        var userData = fm.getUserData();
+        if (userData) {
+            var profile = userData.profile;
+            this.setState(profile);
+        } else {
+            this.setState();
+        }
     },
     unsign: function () {
         fm.setUserData(null);
@@ -34,7 +45,9 @@ var account = {
         this.$.label.text('');
         this.$.login.modal('hide');
         this.setState(data);
-        category.loadPlts.net();
+        category.loadPlts({
+            net: true
+        });
     },
     /**
      * @description set the User Profile by "data"
@@ -58,6 +71,7 @@ var account = {
     },
     listen: function (that) {
         this.$.submit.click(function () {
+            var $btn = $(this).button('loading');
             var phone = that.$.phone.val();
             var password = that.$.password.val();
             api.login(phone, password, function (err, data) {
@@ -67,6 +81,7 @@ var account = {
                     that.loginSuccess(data);
                 }
             });
+            $btn.button('reset');
         });
         this.$.phone.keydown(function (e) {
             if (e.which == 13) {

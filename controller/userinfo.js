@@ -11,8 +11,11 @@ var userinfo = {
             navSidebar: $('.nav-sidebar')
         }
         this.setState();
-        this.$.navSidebar.height($('.sidebar').height() - $('.userinfo').height() - $('.nav-plus').height());
         this.listen(this);
+        this.adjust();
+    },
+    adjust: function () {
+        this.$.navSidebar.height($('.sidebar').height() - $('.userinfo').height() - $('.nav-plus').height());
     },
     setState: function (name, src) {
         this.name = name || "未登录";
@@ -22,8 +25,7 @@ var userinfo = {
     },
     listen: function (that) {
         $(window).resize(function () {
-            that.$.navSidebar.height($('.sidebar').height() - $('.userinfo').height() - $('.nav-plus').height());
-        })
+            that.adjust();
+        });
     }
-
 }

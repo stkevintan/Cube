@@ -2,17 +2,26 @@
  * Created by kevin on 15-5-5.
  */
 var fs = require('fs');
+var async = require('async');
 var path = require('path');
-
+var PltM = require('./PlaylistModel');
 var sup = ['.mp3', '.ogg', '.wav'];
 
+function modefy(arr) {
+    arr = arr.map(function (o) {
+        return new PltM(o);
+    });
+    return arr;
+}
 function toAbsolute() {
     dir = path.join.apply(null, arguments);
     if (path.isAbsolute(dir))return dir;
     return path.resolve(__dirname, '../' + dir);
 }
-DefaultMusicDir = toAbsolute('music');
-DefaultSearchLimit = 20;
+
+var DefaultMusicDir = toAbsolute('music');
+var DefaultSearchLimit = 20;
+var RECURSEARCH = false;
 
 var config = {
     path: toAbsolute('data', 'config.json'),
@@ -84,21 +93,28 @@ fileManager.prototype.setSearchLimit = function (limit) {
         config.isChanged = 1;
     }
 }
+fileManager.prototype.getLocal = function (callback) {
 
-fileManager.prototype.getScheme = function () {
-    var data = this.loadMusicDir();
-    try {
-        scheme.content = JSON.parse(fs.readFileSync(scheme.path), 'utf-8');
-    }
-    catch (e) {
-        scheme.content = [];
-    }
-    scheme.content.push({
-        timestamp: 0,
-        name: '本地音乐',
-        data: data
+    this.loadMusicDir(null, function (err, songList) {
+
+        if (err) {
+            callback(err);
+            console.log('error occur at getLocal', err);
+        }
+        else callback(null, modefy([{
+            timestamp: 0,
+            name: '本地音乐',
+            songList: songList,
+            type: 'local'
+        }]));
     });
-    return scheme.content;
+}
+fileManager.prototype.getScheme = function (callback) {
+    fs.readFile(scheme.path, 'utf-8', function (err, contents) {
+        console.log('getScheme', contents);
+        if (err)callback(err);
+        else callback(null, modefy(JSON.parse(contents)));
+    });
 }
 fileManager.prototype.setUserData = function (data) {
     config.content.userData = data;
@@ -108,7 +124,67 @@ fileManager.prototype.getUserData = function () {
     return config.content.userData;
 }
 
-fileManager.prototype.loadMusicDir = function (musicDir) {
+fileManager.prototype.loadMusicDir = function (musicDir, callback) {
+    musicDir = musicDir || this.getMusicDir();
+    var ret = [];
+    fs.readdir(musicDir, handleFiles);
+
+    function handleFiles(err, files) {
+        if (err) {
+            callback(null, []);
+            console.log("dir doesn't exist,try to create");
+            fs.mkdir(musicDir, function (err) {
+                err && console.log('can not create dir at', musicDir, err);
+            });
+            return;
+        }
+        var that = this;
+        files = files.map(function (f) {
+            return path.join(musicDir, f);
+        });
+
+        function rcSearch(f, callback) {
+            if (!RECURSEARCH) {
+                callback();
+                return;
+            }
+            fs.stat(f, function (err, stat) {
+                if (stat && stat.isDirectory()) {
+                    that.loadMusicDir(f, function (err, tmpRet) {
+                        if (err) {
+                            callback(err);
+                        } else {
+                            ret.concat(tmpRet);
+                            callback();
+                        }
+                    });
+                }
+            });
+        }
+
+        async.each(files, rcSearch, function (err) {
+            if (err) {
+                callback(err);
+                return;
+            }
+            files.forEach(function (f) {
+                var ext = path.extname(f);
+                if (sup.indexOf(ext) == -1)return;
+                var song = {
+                    "title": path.basename(f, f.substr(f.lastIndexOf('.'))),
+                    "artist": "",
+                    "album": "",
+                    "src": f
+                };
+                ret.push(song);
+            });
+            callback(null, ret);
+        });
+    }
+}
+
+
+fileManager.prototype.loadMusicDirSync = function (musicDir) {
     var musicDir = musicDir || this.getMusicDir();
     var ret = [];
     var files = [];
@@ -145,5 +221,4 @@ fileManager.prototype.loadMusicDir = function (musicDir) {
     }
     return ret;
 }
-var fm = new fileManager();//单实例
-module.exports = fm;
+module.exports = new fileManager();

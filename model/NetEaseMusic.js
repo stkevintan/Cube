@@ -1,10 +1,12 @@
 var request = require('superagent');
 var process = require('process');
+var async = require('async');
 var crypto = require('crypto');
-var fm = require('./fileManager');
+var fm = require('./FileManager');
+var PltM = require('./PlaylistModel');
 var userData = fm.getUserData();
 
-var NetEaseMusicAPI = function () {
+var NetEaseMusic = function () {
     this.header = {
         'Accept': '*/*',
         'Accept-Encoding': 'gzip,deflate,sdch',
@@ -19,7 +21,7 @@ var NetEaseMusicAPI = function () {
         'appver': '1.5.2'
     }
 }
-NetEaseMusicAPI.prototype = {
+NetEaseMusic.prototype = {
     httpRequest: function (method, url, data, callback) {
         var header = this.header;
         if (method == 'post') {
@@ -67,11 +69,45 @@ NetEaseMusicAPI.prototype = {
             }
         });
     },
+    getNet: function (callback) {
+        var that = this;
+        this.userPlaylist(function (err, playlists) {
+            if (err) {
+                callback('an error called from getNet' + err);
+            }
+            async.map(playlists, function (item, callback) {
+                that.playlistDetail(item.id, function (err, songList) {
+                    if (err) {
+                        callback(err);
+                        return;
+                    }
+
+                    var pltm = new PltM({
+                        name: item.name,
+                        type: 'net',
+                        songList: songList
+                    });
+                    callback(null, pltm);
+                });
+            }, function (err, results) {
+                if (err) {
+                    callback('an error called from getNet' + err);
+                    return;
+                }
+                callback(null, results);
+            })
+        })
+    },
     userPlaylist: function () {
         // [uid],[offset],[limit],callback
         var argv = [].slice.call(arguments);
         var callback = argv.pop();
-        var uid = argv[0] || userData.account.id;
+        try {
+            var uid = argv[0] || userData.account.id;
+        } catch (e) {
+            callback('user data not found or invalid! please login first!');
+            return;
+        }
         var offset = argv[1] || 0;
         var limit = argv[2] || 100;
         var url = 'http://music.163.com/api/user/playlist/';
@@ -93,7 +129,7 @@ NetEaseMusicAPI.prototype = {
             }
         })
     },
-    playlistDetail: function (name, id, callback) {
+    playlistDetail: function (id, callback) {
         var url = 'http://music.163.com/api/playlist/detail';
         var data = {
             "id": id
@@ -104,7 +140,7 @@ NetEaseMusicAPI.prototype = {
             else {
                 res = JSON.parse(res.text);
                 if (res.code != 200)callback('playlist详情失败');
-                else callback(null, {name: name, data: that.transfer(res.result.tracks)});
+                else callback(null, that.transfer(res.result.tracks));
             }
         });
     },
@@ -143,7 +179,7 @@ NetEaseMusicAPI.prototype = {
         });
     },
     transfer: function (results) {
-        var data = [];
+        var songList = [];
         var idArray = [];
         var idMap = {};
         for (var i = 0; i < results.length; i++) {
@@ -156,10 +192,10 @@ NetEaseMusicAPI.prototype = {
             o.artist = r.artists.map(function (v) {
                 return v.name;
             }).join();
-            data.push(o);
+            songList.push(o);
         }
-        var that= this;
-        process.nextTick(function(){
+        var that = this;
+        process.nextTick(function () {
             // >100时分批查询
             var num = Math.ceil(idArray.length / 100);
             for (var k = 0; k < num; k++) {
@@ -167,13 +203,13 @@ NetEaseMusicAPI.prototype = {
                 that.songsDetail(idTmp, function (err, songs) {
                     for (var i = 0; i < songs.length; i++) {
                         var index = idMap[songs[i].id];
-                        data[index].src = songs[i].mp3Url;
-                        data[index].pic = songs[i].album.picUrl;
+                        songList[index].src = songs[i].mp3Url;
+                        songList[index].pic = songs[i].album.picUrl;
                     }
                 });
             }
         });
-        return data;
+        return songList;
     },
     songsDetail: function (ids, callback) {
         var url = 'http://music.163.com/api/song/detail';
@@ -188,5 +224,4 @@ NetEaseMusicAPI.prototype = {
         });
     }
 }
-
-module.exports = NetEaseMusicAPI;
+module.exports = new NetEaseMusic();

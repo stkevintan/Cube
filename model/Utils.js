@@ -16,13 +16,13 @@ exports.binarySearch = function (array, value, compare) {
 }
 var isType = function (name) {
     return function (v) {
-        return typeof v === name;
+        return Object.prototype.toString.call(v) === '[object ' + name + ']';
     }
 }
-
-exports.isNumber = isType('number');
-exports.isObject = isType('object');
-exports.isFunction = isType('function');
-exports.isString = isType('string');
-exports.isUndefined = isType('undefined');
-exports.isBoolean = isType('boolean');
+exports.isNumber = isType('Number');
+exports.isObject = isType('Object');
+exports.isFunction = isType('Function');
+exports.isString = isType('String');
+exports.isUndefined = isType('Undefined');
+exports.isBoolean = isType('Boolean');
+exports.isArray = isType('Array');

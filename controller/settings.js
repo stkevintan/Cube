@@ -2,6 +2,7 @@
  * Created by kevin on 15-5-8.
  */
 //设置页面行为
+var fm = require('./model/FileManager');
 var settings = {
     init: function () {
         this.$ = {

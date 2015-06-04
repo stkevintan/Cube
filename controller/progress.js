@@ -19,7 +19,7 @@ var progress = {
         this.ID = null;
         this.setState(start, duration);
         this.listen(this);
-        this.addGlobalEvent();
+        this.addEvents();
     },
     /**
      * setState([start,[duration],[title]]),set the state of progress.
@@ -62,15 +62,15 @@ var progress = {
         var strm = (mm < 10 ? '0' : '') + mm;
         return strm + ':' + strs;
     },
-    addGlobalEvent: function () {
-        global.on('progressMove', function () {
+    addEvents: function () {
+        Event.on('progressMove', function () {
             if (this.ID) return;
             var that = this;
             this.ID = setInterval(function () {
                 that.setState();
             }, 1000);
         }, this);
-        global.on('progressHalt', function () {
+        Event.on('progressHalt', function () {
             if (this.ID) {
                 clearInterval(this.ID);
                 this.ID = 0;
@@ -80,7 +80,7 @@ var progress = {
     listen: function () {
         var that = this;
         this.$.progress.on('click', function () {//滑块定位
-            global.emit('playerPlay', 0, that.$.progress.val());
+            Event.emit('playerPlay', 0, that.$.progress.val());
         });
     }
 }

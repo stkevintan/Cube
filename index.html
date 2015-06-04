@@ -57,10 +57,6 @@
                         </div>
                         <!-- /input-group -->
                     </form>
-                    <button id="dev"
-                            data-loading-text="更新中..."
-                            class="btn btn-default navbar-btn">开发人员工具
-                    </button>
                     <a class="btn btn-default navbar-btn"href="javascript:nav.simplize()">
                         简洁模式
                     </a>
@@ -194,10 +190,10 @@
                         <a id="backward" href="javascript:controls.backward();">
                             <span class="glyphicon glyphicon-step-backward"></span>
                         </a>
-                        <a id="play" href="javascript:global.emit('playerPlay');">
+                        <a id="play" href="javascript:Event.emit('playerPlay');">
                             <span class="glyphicon glyphicon-play"></span>
                         </a>
-                        <a id="pause" style="display:none" href="javascript:global.emit('playerPause');">
+                        <a id="pause" style="display:none" href="javascript:Event.emit('playerPause');">
                             <span class="glyphicon glyphicon-pause"></span>
                         </a>
                         <a id="forward" href="javascript:controls.forward();">
@@ -297,7 +293,7 @@
             </div>
             <div class="modal-footer">
                 <button type="button" class="btn btn-default" data-dismiss="modal">撤销</button>
-                <button type="button" class="btn btn-primary submit">确定</button>
+                <button type="button" data-loading-text="加载中..." class="btn btn-primary submit">确定</button>
             </div>
         </div>
         <!-- /.modal-content -->
