@@ -11,67 +11,71 @@ var playlist = {
      * @description init the playlist object
      *
      * @param {number} ts - timestamp of this playlist
-     * @param {array} data - songs object array
+     * @param {array} songList - songList
      */
-    init: function (timestamp, data) {
+    init: function (timestamp, songList, $frame) {
         this.timestamp = timestamp;
         this.$ = {
-            body: category.$.table.children('tbody#_' + timestamp).first(),
+            frame: $frame,
             tr: function () {
-                return this.body.children('tr');
+                return this.frame.find('tr');
             }
         };
-        this.data = data;
+
+        this.songList = songList;
+        this.domCache = '';
         this.ID = -1;
         this.length = 0;
         this.load();
+        this.listen();
     },
     show: function () {
-        this.$.body.fadeIn();
+        this.$.frame.fadeIn();
     },
     hide: function () {
-        this.$.body.hide();
+        this.$.frame.hide();
     },
     /**
      * @description load songs of the playlist
      */
     load: function () {
-        this.$.body.empty();
-        for (var i = 0; i < this.data.length; i++) {
-            this.addItem(this.data[i]);
+        this.$.frame.empty();
+        for (var i = 0; i < this.songList.length; i++) {
+            this.addItem(this.songList[i]);
         }
+        this.addtoDOM();
     },
     /**
      * @description add song object
      *
-     * @param {object} dataItem - song object
-     * @param {string} dataItem.title - song's title
-     * @param {string} [dataItem.artist] - song's artist
-     * @param {string} [dataItem.album] - song's album
+     * @param {object} songModel - song object
+     * @param {string} songModel.title - song's title
+     * @param {string} [songModel.artist] - song's artist
+     * @param {string} [songModel.album] - song's album
+     * @param {boolean} [instant] - insert to dom instantly without cache
      */
-    addItem: function (dataItem) {
+    addItem: function (songModel, instant) {
         var id = this.length;
-        var str = '<tr data-target="' + id + '">';
-        str += '<td>' + (1 + id) + '</td>';
-        str += '<td>' + dataItem.title + '</td>';
-        str += '<td>' + (dataItem.artist ? dataItem.artist : '未知') + '</td>';
-        str += '<td>' + (dataItem.album ? dataItem.album : '未知') + '</td>';
-        str += '<td><span class="dropdown">'
+        this.domCache += '<tr>'
+            + '<td>' + (1 + id) + '</td>'
+            + '<td>' + songModel.title + '</td>'
+            + '<td>' + (songModel.artist ? songModel.artist : '未知') + '</td>'
+            + '<td>' + (songModel.album ? songModel.album : '未知') + '</td>'
+            + '<td><span class="dropdown">'
             + '<a data-toggle="dropdown" href="javascript:0">'
             + '<span class="glyphicon glyphicon-plus"></span></a>'
             + '<ul class="dropdown-menu" role="menu">'
             + '</ul></span>'
             + '<a href="javascript:void(0);"><span class="glyphicon glyphicon-heart"></span></a>'
-            + '<a href="javascript:void(0);"><span class="glyphicon glyphicon-trash"></span></a></td>';
-        str += '</tr>';
-        this.$.body.append(str);
+            + '<a href="javascript:void(0);"><span class="glyphicon glyphicon-trash"></span></a></td>'
+            + '</tr>';
+        if (instant)this.addtoDOM();
         this.length++;
-        if (id >= this.data.length) {
-            this.data.push(dataItem);
+        if (id >= this.songList.length) {
+            this.songList.push(songModel);
             //更新标记
             Event.emit('rfshBadge');
         }
-        this.listen(this);
     },
     /**
      * @description remove "id"th song from the playlist
@@ -92,7 +96,6 @@ var playlist = {
         }
         if (this.ID > id) this.ID--;
         var Tr = this.$.tr();
-        var realID = Tr.eq(id).data('target');
         Tr.eq(id).remove();
         //将之后的歌曲编号-1 ,注意不要覆盖正在播放那一项
         var mark = Tr.slice(id + 1);
@@ -101,8 +104,8 @@ var playlist = {
             var t = o.text();
             if (t)o.text(Number(t) - 1);
         });
-        delete
-            this.length--;
+        this.songList.splice(id, 1);
+        this.length--;
         Event.emit('rfshBadge');
 
     },
@@ -123,7 +126,7 @@ var playlist = {
         var content = [];
         if (id >= 0) {
             Trl = [Tr[id]];
-            content = ['<span class="glyphicon glyphicon-play"></span>'];
+            content = ['<span class="glyphicon glyphicon-music"></span>'];
         }
         if (this.ID >= 0) {
             Trl.push(Tr[this.ID]);
@@ -171,31 +174,33 @@ var playlist = {
         this.setState(id);
         //获得真实的序号
         var $tr = this.$.tr().eq(id);
-        var realID = $tr.data('target');
-        return this.data[realID];
+        return this.songList[id];
     },
-
-    listen: function (that) {
-        var $tr = this.$.tr().last();
-        //双击播放音乐
-        $tr.dblclick(function () {
+    addtoDOM: function () {
+        if (!this.domCache)return;
+        this.$.frame.append(this.domCache);
+        this.domCache = '';//flush
+    },
+    listen: function () {
+        var that = this;
+        this.$.frame.on('dblclick', 'tr', function () {
             //去掉之前播放列表的播放状态
             var old = controls.playlist;
             if (old && old != that)old.setState(-1);
             //获取要播放歌曲的数据
-            var dataItem = that.next(0, $(this).index());
+            var songModel = that.next(0, $(this).index());
             //更新controls的playlist
             controls.playlist = that;
-            Event.emit('playerPlay', 1, dataItem);
+            Event.emit('playerPlay', 1, songModel);
         });
-        //单击‘+’符号，添加到其他播放列表
-        $tr.find('span.glyphicon-plus').click(function (e) {
+        this.$.frame.on('click', 'span.glyphicon-plus', function (e) {
+            var $tr = $(this).closest('tr');
             //形成下拉列表
             var menuStuff = '';
-            var dropdown = $tr.find('ul.dropdown-menu');
+            var dropdown = $tr.find('.dropdown-menu');
             for (var i = 0; i < category.plts.length; i++) {
                 var cur = category.plts[i];
-                if (cur.timestamp && cur.timestamp != that.timestamp) {
+                if (cur.timestamp != that.timestamp && entry.getMode(cur.type, 1)) {
                     menuStuff += '<li role="presentation">'
                         + '<a role="menuitem" tabindex="-1" href="javascript:0">'
                         + cur.name
@@ -207,27 +212,29 @@ var playlist = {
                 return;
             }
             dropdown.html(menuStuff);
-            //绑定新生成的菜单项的单击行为
-            dropdown.children('li').click(function () {
-                //获得目标播放列表对象
-                var itName = $(this).text();
-                var itID = -1;
-                category.$.lis().children('a').each(function (i) {
-                    if ($(this).children('div.name').text() == itName) {
-                        itID = i;
-                    }
-                });
-                var itList = category.get$plt(itID);
-                var realID = $tr.data('target');
-                if (itList != null) {
-                    //添加当前歌曲到指定播放列表
-                    itList.addItem(that.data[realID]);
-                }
-            });
         });
 
-        //单击删除符号，删除该行
-        $tr.find('span.glyphicon-trash').click(function () {
+        this.$.frame.on('click', '.dropdown-menu li', function () {
+            var $tr = $(this).closest('tr');
+            //获得目标播放列表对象
+            var itName = $(this).text();
+            var itID = -1;
+            category.$.lis().children('a').each(function (i) {
+                if ($(this).children('div.name').text() == itName) {
+                    itID = i;
+                }
+            });
+            var itList = category.get$plt(itID);
+            var id = $tr.index();
+            if (itList != null) {
+                //添加当前歌曲到指定播放列表
+                itList.addItem(that.songList[id], true);
+            }
+
+        });
+
+        this.$.frame.on('click', '.glyphicon-trash', function () {
+            var $tr = $(this).closest('tr');
             that.removeItem($tr.index());//不能用id
         });
     }

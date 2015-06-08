@@ -1,5 +1,7 @@
-exports.binarySearch = function (array, value, compare) {
-    var res = -1, l = 0, r = array.length;
+var base = require('util');
+
+base.binarySearch = function (array, value, compare) {
+    var res = -1, l = 0, r = array.length - 1;
     if (!compare)compare = function (v) {
         return v
     }
@@ -19,10 +21,15 @@ var isType = function (name) {
         return Object.prototype.toString.call(v) === '[object ' + name + ']';
     }
 }
-exports.isNumber = isType('Number');
-exports.isObject = isType('Object');
-exports.isFunction = isType('Function');
-exports.isString = isType('String');
-exports.isUndefined = isType('Undefined');
-exports.isBoolean = isType('Boolean');
-exports.isArray = isType('Array');
+base.isNumber = isType('Number');
+base.isObject = isType('Object');
+base.isFunction = isType('Function');
+base.isString = isType('String');
+base.isUndefined = isType('Undefined');
+base.isBoolean = isType('Boolean');
+base.isArray = isType('Array');
+base.isNull = isType('Null');
+base.isUndefinedorNull = function (v) {
+    return base.isNull(v) || base.isUndefined(v);
+}
+module.exports = base;

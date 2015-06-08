@@ -21,7 +21,6 @@ module.exports = function (howler) {
             player.volume(v);
         },
         getTime: function () {
-            console.log('getTime', player.pos());
             return player.pos();
         },
         setTime: function (t) {

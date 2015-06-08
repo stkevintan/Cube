@@ -32,18 +32,18 @@
                     <li id="about-nav"><a href="javascript:nav.setState(2)">关于</a></li>
                 </ul>
                 <!--<ul class="nav navbar-nav navbar-right win-control">-->
-                    <!--&lt;!&ndash;<li>&ndash;&gt;-->
-                        <!--&lt;!&ndash;<a href="javascript:nav.minimize()"><span class="glyphicon glyphicon-minus"></span></a>&ndash;&gt;-->
-                    <!--&lt;!&ndash;</li>&ndash;&gt;-->
-                    <!--<li>-->
-                        <!--<a href="javascript:nav.simplize()"><span class="glyphicon glyphicon-log-in"></span></a>-->
-                    <!--</li>-->
-                    <!--&lt;!&ndash;<li>&ndash;&gt;-->
-                        <!--&lt;!&ndash;<a href="javascript:nav.maximize()"><span class="glyphicon glyphicon-resize-full"></span></a>&ndash;&gt;-->
-                    <!--&lt;!&ndash;</li>&ndash;&gt;-->
-                    <!--&lt;!&ndash;<li>&ndash;&gt;-->
-                        <!--&lt;!&ndash;<a href="javascript:nav.close()"><span class="glyphicon glyphicon-remove"></span></a>&ndash;&gt;-->
-                    <!--&lt;!&ndash;</li>&ndash;&gt;-->
+                <!--&lt;!&ndash;<li>&ndash;&gt;-->
+                <!--&lt;!&ndash;<a href="javascript:nav.minimize()"><span class="glyphicon glyphicon-minus"></span></a>&ndash;&gt;-->
+                <!--&lt;!&ndash;</li>&ndash;&gt;-->
+                <!--<li>-->
+                <!--<a href="javascript:nav.simplize()"><span class="glyphicon glyphicon-log-in"></span></a>-->
+                <!--</li>-->
+                <!--&lt;!&ndash;<li>&ndash;&gt;-->
+                <!--&lt;!&ndash;<a href="javascript:nav.maximize()"><span class="glyphicon glyphicon-resize-full"></span></a>&ndash;&gt;-->
+                <!--&lt;!&ndash;</li>&ndash;&gt;-->
+                <!--&lt;!&ndash;<li>&ndash;&gt;-->
+                <!--&lt;!&ndash;<a href="javascript:nav.close()"><span class="glyphicon glyphicon-remove"></span></a>&ndash;&gt;-->
+                <!--&lt;!&ndash;</li>&ndash;&gt;-->
                 <!--</ul>-->
                 <div class="navbar-right">
                     <form class="navbar-form navbar-left" role="search">
@@ -57,12 +57,10 @@
                         </div>
                         <!-- /input-group -->
                     </form>
-                    <a class="btn btn-default navbar-btn"href="javascript:nav.simplize()">
-                        简洁模式
-                    </a>
                     <!-- Single button -->
                     <div class="btn-group navbar-btn">
-                        <button type="button" class="btn btn-default dropdown-toggle" data-toggle="dropdown"
+                        <button id="launcher" type="button" class="btn btn-default dropdown-toggle"
+                                data-toggle="dropdown"
                                 aria-expanded="false">
                             账户
                         </button>
@@ -72,7 +70,6 @@
                             <li id="menugo-1"><a href="javascript:nav.clickMenu(1)">注销</a></li>
                         </ul>
                     </div>
-
 
 
                 </div>
@@ -86,42 +83,47 @@
 
     <div id="page" class="container-fluid">
         <div id="main" class="row">
-            <div class="col-sm-3 sidebar">
-                <div class="userinfo">
-                    <div class="avater">
-                        <a href="javascript:void(0);">
-                            <img class="img-thumbnail" ,
-                                 src="assets/img/avater.jpg" ,alt="...">
-                        </a>
-                    </div>
-                    <div class="title">
-                        <h4>未登录</h4>
-                        <span id="totsong" class="label label-primary"></span>&nbsp;
-                        <span id="totlist" class="label label-success"></span>
+            <div id="sidebar">
+                <!--<div class="userinfo">-->
+                <!--<div class="avater">-->
+                <!--<a href="javascript:void(0);">-->
+                <!--<img class="img-thumbnail" ,-->
+                <!--src="assets/img/avater.jpg" ,alt="...">-->
+                <!--</a>-->
+                <!--</div>-->
+                <!--<div class="title">-->
+                <!--<h4>未登录</h4>-->
+                <!--<span id="totsong" class="label label-primary"></span>&nbsp;-->
+                <!--<span id="totlist" class="label label-success"></span>-->
+                <!--</div>-->
+                <!--</div>-->
+                <div id="entry">
+                    <div class="plts-group">
+                        <div class="plts-title">本地音乐</div>
+                        <ul class="nav nav-sidebar"></ul>
                     </div>
                 </div>
-
-                <ul class="nav nav-sidebar">
-                </ul>
-                <div class="nav-plus">
+                <div id="ptls-tools">
                     <span id="refresh" title="更新列表" class="glyphicon glyphicon-refresh"></span>
                     <span id="addlist" title="添加自定义列表" class="glyphicon glyphicon-plus"></span>
                 </div>
             </div>
-            <div class="col-sm-9 list">
-                <table class="table table-hover">
-                    <thead>
-                    <tr>
-                        <th>#</th>
-                        <th>标题</th>
-                        <th>艺术家</th>
-                        <th>专辑</th>
-                        <th>操作</th>
-                    </tr>
-                    </thead>
-                    <tbody>
-                    </tbody>
-                </table>
+            <div class="list">
+                <div class="twrap">
+                    <table class="table table-hover">
+                        <thead>
+                        <tr>
+                            <th>#</th>
+                            <th>标题</th>
+                            <th>艺术家</th>
+                            <th>专辑</th>
+                            <th>操作</th>
+                        </tr>
+                        </thead>
+                        <tbody>
+                        </tbody>
+                    </table>
+                </div>
             </div>
         </div>
         <div id="settings" style="display:none" class="row">
@@ -219,17 +221,25 @@
                 </div>
                 <div class="col-sm-3">
                     <div class="audio-adjust">
+                        <a id="open-side" href="javascript:controls.openSide();">
+                            <span class="glyphicon glyphicon-list"></span>
+                        </a>
                         <a id="vol-icon" href="javascript:controls.volPanel()">
-                            <span class="glyphicon glyphicon-volume-up"></span>
+                            <span title="音量" class="glyphicon glyphicon-volume-up"></span>
                         </a>
 
                         <a id="order" href="javascript:controls.order();">
-                            <span class="glyphicon glyphicon-repeat"></span>
+                            <span title="列表循环" class="glyphicon glyphicon-repeat"></span>
+                        </a>
+
+                        <a href="javascript:controls.toggleWindow(false);">
+                            <span title="Mini模式" class="glyphicon glyphicon-import"></span>
                         </a>
                     </div>
                 </div>
                 <div class="mini-tool">
-                    <a href="javascript:nav.simplize()"><span class="glyphicon glyphicon-new-window"></span></a>
+                    <a href="javascript:controls.toggleWindow(true)">
+                        <span title="正常模式" class="glyphicon glyphicon-new-window"></span></a>
                 </div>
             </div>
         </div>
@@ -304,6 +314,7 @@
 <script src="assets/js/jquery.min.js"></script>
 <script src="assets/js/bootstrap.min.js"></script>
 <script src="assets/js/sortable.js"></script>
+<script src="controller/entry.js" type="text/javascript"></script>
 <script src="controller/nav.js" type="text/javascript"></script>
 <script src="controller/userinfo.js" type="text/javascript"></script>
 <script src="controller/account.js" type="text/javascript"></script>

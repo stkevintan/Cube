@@ -6,9 +6,22 @@
  *
  * @constructor controls.init
  */
+state = 1;
 var Player = require('./model/player_backup');
 var controls = {
-    orderList: ['repeat', 'refresh', 'align-justify', 'random'],
+    orderList: [{
+        name: '单曲循环',
+        value: 'repeat'
+    }, {
+        name: '列表循环',
+        value: 'refresh'
+    }, {
+        name: '顺序播放',
+        value: 'align-justify'
+    }, {
+        name: '随机播放',
+        value: 'random'
+    }],
     init: function () {
         //初始化播放器
         this.player = Player;
@@ -21,6 +34,11 @@ var controls = {
             volPop: $('#vol-pop'),
             volume: $('#volume'),
             songPic: $('#song-pic')
+        }
+        this.WinMode = {
+            isSimp: 0,
+            width: null,
+            height: null
         }
         this.ID = 1;
         this.order(this.ID);
@@ -57,6 +75,37 @@ var controls = {
             this.playlist = null;
         }, this);
     },
+    openSide: function () {
+        var list = $('.list');
+        var side = category.$.sidebar;
+        //if (!state) {
+        //    list.animate({
+        //        width: '75%'
+        //    }, 400);
+        //} else {
+        //    list.animate({
+        //        width: '100%'
+        //    }, 400);
+        //}
+        //state ^= 1;
+        if (state) {
+            list.animate({
+                'padding-left': '0px'
+            }, 600);
+            side.animate({
+                right: '100%'
+            }, 600)
+        } else {
+            side.animate({
+                right: '75%'
+            }, 600);
+            list.animate({
+                'padding-left': '25%'
+            }, 600);
+        }
+        state ^= 1;
+
+    },
     /**
      * play next music on the playlist
      */
@@ -79,7 +128,8 @@ var controls = {
         if (!utils.isNumber(mode)) {
             this.ID = (this.ID + 1) % len;
             var tag = this.orderList[this.ID];
-            this.$.order.attr('class', 'glyphicon glyphicon-' + tag);
+            this.$.order.attr('class', 'glyphicon glyphicon-' + tag.value);
+            this.$.order.attr('title', tag.name);
         } else {
             this.ID = (mode - 1 + len) % len;
             this.order();
@@ -130,6 +180,22 @@ var controls = {
         //controls._volPop.offset({top: offs.top - 50, left: offs.left - 70});
         this.$.volPop.fadeIn(100);
         this.$.volume.focus();
+    },
+    /**
+     * toggle Window between normal size and mini size
+     * this is a bug of nw.js. temporary solution.
+     * @param {boolean} [flag=false] - if true,force to normal size,vice verse.
+     */
+    toggleWindow: function (flag) {
+        if (flag || this.WinMode.isSimp) {
+            win.resizeTo(this.WinMode.width, this.WinMode.height);
+        } else {
+            win.unmaximize();
+            this.WinMode.width = win.width;
+            this.WinMode.height = win.height;
+            win.resizeTo(560, 60);
+        }
+        this.WinMode.isSimp ^= 1;
     },
     listen: function (that) {
         this.$.volume.on('focusout', function () {

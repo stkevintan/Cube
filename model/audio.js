@@ -15,8 +15,3 @@
 ////        console.log(chunk.toString());
 ////    });
 ////});
-function isType(v) {
-    console.log(Object.prototype.toString.call(v));
-}
-var f;
-isType(f);

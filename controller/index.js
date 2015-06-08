@@ -5,10 +5,10 @@
 var gui = require('nw.gui');
 // Get the current window
 var win = gui.Window.get();
-
 var fm = require('./model/FileManager');
 var api = require('./model/NetEaseMusic');
 var utils = require('./model/Utils');
+var PltM = require('./model/PlaylistModel');
 var Event = (function () {
     var w = $(window);
     return {
@@ -27,20 +27,18 @@ var Event = (function () {
         }
     }
 })();
-
-var sources = {
-    local: function (callback) {
-        fm.getLocal(callback);
-    },
-    user: function (callback) {
-        fm.getScheme(callback);
-    },
-    net: function (callback) {
-        api.getNet(callback);
+var createDOM = function (name, options, inner) {
+    var dom = document.createElement(name);
+    for (var key in options) {
+        dom.setAttribute(key, options[key]);
     }
+    if (!utils.isUndefinedorNull(inner))
+        dom.innerText = inner;
+    return dom;
 }
+
 nav.init();
-userinfo.init();
+//userinfo.init();
 account.init();
 progress.init();
 controls.init();
@@ -50,5 +48,21 @@ category.init();
 $('table').on('selectstart', function (e) {
     e.preventDefault();
 });
-win.setMinimumSize(510, 60);
+win.setMinimumSize(560, 60);
+
+win.on('close', function () {
+    win.hide();
+    console.log('save the config changes...');
+    fm.SaveChanges(function (err) {
+        if (err)console.log('save failed', err);
+        else console.log('saved');
+        win.close(true);
+    });
+    //5s to save changes or close directly.
+    setTimeout(function () {
+        console.log('errors may be occurred , exit');
+        win.close(true);
+    }, 5000);
+});
+
 

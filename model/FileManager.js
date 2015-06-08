@@ -4,6 +4,7 @@
 var fs = require('fs');
 var async = require('async');
 var path = require('path');
+var utils = require('./Utils');
 var PltM = require('./PlaylistModel');
 var sup = ['.mp3', '.ogg', '.wav'];
 
@@ -31,7 +32,12 @@ var config = {
 
 var scheme = {
     path: toAbsolute('data', 'scheme.json'),
-    content: []
+    content: [],
+    indexOf: function (pltm) {
+        return utils.binarySearch(this.content, pltm.timestamp, function (o) {
+            return o.timestamp;
+        });
+    }
 }
 
 var fileManager = function () {
@@ -48,26 +54,20 @@ var fileManager = function () {
         }
     }
 }
-fileManager.prototype.SaveChanges = function (recKey, plts, callback) {
-    if (config.isChanged) {
-        fs.writeFile(config.path,
-            JSON.stringify(config.content),
-            function (err) {
-                callback(err);
-            });
-    }
-    scheme.content = [];
-    for (var i = 0, j = 0; i < recKey.length; i++) {
-        var tmpTs = recKey[i];
-        while (j < plts.length && plts[j].timestamp != tmpTs)j++;
-        if (j >= plts.length)break;
-        scheme.content.push(plts[j]);
-    }
-    fs.writeFile(scheme.path,
-        JSON.stringify(scheme.content),
-        function (err) {
-            callback(err);
-        });
+fileManager.prototype.SaveChanges = function (callback) {
+    async.parallel([
+        function (callback) {
+            if (config.isChanged) {
+                fs.writeFile(config.path,
+                    JSON.stringify(config.content),
+                    callback)
+            } else callback(null);
+        }, function (callback) {
+            fs.writeFile(scheme.path,
+                JSON.stringify(scheme.content),
+                callback);
+        }
+    ], callback);
 }
 
 fileManager.prototype.setMusicDir = function (dir) {
@@ -94,7 +94,7 @@ fileManager.prototype.setSearchLimit = function (limit) {
     }
 }
 fileManager.prototype.getLocal = function (callback) {
-
+    var that = this;
     this.loadMusicDir(null, function (err, songList) {
 
         if (err) {
@@ -103,18 +103,59 @@ fileManager.prototype.getLocal = function (callback) {
         }
         else callback(null, modefy([{
             timestamp: 0,
-            name: '本地音乐',
+            name: that.getMusicDir(),
             songList: songList,
             type: 'local'
         }]));
     });
 }
-fileManager.prototype.getScheme = function (callback) {
+fileManager.prototype.loadScheme = function (callback) {
     fs.readFile(scheme.path, 'utf-8', function (err, contents) {
-        console.log('getScheme', contents);
         if (err)callback(err);
         else callback(null, modefy(JSON.parse(contents)));
     });
+}
+
+fileManager.prototype.getScheme = function (callback) {
+    if (scheme.content.length == 0) {
+        this.loadScheme(function (err, content) {
+            if (err) callback('getScheme error' + err);
+            else {
+                scheme.content = content;
+                callback(null, content);
+            }
+        });
+    } else {
+        callback(null, scheme.content);
+    }
+}
+fileManager.prototype.addScheme = function (plt) {
+    if (!(plt instanceof PltM)) {
+        console.log('addScheme failed');
+        return;
+    }
+    scheme.content.push(plt);
+}
+fileManager.prototype.setScheme = function (plt) {
+    if (!(plt instanceof PltM)) {
+        console.log('setScheme failed');
+        return;
+    }
+    var index = scheme.indexOf(plt);
+    if (index == -1) {
+        scheme.content.push(plt);
+    }
+}
+fileManager.prototype.delScheme = function (plt) {
+    if (!(plt instanceof PltM)) {
+        console.log('delScheme failed');
+        return;
+    }
+    var index = scheme.indexOf(plt);
+    console.log(index);
+    if (index != -1) {
+        scheme.content.splice(index, 1);
+    }
 }
 fileManager.prototype.setUserData = function (data) {
     config.content.userData = data;

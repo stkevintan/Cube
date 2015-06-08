@@ -4,65 +4,90 @@
  *
  * @author Kevin Tan
  *
- * @description define the action of nav-sidebar and nav-plus
+ * @description define the action of nav-sidebar and ptls-tools
  */
 var category = {
     init: function () {
         this.$ = {
-            uls: $('ul.nav-sidebar'),
-            lis: function () {
-                return this.uls.children('li');
+            sidebar: $('#sidebar'),
+            entry: $('#entry'),
+            uls: function (key) {
+                return key ? this.entry.find('#__' + key).find('ul') :
+                    this.entry.find('ul');
+            },
+            lis: function (key) {
+                return key ? this.entry.find('#__' + key).find('li') :
+                    this.entry.find('li');
             },
             totSong: $("#totsong"),
             totlist: $("#totlist"),
             refresh: $('#refresh'),
             addlist: $('#addlist'),
-            table: $('.list table')
+            table: $('table')
         }
-        this.length = 0;
+        this.domCache = [];
+        //this.$.entry.slimScroll({
+        //    height: '100%',
+        //    width: '100%',
+        //    railVisible: true,
+        //    distance: '0px',
+        //    size: '2px'
+        //
+        //});
+        //this.$.table.slimScroll({
+        //    height: '100%',
+        //    railVisible: true,
+        //    distance: '-1px'
+        //})
         this.listen(this);
         this.addEvents();
         this.$.refresh.trigger('click');
     },
     /**
-     * load playlist defined in source object.
+     * load entries defined in source object.
      *
      * @param {object} [options] - {sourceName:true|false}
      *                             only load source which sourceName's value is true.
      *                             if null,load all the sources.
      * @param {boolean} [isClean] - if to remove all the playlist at first.
      */
-    loadPlts: function (options, isClean) {
+    loadEntry: function (options, isClean) {
         if (isClean) {
             this.ID = -1;
             this.$plts = {};
             this.plts = [];
-            this.$.uls.empty();
+            this.pLength = 0;//playlist's length
+
+            this.$.entry.empty();
             this.$.table.children('tbody').remove();
         }
+        var schema = entry.schema;
         if (!options) {
             options = {};
-            for (var key in sources) {
-                if (sources.hasOwnProperty(key)) {
+            for (var key in schema) {
+                if (schema.hasOwnProperty(key)) {
+                    this.add$Entry(key, schema[key].name);
                     options[key] = true;
                 }
             }
         }
-        console.log(options);
+        account.setAssessable(false);
+        this.$.refresh.addClass('loading');
+        this.eLength = 0;
+        var that = this;
         for (var key in options) {
             if (!options[key] || !options.hasOwnProperty(key)) continue;
-            //console.log(key);
-            var func = sources[key];
-            if (utils.isFunction(func)) {
-                func(loadSource);
+            this.eLength++;
+            var loader = schema[key].loader;
+            if (utils.isFunction(loader)) {
+                loader(callback);
             }
         }
 
-        var that = this;
-
-        function loadSource(err, plts) {
+        function callback(err, plts) {
             if (err || !utils.isArray(plts)) {
                 console.log(err || "the source doesn't return an Array!");
+                Event.emit('entryLoad');
                 return;
             }
             if (plts.length > 1 && plts[0].timestamp) {
@@ -70,13 +95,14 @@ var category = {
                     return a.timestamp - b.timestamp;
                 });
             }
+            that.plts = that.plts.concat(plts);
             for (var i = 0; i < plts.length; i++) {
                 that.addItem(plts[i]);
             }
-            that.plts = that.plts.concat(plts);
-            plts.length && Event.emit('pltLoaded');
+            Event.emit('entryLoad');
         }
-    },
+    }
+    ,
     /**
      * @description create view of the playlist
      *
@@ -88,43 +114,100 @@ var category = {
     create$plt: function (timestamp, songList) {
         var o = playlist.init;
         o.prototype = playlist;
-        this.$plts[timestamp] = new o(timestamp, songList);
+        var id = '_' + timestamp;
+        this.$.table.append('<tbody style="display:none" id="' + id + '"></tbody>');
+        this.$plts[timestamp] = new o(timestamp, songList, this.$.table.find('#' + id));
+    },
+    /*
+     <div class="plts-group">
+     <div class="plts-title">本地音乐</div>
+     <ul class="nav nav-sidebar"></ul>
+     </div>
+     */
+    add$Entry: function (key, name) {
+
+        var div = createDOM('div', {
+            class: 'plts-group',
+            id: '__' + key
+        });
+
+        div.appendChild(createDOM('div', {
+            class: 'plts-title'
+        }, name));
+        div.appendChild(createDOM('ul', {
+            class: 'nav nav-sidebar'
+        }));
+
+
+        var el = this.$.entry[0].appendChild(div).getElementsByTagName('ul')[0];
+        var that = this;
+        Sortable.create(el, {
+            onEnd: function (e) {
+                that.ID = that.getActive$li();
+            }
+        });
+    },
+    getActive$li: function () {
+        return this.$.lis().index(this.$.entry.find('li.active'));
     },
     /**
      * @description add playlist
      *
      * @param {object} pltModel -  instance of the PlaylistModel
+     * @param {boolean} [instant] - if true,instantly add to html dom without add to cache.
      */
-    addItem: function (pltModel) {
+    addItem: function (pltModel, instant) {
         //change view (html)
         var ts = pltModel.timestamp;
         if (utils.isUndefined(ts)) {
             //没有时间戳
             ts = pltModel.timestamp = (new Date()).getTime();
         }
-        var str = '<li data-target="' + ts + '">'
-            + '<a href="javascript:void(0)">'
-            + '<div class="name">' + pltModel.name + '</div>'
-            + '<div class="limark">'
-            + ( pltModel.getMode(1) ? '<span class="glyphicon glyphicon-trash"></span>' : '')
-            + '<span class="badge">' + pltModel.songList.length + '</span>'
-            + '</div></a></li>';
-        this.$.uls.append(str);
-        this.$.table.append('<tbody style="display:none" id="_' + ts + '"></tbody>');
-        this.length++;
-        //bind event
-        (function (that) {
-            var $lis = that.$.lis().last();
-            $lis.click(function () {
-                that.setState($(this).index());
-            });
-            $lis.find('span.glyphicon-trash').click(function () {
-                that.removeItem($(this).closest('li').index());
-            });
-        })(this);
+        var li = createDOM('li', {
+            'data-target': ts
+        });
+        var a = createDOM('a', {
+            title: pltModel.name,
+            href: 'javascript:void(0)'
+        });
+        var divName = createDOM('div', {
+            class: 'name'
+        }, pltModel.name);
+
+        var divLimark = createDOM('div', {
+            class: 'limark'
+        });
+        if (entry.getMode(pltModel.type, 1)) {
+            divLimark.appendChild(createDOM('span', {
+                class: 'glyphicon glyphicon-trash'
+            }));
+        }
+
+        divLimark.appendChild(createDOM('span', {
+            class: 'badge'
+        }, pltModel.songList.length));
+
+        li.appendChild(a);
+        a.appendChild(divName);
+        a.appendChild(divLimark);
+
+        this.domCache.push({
+            key: pltModel.type,
+            dom: li
+        });
+        if (this.plts.length <= this.pLength) {
+            this.plts.push(pltModel);
+        }
+        this.pLength++;
         this.create$plt(ts, pltModel.songList);
-        Event.emit('rfshLabel');
-    },
+        if (instant) {
+            this.addtoDOM();
+            this.ID = this.getActive$li();
+            this.setState(this.$.lis().index(li));
+        }
+
+    }
+    ,
     /**
      * @description switch to last or "id"th playlist.
      *
@@ -134,9 +217,9 @@ var category = {
      */
     setState: function (id) {
         if (!utils.isNumber(id)) {
-            id = this.length - 1;
+            id = this.pLength - 1;
         }
-        if (id < 0 || id >= this.length)throw 'index out of range';
+        if (id < 0 || id >= this.pLength)throw 'index out of range' + id;
         var $lis = this.$.lis();
         if (this.ID == id) return;
         if (this.ID >= 0) {
@@ -148,7 +231,8 @@ var category = {
         new$li.addClass('active');
         this.$plts[new$li.data('target')].show();
         this.ID = id;
-    },
+    }
+    ,
     /**
      * @description get playlist object by id
      *
@@ -160,12 +244,11 @@ var category = {
      */
     get$plt: function (id) {
         if (!utils.isNumber(id))id = this.ID;
-        if (id < 0 || id >= this.length)throw 'index out of range';
+        if (id < 0 || id >= this.pLength)throw 'index out of range';
         var $li = this.$.lis();
         var target = $li.eq(id).data('target');
         return this.$plts[target];
-    }
-    ,
+    },
     /**
      * @description remove playlist by id.
      *
@@ -174,26 +257,30 @@ var category = {
      * @throw index out of range
      */
     removeItem: function (id) {
-        if (id < 0 || id >= this.length)throw 'index out of range';
+        if (id < 0 || id >= this.pLength)throw 'index out of range';
         var $lis = this.$.lis();
         var now$plt = this.get$plt(id);
-        $lis.eq(id).remove();
-        now$plt.$.body.remove();
+        var liID = $lis.eq(id);
+        liID.slideUp(600, function () {
+            liID.remove();
+            now$plt.$.frame.remove();
+        });
         if (now$plt == controls.playlist) {
             Event.emit('playerExit');
         }
-        var index = utils.binarySearch(this.recKey, now$plt.timestamp);
-        if (index != -1) {
-            this.recKey.splice(index, 1);
-        }
-        index = utils.binarySearch(this.plts, now$plt.timestamp, function (o) {
+        var index = utils.binarySearch(this.plts, now$plt.timestamp, function (o) {
             return o.timestamp;
         });
         if (index != -1) {
+            if (this.plts[index].type == 'user') {
+                fm.delScheme(this.plts[index]);//及时删除
+            }
             this.plts.splice(index, 1);
         }
+
         delete now$plt;
-        this.length--;
+        this.pLength--;
+
         if (id == this.ID) {
             this.ID = -1;
             this.setState(0);
@@ -201,30 +288,35 @@ var category = {
             this.ID--;
         }
     },
+    addUserPlt: function (name) {
+        var plt = new PltM({
+            name: name,
+            type: 'user'
+        });
+        this.addItem(plt, true);
+        fm.addScheme(plt);
+    },
     listen: function (that) {
+        //事件委托
+        this.$.entry.on('click', 'li', function () {
+            that.setState(that.$.lis().index(this));
+        });
+
+        this.$.entry.on('click', 'li span.glyphicon-trash', function (e) {
+            var it = $(this).closest('li');
+            that.removeItem(that.$.lis().index(it));
+            e.stopPropagation();
+        });
+        this.refreshable = true;
         this.$.refresh.click(function () {
-            var $span = $('#refresh');
-            var origin = $span.text();
-            $span.text(origin + '加载中...');
-            //load playlists
-            that.loadPlts(null, true);
-
-            Event.once('pltLoaded', function () {
-                that.setState(0);
-                Event.emit('playerExit');
-                $span.text(origin);
-                var el = that.$.uls[0];
-                Sortable.create(el, {
-                    onEnd: function (e) {
-                        var l = e.oldIndex;
-                        var r = e.newIndex;
-                        if (l == that.ID)that.ID = r;
-                        else if (l < that.ID && r >= that.ID)that.ID--;
-                        else if (l > that.ID && r <= that.ID)that.ID++;
-                    }
-                });
-            });
-
+            if (!that.refreshable) return;
+            that.refreshable = false;
+            Event.emit('playerExit');
+            //load entry
+            that.loadEntry(null, true);
+            Event.once('setActive', function () {
+                this.setState(0);
+            }, that);
         });
 
         var model = $('#inputListName');
@@ -235,25 +327,23 @@ var category = {
             model.removeClass('has-error');
             model.modal('show');
         });
-
         submit.click(function () {
+            if (!that.refreshable) {
+                return;
+            }
             var val = input.val();
             val = val.trim();
             var flag = true;
             if (val == '')flag = false;
             else {
-                var $name = that.$.uls.find('div.name');
+                var $name = that.$.lis().find('div.name');
                 $name.each(function () {
                     if ($(this).text() == val)flag = false;
                 });
             }
             if (flag) {
-                //添加列表
-                that.addItem({
-                    name: val,
-                    data: []
-                });
                 model.modal('hide');
+                that.addUserPlt(val);
             } else {
                 model.find('label').fadeIn();
                 model.addClass('has-error');
@@ -266,13 +356,35 @@ var category = {
             }
         });
     },
+    addtoDOM: function () {
+        if (this.domCache.length == 0)return;
+        var tmp$ = {};
+        var that = this;
+        this.domCache.forEach(function (o) {
+            if (!tmp$[o.key]) {
+                tmp$[o.key] = that.$.entry.find('#__' + o.key).find('ul');
+            }
+            o.dom.style.display = 'none';
+            tmp$[o.key][0].appendChild(o.dom);
+            $(o.dom).slideDown(600);
+        });
+        //flush dom cache
+        this.domCache = [];
+        Event.emit('setActive');
+    }
+    ,
     addEvents: function () {
-        Event.on('rfshLabel', function () {
-            /**
-             * @description refresh the Labels on userInfo
-             */
-            //this.$.totSong.text("本地歌曲：" + this.plts[0].songList.length);
-            //this.$.totlist.text("歌单：" + this.plts.length);
+        var count = 0;
+        Event.on('entryLoad', function () {
+            count++;
+            this.addtoDOM();
+            if (count == this.eLength) {
+                //All playgroup load ready! flush domCache to dom!
+                this.$.refresh.removeClass('loading');
+                count = 0;
+                this.refreshable = true;
+                account.setAssessable(true);
+            }
         }, this);
         Event.on('rfshBadge', function (id) {
             /**
@@ -281,12 +393,16 @@ var category = {
              * @param {number} [id=-1] - the index of badge to refresh
              */
             id = id || -1;
-            var badge = this.$.uls.find('.badge');
-            if (id >= 0 && id < this.length) {
-                badge.eq(id).text(this.plts[id].data.length);
+            var badge = this.$.lis().find('.badge');
+            if (id >= 0 && id < this.pLength) {
+                var bo = badge.eq(id);
+                var ts = bo.closest('li').data('target');
+                bo.text(this.$plts[ts].length);
             } else {
-                for (var i = 0; i < this.length; i++) {
-                    badge.eq(i).text(this.plts[i].data.length);
+                for (var i = 0; i < this.pLength; i++) {
+                    var bo = badge.eq(i);
+                    var ts = bo.closest('li').data('target');
+                    badge.eq(i).text(this.$plts[ts].length);
                 }
             }
         }, this);

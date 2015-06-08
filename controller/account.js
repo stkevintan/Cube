@@ -8,6 +8,7 @@
 var account = {
     init: function () {
         this.$ = {
+            launcher: $('#launcher'),
             login: $('#login'),
             submit: $('#login').find('button.submit'),
             label: $('#login').find('label'),
@@ -45,9 +46,16 @@ var account = {
         this.$.label.text('');
         this.$.login.modal('hide');
         this.setState(data);
-        category.loadPlts({
+        category.loadEntry({
             net: true
         });
+    },
+    setAssessable: function (f) {
+        if (f) {
+            this.$.launcher.removeClass('disabled');
+        } else {
+            this.$.launcher.addClass('disabled');
+        }
     },
     /**
      * @description set the User Profile by "data"

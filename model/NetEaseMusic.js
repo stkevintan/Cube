@@ -4,7 +4,7 @@ var async = require('async');
 var crypto = require('crypto');
 var fm = require('./FileManager');
 var PltM = require('./PlaylistModel');
-var userData = fm.getUserData();
+
 
 var NetEaseMusic = function () {
     this.header = {
@@ -62,7 +62,6 @@ NetEaseMusic.prototype = {
                     //登录失败
                     callback("用户名或密码错误");
                 } else {
-                    userData = data;
                     fm.setUserData(data);
                     callback(null, data.profile);
                 }
@@ -74,6 +73,7 @@ NetEaseMusic.prototype = {
         this.userPlaylist(function (err, playlists) {
             if (err) {
                 callback('an error called from getNet' + err);
+                return;
             }
             async.map(playlists, function (item, callback) {
                 that.playlistDetail(item.id, function (err, songList) {
@@ -102,12 +102,13 @@ NetEaseMusic.prototype = {
         // [uid],[offset],[limit],callback
         var argv = [].slice.call(arguments);
         var callback = argv.pop();
-        try {
-            var uid = argv[0] || userData.account.id;
-        } catch (e) {
+        var userData = fm.getUserData();
+        if (!userData) {
             callback('user data not found or invalid! please login first!');
             return;
         }
+        var uid = argv[0] || userData.account.id;
+
         var offset = argv[1] || 0;
         var limit = argv[2] || 100;
         var url = 'http://music.163.com/api/user/playlist/';

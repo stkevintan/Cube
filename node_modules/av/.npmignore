@@ -1,6 +1,0 @@
-tests/
-experiments/
-build/
-.git*
-.DS_Store
-*.html

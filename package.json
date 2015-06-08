@@ -12,9 +12,6 @@
   },
   "dependencies": {
     "async": "^1.2.0",
-    "av": "^0.4.4",
-    "mp3": "^0.1.0",
-    "speaker": "^0.2.5",
     "superagent": "^1.2.0"
   }
 }
