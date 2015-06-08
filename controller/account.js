@@ -5,20 +5,21 @@
  *
  * @constructor account.init
  */
-var account = {
-    init: function () {
-        this.$ = {
-            launcher: $('#launcher'),
-            login: $('#login'),
-            submit: $('#login').find('button.submit'),
-            label: $('#login').find('label'),
-            phone: $('#login').find('input[name="phone"]'),
-            password: $('#login').find('input[name="password"]')
-        }
-        this.isLogin = false;
-        this.listen(this);
-        this.load();
-    },
+var Account = function () {
+    this.$ = {
+        launcher: $('#launcher'),
+        login: $('#login'),
+        submit: $('#login').find('button.submit'),
+        label: $('#login').find('label'),
+        phone: $('#login').find('input[name="phone"]'),
+        password: $('#login').find('input[name="password"]')
+    }
+    this.isLogin = false;
+    this.listen(this);
+    this.load();
+}
+
+Account.prototype = {
     load: function () {
         //获得登录信息
         var userData = fm.getUserData();
@@ -37,6 +38,7 @@ var account = {
     showlogin: function () {
         this.$.label.hide();
         this.$.login.modal('show');
+        this.$.phone.focus();
     },
     loginErr: function (msg) {
         this.$.label.text(msg);
@@ -46,7 +48,7 @@ var account = {
         this.$.label.text('');
         this.$.login.modal('hide');
         this.setState(data);
-        category.loadEntry({
+        category.loadPlaylists({
             net: true
         });
     },

@@ -6,30 +6,32 @@
  *
  * @description define the action of nav-sidebar and ptls-tools
  */
-var category = {
-    init: function () {
-        this.$ = {
-            sidebar: $('#sidebar'),
-            entry: $('#entry'),
-            uls: function (key) {
-                return key ? this.entry.find('#__' + key).find('ul') :
-                    this.entry.find('ul');
-            },
-            lis: function (key) {
-                return key ? this.entry.find('#__' + key).find('li') :
-                    this.entry.find('li');
-            },
-            totSong: $("#totsong"),
-            totlist: $("#totlist"),
-            refresh: $('#refresh'),
-            addlist: $('#addlist'),
-            table: $('table')
-        }
-        this.domCache = [];
-        this.listen(this);
-        this.addEvents();
-        this.$.refresh.trigger('click');
-    },
+var loading = false;
+var loadSize = 0;
+function Category() {
+    this.$ = {
+        sidebar: $('#sidebar'),
+        entry: $('#entry'),
+        uls: function (key) {
+            return key ? this.entry.find('#__' + key).find('ul') :
+                this.entry.find('ul');
+        },
+        lis: function (key) {
+            return key ? this.entry.find('#__' + key).find('li') :
+                this.entry.find('li');
+        },
+        totSong: $("#totsong"),
+        totlist: $("#totlist"),
+        refresh: $('#refresh'),
+        addlist: $('#addlist'),
+        table: $('table')
+    }
+    this.domCache = [];
+    this.listen(this);
+    this.addEvents();
+}
+
+Category.prototype = {
     /**
      * load entries defined in source object.
      *
@@ -38,7 +40,8 @@ var category = {
      *                             if null,load all the sources.
      * @param {boolean} [isClean] - if to remove all the playlist at first.
      */
-    loadEntry: function (options, isClean) {
+    loadPlaylists: function (options, isClean) {
+        if (loading) return;
         if (isClean) {
             this.$plts = {};
             this.plts = [];
@@ -46,6 +49,11 @@ var category = {
 
             this.$.entry.empty();
             this.$.table.children('tbody').remove();
+
+            Event.emit('playerExit');
+            Event.once('setActive', function () {
+                this.setState(0);
+            }, this);
         }
         var schema = entry.schema;
         if (!options) {
@@ -57,17 +65,22 @@ var category = {
                 }
             }
         }
-        account.setAssessable(false);
-        this.$.refresh.addClass('loading');
-        this.eLength = 0;
+
+        loadSize = 0;
         var that = this;
         for (var key in options) {
             if (!options[key] || !options.hasOwnProperty(key)) continue;
-            this.eLength++;
+            loadSize++;
             var loader = schema[key].loader;
             if (utils.isFunction(loader)) {
                 loader(callback);
             }
+        }
+        if (loadSize) {
+            //enter loading state
+            account.setAssessable(false);
+            this.$.refresh.addClass('loading');
+            loading = true;
         }
 
         function callback(err, plts) {
@@ -83,28 +96,17 @@ var category = {
             }
             Event.emit('entryLoad');
         }
-    }
-    ,
-    /**
-     * @description create view of the playlist
-     *
-     * @param {number} timestamp - timestamp of the playlist
-     * @param {array} data - songs object array of the playlist
-     *
-     * @return {object} playlist.init
-     */
-    create$plt: function (timestamp, songList) {
-        var o = playlist.init;
-        o.prototype = playlist;
-        var tbody = createDOM('tbody', {style: 'display:none', id: '_' + timestamp});
-        this.$.table.append(tbody);
-        this.$plts[timestamp] = new o(timestamp, songList, $(tbody));
     },
     add$EntryFrame: function (key, name) {
         var div = createDOM('div', {class: 'plts-group', id: '__' + key});
         div.appendChild(createDOM('div', {class: 'plts-title'}, name));
         div.appendChild(createDOM('ul', {class: 'nav nav-sidebar'}));
         Sortable.create(this.$.entry[0].appendChild(div).getElementsByTagName('ul')[0]);
+    },
+    findPltIndexByTs: function (timestamp) {
+        return utils.binarySearch(this.plts, timestamp, function (o) {
+            return o.timestamp
+        });
     },
     /**
      * @description add playlist
@@ -124,6 +126,7 @@ var category = {
         var a = createDOM('a', {title: pltModel.name, href: 'javascript:void(0)'});
         var divName = createDOM('div', {class: 'name'}, pltModel.name);
         var divLimark = createDOM('div', {class: 'limark'});
+        var tbody = createDOM('tbody', {style: 'display:none', id: '_' + ts});
 
         entry.getMode(pltModel.type, 1) &&
         divLimark.appendChild(createDOM('span', {class: 'glyphicon glyphicon-trash'}));
@@ -133,12 +136,12 @@ var category = {
         a.appendChild(divLimark);
 
         this.domCache.push({type: pltModel.type, dom: li});
-        if (this.refreshable) {//没有在loadPlt过程中
+        if (!loading) {//not in loading process
             this.plts.push(pltModel);
         }
         this.pLength++;
-        this.create$plt(ts, pltModel.songList);
-
+        this.$.table.append(tbody);
+        this.$plts[ts] = new Playlist(tbody, pltModel.songList);
         if (instant) {
             this.addtoDOM();
             this.setState(this.$.lis().index(li));
@@ -188,24 +191,18 @@ var category = {
         if (now$plt == controls.playlist) {
             Event.emit('playerExit');
         }
-        var index = utils.binarySearch(this.plts, now$plt.timestamp, function (o) {
-            return o.timestamp;
-        });
+        var index = this.findPltIndexByTs(now$plt.timestamp);
         if (index != -1) {
             if (this.plts[index].type == 'user') {
                 fm.delScheme(this.plts[index]);//及时删除
             }
             this.plts.splice(index, 1);
         }
-
         delete now$plt;
         this.pLength--;
     },
     addUserPlt: function (name) {
-        var plt = new PltM({
-            name: name,
-            type: 'user'
-        });
+        var plt = new PltM({name: name, type: 'user'});
         this.addItem(plt, true);
         fm.addScheme(plt);
     },
@@ -220,16 +217,10 @@ var category = {
             that.removeItem(that.$.lis().index(it));
             e.stopPropagation();
         });
-        this.refreshable = true;
+
         this.$.refresh.click(function () {
-            if (!that.refreshable) return;
-            that.refreshable = false;
-            Event.emit('playerExit');
             //load entry
-            that.loadEntry(null, true);
-            Event.once('setActive', function () {
-                this.setState(0);
-            }, that);
+            that.loadPlaylists(null, true);
         });
 
         var model = $('#inputListName');
@@ -239,21 +230,15 @@ var category = {
             model.find('label').hide();
             model.removeClass('has-error');
             model.modal('show');
+            input.focus();
         });
         submit.click(function () {
-            if (!that.refreshable) {
-                return;
-            }
-            var val = input.val();
-            val = val.trim();
+            var val = input.val().trim();
             var flag = true;
             if (val == '')flag = false;
-            else {
-                var $name = that.$.lis().find('div.name');
-                $name.each(function () {
-                    if ($(this).text() == val)flag = false;
-                });
-            }
+            else that.$.lis().find('div.name').each(function () {
+                if ($(this).text() == val)flag = false;
+            });
             if (flag) {
                 model.modal('hide');
                 that.addUserPlt(val);
@@ -262,6 +247,7 @@ var category = {
                 model.addClass('has-error');
             }
         });
+
         input.keydown(function (e) {
             if (e.which == 13) {
                 e.preventDefault();
@@ -284,44 +270,36 @@ var category = {
         //flush dom cache
         this.domCache = [];
         Event.emit('setActive');
-    }
-    ,
+    },
     addEvents: function () {
         var count = 0;
         Event.on('entryLoad', function () {
             count++;
             this.addtoDOM();
-            if (count == this.eLength) {
+            if (count == loadSize) {
                 //All playgroup load ready! flush domCache to dom!
+                count = 0;
                 this.$.refresh.removeClass('loading');
+                loading = false;
+                account.setAssessable(true);
+
                 //sort plts to fix some bugs
                 if (this.plts.length > 1)
                     this.plts = this.plts.sort(function (a, b) {
                         return a.timestamp - b.timestamp;
                     });
-                count = 0;
-                this.refreshable = true;
-                account.setAssessable(true);
             }
         }, this);
-        Event.on('rfshBadge', function (id) {
+        Event.on('rfshBadge', function () {
             /**
              * @description refresh "id"th or all badge's number.
              *
-             * @param {number} [id=-1] - the index of badge to refresh
              */
-            id = id || -1;
             var badge = this.$.lis().find('.badge');
-            if (id >= 0 && id < this.pLength) {
-                var bo = badge.eq(id);
+            for (var i = 0; i < this.pLength; i++) {
+                var bo = badge.eq(i);
                 var ts = bo.closest('li').data('target');
-                bo.text(this.$plts[ts].length);
-            } else {
-                for (var i = 0; i < this.pLength; i++) {
-                    var bo = badge.eq(i);
-                    var ts = bo.closest('li').data('target');
-                    badge.eq(i).text(this.$plts[ts].length);
-                }
+                badge.eq(i).text(this.$plts[ts].length);
             }
         }, this);
     }

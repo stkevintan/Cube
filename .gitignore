@@ -2,4 +2,5 @@ music/
 data/
 .idea/
 bin/
+release/
 *.exe

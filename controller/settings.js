@@ -2,19 +2,18 @@
  * Created by kevin on 15-5-8.
  */
 //设置页面行为
-var fm = require('./model/FileManager');
-var settings = {
-    init: function () {
-        this.$ = {
-            musicDir: $('#music-dir'),
-            dialog: $('#dialog'),
-            btnOpen: $('button#openDialog'),
-            searchLimit: $('#search-limit')
-        };
-        this.$.searchLimit.val(fm.getSearchLimit());
-        this.$.musicDir.val(fm.getMusicDir());
-        this.listen();
-    },
+var Settings = function () {
+    this.$ = {
+        musicDir: $('#music-dir'),
+        dialog: $('#dialog'),
+        btnOpen: $('button#openDialog'),
+        searchLimit: $('#search-limit')
+    };
+    this.$.searchLimit.val(fm.getSearchLimit());
+    this.$.musicDir.val(fm.getMusicDir());
+    this.listen();
+};
+Settings.prototype = {
     listen: function () {
         var that = this;
         this.$.btnOpen.click(function () {
@@ -26,7 +25,8 @@ var settings = {
             console.log('newDir', newDir);
             if (fm.setMusicDir(newDir)) {
                 that.$.musicDir.val(newDir);
-                category.$.refresh.trigger('click');
+                //reload localdir
+                category.loadPlaylists(null, true);
             }
         });
         this.$.searchLimit.change(function () {
@@ -42,6 +42,5 @@ var settings = {
                 $(this).parent().addClass('has-error');
             }
         });
-
     }
 }

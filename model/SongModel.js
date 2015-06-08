@@ -1,11 +1,11 @@
 /**
  * Created by kevin on 15-5-18.
  */
-module.exports = function SongModel(rawData) {
-    this.id = rawData.id;
-    this.src = rawData.src;
-    this.pic = rawData.pic;
-    this.artist = rawData.artist || '未知';
-    this.album = rawData.album || '未知';
-    this.title = rawData.title;
+module.exports = function SongModel(raw) {
+    this.id = raw.id;
+    this.src = raw.src;
+    this.pic = raw.pic;
+    this.artist = raw.artist || '未知';
+    this.album = raw.album || '未知';
+    this.title = raw.title || '未知';
 }

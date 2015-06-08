@@ -6,11 +6,16 @@ var async = require('async');
 var path = require('path');
 var utils = require('./Utils');
 var PltM = require('./PlaylistModel');
+var SongM = require('./SongModel');
 var sup = ['.mp3', '.ogg', '.wav'];
 
 function modefy(arr) {
     arr = arr.map(function (o) {
-        return new PltM(o);
+        var n = new PltM(o);
+        n.songList = n.songList.map(function (s) {
+            return new SongM(s);
+        });
+        return n;
     });
     return arr;
 }

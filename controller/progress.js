@@ -6,21 +6,21 @@
  *
  * @author Kevin Tan
  */
-var progress = {
-    init: function (start, duration) {
-        this.$ = {
-            progress: $('#progress'),
-            totTime: $('#tot-time'),
-            curTime: $('#cur-time'),
-            title: $('h4.media-heading')
-        };
-        start = start || 0;
-        duration = duration || 0;
-        this.ID = null;
-        this.setState(start, duration);
-        this.listen(this);
-        this.addEvents();
-    },
+var Progress = function (start, duration) {
+    this.$ = {
+        progress: $('#progress'),
+        totTime: $('#tot-time'),
+        curTime: $('#cur-time'),
+        title: $('h4.media-heading')
+    };
+    start = start || 0;
+    duration = duration || 0;
+    this.ID = null;
+    this.setState(start, duration);
+    this.listen(this);
+    this.addEvents();
+};
+Progress.prototype = {
     /**
      * setState([start,[duration],[title]]),set the state of progress.
      * if argument is empty, increase current time by 1.
@@ -39,12 +39,12 @@ var progress = {
         if (arguments.length >= 2) {
             duration = arguments[1];
             this.$.progress.attr('max', duration);
-            this.$.totTime.text(progress.format(duration));
+            this.$.totTime.text(this.format(duration));
         }
         if (arguments.length >= 3) {
             this.$.title.text(arguments[2]);
         }
-        this.$.curTime.text(progress.format(start));
+        this.$.curTime.text(this.format(start));
         this.$.progress.val(start);
     },
     /**

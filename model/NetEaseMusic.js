@@ -4,6 +4,7 @@ var async = require('async');
 var crypto = require('crypto');
 var fm = require('./FileManager');
 var PltM = require('./PlaylistModel');
+var SongM = require('./SongModel');
 
 
 var NetEaseMusic = function () {
@@ -193,7 +194,7 @@ NetEaseMusic.prototype = {
             o.artist = r.artists.map(function (v) {
                 return v.name;
             }).join();
-            songList.push(o);
+            songList.push(new SongM(o));//modefy here!
         }
         var that = this;
         process.nextTick(function () {

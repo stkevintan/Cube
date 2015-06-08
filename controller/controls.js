@@ -7,8 +7,33 @@
  * @constructor controls.init
  */
 state = 1;
-var Player = require('./model/player_backup');
-var controls = {
+
+var Controls = function () {
+    //初始化播放器
+    this.player = Player;
+    Player.init($('audio')[0]);
+    this.$ = {
+        play: $('#play'),
+        pause: $('#pause'),
+        order: $('#order span'),
+        volPanel: $('#vol-icon'),
+        volPop: $('#vol-pop'),
+        volume: $('#volume'),
+        songPic: $('#song-pic')
+    }
+    this.WinMode = {
+        isSimp: 0,
+        width: null,
+        height: null
+    }
+    this.ID = 1;
+    this.order(this.ID);
+    this.playlist = null;
+    this.setState(-1);
+    this.listen(this);
+    this.addEvents();
+}
+Controls.prototype = {
     orderList: [{
         name: '单曲循环',
         value: 'repeat'
@@ -22,31 +47,6 @@ var controls = {
         name: '随机播放',
         value: 'random'
     }],
-    init: function () {
-        //初始化播放器
-        this.player = Player;
-        Player.init($('audio')[0]);
-        this.$ = {
-            play: $('#play'),
-            pause: $('#pause'),
-            order: $('#order span'),
-            volPanel: $('#vol-icon'),
-            volPop: $('#vol-pop'),
-            volume: $('#volume'),
-            songPic: $('#song-pic')
-        }
-        this.WinMode = {
-            isSimp: 0,
-            width: null,
-            height: null
-        }
-        this.ID = 1;
-        this.order(this.ID);
-        this.playlist = null;
-        this.setState(-1);
-        this.listen(this);
-        this.addEvents();
-    },
     addEvents: function () {
         Event.on('playerPlay', function () {
             if (this.playlist == null || this.playlist.ID == -1) {
@@ -78,16 +78,6 @@ var controls = {
     openSide: function () {
         var list = $('.list');
         var side = category.$.sidebar;
-        //if (!state) {
-        //    list.animate({
-        //        width: '75%'
-        //    }, 400);
-        //} else {
-        //    list.animate({
-        //        width: '100%'
-        //    }, 400);
-        //}
-        //state ^= 1;
         if (state) {
             list.animate({
                 'padding-left': '0px'

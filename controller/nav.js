@@ -7,15 +7,15 @@
  * @constructor nav.init
  *
  */
-var nav = {
-    init: function () {
-        this.ID = 0;
-        this.$ = {
-            tabs: ['#main', '#settings', '#about'],
-            search: '#search'
-        };
-        this.listen(this);
-    },
+var Nav = function () {
+    this.ID = 0;
+    this.$ = {
+        tabs: ['#main', '#settings', '#about'],
+        search: '#search'
+    };
+    this.listen(this);
+}
+Nav.prototype = {
     /**
      * @description switch to "id"th tab
      *
@@ -31,7 +31,8 @@ var nav = {
         });
         $([$(Old + '-nav'), $(New + '-nav')]).toggleClass('active');
         this.ID = id;
-    },
+    }
+    ,
     /**
      * @description search keywords from UI,add result playlist to category
      *
@@ -49,7 +50,8 @@ var nav = {
             });
             category.setState();
         });
-    },
+    }
+    ,
     close: function () {
         win.hide();
         console.log('save the config changes...');
@@ -58,10 +60,12 @@ var nav = {
             else console.log('saved');
             win.close(true);
         });
-    },
+    }
+    ,
     minimize: function () {
         win.minimize();
-    },
+    }
+    ,
     maximize: function () {
         if (this.WinMode.isMaxi) {
             win.unmaximize();
@@ -69,7 +73,8 @@ var nav = {
             win.maximize();
         }
         this.WinMode.isMaxi ^= 1;
-    },
+    }
+    ,
     /**
      * @description set menu display state
      *
@@ -83,7 +88,8 @@ var nav = {
             $('#menugo-1').hide();
             $('#menugo-0').show();
         }
-    },
+    }
+    ,
     /**
      * @description define the action after click a MenuItem
      *
@@ -95,7 +101,8 @@ var nav = {
         } else {
             account.unsign();
         }
-    },
+    }
+    ,
     /**
      * @description attach handler to events
      *

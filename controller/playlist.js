@@ -6,29 +6,24 @@
  *
  * @constructor playlist.init
  */
-var playlist = {
-    /**
-     * @description init the playlist object
-     *
-     * @param {number} ts - timestamp of this playlist
-     * @param {array} songList - songList
-     */
-    init: function (timestamp, songList, $frame) {
-        this.timestamp = timestamp;
-        this.$ = {
-            frame: $frame,
-            tr: function () {
-                return this.frame.find('tr');
-            }
-        };
+var Playlist = function (frame, songList) {
+    this.$ = {
+        frame: $(frame),
+        tr: function () {
+            return this.frame.find('tr');
+        }
+    };
 
-        this.songList = songList;
-        this.domCache = '';
-        this.ID = -1;
-        this.length = 0;
-        this.load();
-        this.listen();
-    },
+    this.timestamp = new Number(frame.id.substr(1));
+    this.songList = songList;
+    this.domCache = [];
+    this.ID = -1;
+    this.length = 0;
+    this.load();
+    this.listen();
+}
+
+Playlist.prototype = {
     show: function () {
         this.$.frame.fadeIn();
     },
@@ -56,19 +51,30 @@ var playlist = {
      */
     addItem: function (songModel, instant) {
         var id = this.length;
-        this.domCache += '<tr>'
-            + '<td>' + (1 + id) + '</td>'
-            + '<td>' + songModel.title + '</td>'
-            + '<td>' + (songModel.artist ? songModel.artist : '未知') + '</td>'
-            + '<td>' + (songModel.album ? songModel.album : '未知') + '</td>'
-            + '<td><span class="dropdown">'
-            + '<a data-toggle="dropdown" href="javascript:0">'
-            + '<span class="glyphicon glyphicon-plus"></span></a>'
-            + '<ul class="dropdown-menu" role="menu">'
-            + '</ul></span>'
-            + '<a href="javascript:void(0);"><span class="glyphicon glyphicon-heart"></span></a>'
-            + '<a href="javascript:void(0);"><span class="glyphicon glyphicon-trash"></span></a></td>'
-            + '</tr>';
+        var tr = createDOM('tr');
+        tr.appendChild(createDOM('td', null, 1 + id));
+        tr.appendChild(createDOM('td', null, songModel.title));
+        tr.appendChild(createDOM('td', null, songModel.album));
+        tr.appendChild(createDOM('td', null, songModel.artist));
+
+        var td = createDOM('td', null);
+        var span = createDOM('span', {class: 'dropdown'});
+        var aPlus = createDOM('a', {'data-toggle': 'dropdown', href: 'javascript:0'});
+        var aHeart = createDOM('a', {href: 'javascript:0'});
+        var aTrash = createDOM('a', {href: 'javascript:0'});
+        aPlus.appendChild(createDOM('span', {class: 'glyphicon glyphicon-plus'}));
+        aHeart.appendChild(createDOM('span', {class: 'glyphicon glyphicon-heart'}));
+        aTrash.appendChild(createDOM('span', {class: 'glyphicon glyphicon-trash'}));
+
+        span.appendChild(aPlus);
+        span.appendChild(createDOM('ul', {class: 'dropdown-menu', role: 'menu'}));
+
+        td.appendChild(span);
+        td.appendChild(aHeart);
+        td.appendChild(aTrash);
+        tr.appendChild(td);
+
+        this.domCache.push(tr);
         if (instant)this.addtoDOM();
         this.length++;
         if (id >= this.songList.length) {
@@ -86,9 +92,9 @@ var playlist = {
      * @throw local file cannot remove
      */
     removeItem: function (id) {
-
         if (id < 0 || id > this.length)throw 'index out of range';
-        if (!this.timestamp)throw 'local file cannot remove';
+        var index = category.findPltIndexByTs(this.timestamp);
+        if (!entry.getMode(category.plts[index].type, 1))throw 'local file cannot remove';
 
         if (id == this.ID) {
             this.ID = -1;
@@ -173,13 +179,16 @@ var playlist = {
         }
         this.setState(id);
         //获得真实的序号
-        var $tr = this.$.tr().eq(id);
         return this.songList[id];
     },
     addtoDOM: function () {
-        if (!this.domCache)return;
-        this.$.frame.append(this.domCache);
-        this.domCache = '';//flush
+        if (this.domCache.length == 0)return;
+        //this.$.frame.append(this.domCache);
+        var $frame = this.$.frame;
+        this.domCache.forEach(function (o) {
+            $frame.append(o);
+        });
+        this.domCache = [];//flush
     },
     create$DropDownMenus: function () {
         //形成下拉列表

@@ -9,7 +9,8 @@ var fm = require('./model/FileManager');
 var api = require('./model/NetEaseMusic');
 var utils = require('./model/Utils');
 var PltM = require('./model/PlaylistModel');
-
+var SongM = require('./model/SongModel');
+var Player = require('./model/player_backup');
 var Event = (function () {
     var w = $(window);
     return {
@@ -39,13 +40,20 @@ var createDOM = function (name, options, inner) {
     return dom;
 }
 
-nav.init();
-account.init();
-progress.init();
-controls.init();
-settings.init();
-category.init();
+//nav.init();
+//account.init();
+//progress.init();
+//controls.init();
+//settings.init();
+//category.init();
+var nav = new Nav();
+var account = new Account();
+var progress = new Progress();
+var controls = new Controls();
+var settings = new Settings();
+var category = new Category();
 
+category.loadPlaylists(null, true);
 //table屏蔽选中
 $('table').on('selectstart', function (e) {
     e.preventDefault();
