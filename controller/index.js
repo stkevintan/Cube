@@ -9,6 +9,7 @@ var fm = require('./model/FileManager');
 var api = require('./model/NetEaseMusic');
 var utils = require('./model/Utils');
 var PltM = require('./model/PlaylistModel');
+
 var Event = (function () {
     var w = $(window);
     return {
@@ -27,6 +28,7 @@ var Event = (function () {
         }
     }
 })();
+
 var createDOM = function (name, options, inner) {
     var dom = document.createElement(name);
     for (var key in options) {
@@ -38,16 +40,17 @@ var createDOM = function (name, options, inner) {
 }
 
 nav.init();
-//userinfo.init();
 account.init();
 progress.init();
 controls.init();
 settings.init();
 category.init();
+
 //table屏蔽选中
 $('table').on('selectstart', function (e) {
     e.preventDefault();
 });
+
 win.setMinimumSize(560, 60);
 
 win.on('close', function () {

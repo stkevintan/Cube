@@ -181,6 +181,20 @@ var playlist = {
         this.$.frame.append(this.domCache);
         this.domCache = '';//flush
     },
+    create$DropDownMenus: function () {
+        //形成下拉列表
+        var menuDOM = [];
+        for (var i = 0; i < category.plts.length; i++) {
+            var cur = category.plts[i];
+            if (cur.timestamp != this.timestamp && entry.getMode(cur.type, 1)) {
+                var li = createDOM('li', {role: "presentation", "data-target": cur.timestamp});
+                var a = createDOM('a', {role: "menuitem", tabindex: -1, href: "javascript:0"}, cur.name);
+                li.appendChild(a);
+                menuDOM.push(li);
+            }
+        }
+        return menuDOM;
+    },
     listen: function () {
         var that = this;
         this.$.frame.on('dblclick', 'tr', function () {
@@ -194,48 +208,18 @@ var playlist = {
             Event.emit('playerPlay', 1, songModel);
         });
         this.$.frame.on('click', 'span.glyphicon-plus', function (e) {
-            var $tr = $(this).closest('tr');
-            //形成下拉列表
-            var menuStuff = '';
-            var dropdown = $tr.find('.dropdown-menu');
-            for (var i = 0; i < category.plts.length; i++) {
-                var cur = category.plts[i];
-                if (cur.timestamp != that.timestamp && entry.getMode(cur.type, 1)) {
-                    menuStuff += '<li role="presentation">'
-                        + '<a role="menuitem" tabindex="-1" href="javascript:0">'
-                        + cur.name
-                        + '</a></li>';
-                }
-            }
-            if (menuStuff == '') {
-                e.stopPropagation();
-                return;
-            }
-            dropdown.html(menuStuff);
+            var menuDOM = that.create$DropDownMenus();
+            if (menuDOM.length == 0) e.stopPropagation();
+            else $(this).closest('tr').find('.dropdown-menu').html(menuDOM);
         });
 
         this.$.frame.on('click', '.dropdown-menu li', function () {
-            var $tr = $(this).closest('tr');
-            //获得目标播放列表对象
-            var itName = $(this).text();
-            var itID = -1;
-            category.$.lis().children('a').each(function (i) {
-                if ($(this).children('div.name').text() == itName) {
-                    itID = i;
-                }
-            });
-            var itList = category.get$plt(itID);
-            var id = $tr.index();
-            if (itList != null) {
-                //添加当前歌曲到指定播放列表
-                itList.addItem(that.songList[id], true);
-            }
-
+            var index = $(this).closest('tr').index();
+            var ts = $(this).data('target');
+            category.$plts[ts].addItem(that.songList[index], true);
         });
-
         this.$.frame.on('click', '.glyphicon-trash', function () {
-            var $tr = $(this).closest('tr');
-            that.removeItem($tr.index());//不能用id
+            that.removeItem($(this).closest('tr').index());//不能用id
         });
     }
 }

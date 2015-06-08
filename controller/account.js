@@ -67,7 +67,7 @@ var account = {
         //设置用户头像
         var nickname = data.nickname;
         var avatarUrl = data.avatarUrl;
-        userinfo.setState(nickname, avatarUrl);
+        //userinfo.setState(nickname, avatarUrl);
         if (nickname) {
             this.isLogin = true;
             nav.setMenu(1);

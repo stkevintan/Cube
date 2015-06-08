@@ -26,19 +26,6 @@ var category = {
             table: $('table')
         }
         this.domCache = [];
-        //this.$.entry.slimScroll({
-        //    height: '100%',
-        //    width: '100%',
-        //    railVisible: true,
-        //    distance: '0px',
-        //    size: '2px'
-        //
-        //});
-        //this.$.table.slimScroll({
-        //    height: '100%',
-        //    railVisible: true,
-        //    distance: '-1px'
-        //})
         this.listen(this);
         this.addEvents();
         this.$.refresh.trigger('click');
@@ -53,7 +40,6 @@ var category = {
      */
     loadEntry: function (options, isClean) {
         if (isClean) {
-            this.ID = -1;
             this.$plts = {};
             this.plts = [];
             this.pLength = 0;//playlist's length
@@ -66,7 +52,7 @@ var category = {
             options = {};
             for (var key in schema) {
                 if (schema.hasOwnProperty(key)) {
-                    this.add$Entry(key, schema[key].name);
+                    this.add$EntryFrame(key, schema[key].name);
                     options[key] = true;
                 }
             }
@@ -90,11 +76,7 @@ var category = {
                 Event.emit('entryLoad');
                 return;
             }
-            if (plts.length > 1 && plts[0].timestamp) {
-                plts = plts.sort(function (a, b) {
-                    return a.timestamp - b.timestamp;
-                });
-            }
+
             that.plts = that.plts.concat(plts);
             for (var i = 0; i < plts.length; i++) {
                 that.addItem(plts[i]);
@@ -114,41 +96,15 @@ var category = {
     create$plt: function (timestamp, songList) {
         var o = playlist.init;
         o.prototype = playlist;
-        var id = '_' + timestamp;
-        this.$.table.append('<tbody style="display:none" id="' + id + '"></tbody>');
-        this.$plts[timestamp] = new o(timestamp, songList, this.$.table.find('#' + id));
+        var tbody = createDOM('tbody', {style: 'display:none', id: '_' + timestamp});
+        this.$.table.append(tbody);
+        this.$plts[timestamp] = new o(timestamp, songList, $(tbody));
     },
-    /*
-     <div class="plts-group">
-     <div class="plts-title">本地音乐</div>
-     <ul class="nav nav-sidebar"></ul>
-     </div>
-     */
-    add$Entry: function (key, name) {
-
-        var div = createDOM('div', {
-            class: 'plts-group',
-            id: '__' + key
-        });
-
-        div.appendChild(createDOM('div', {
-            class: 'plts-title'
-        }, name));
-        div.appendChild(createDOM('ul', {
-            class: 'nav nav-sidebar'
-        }));
-
-
-        var el = this.$.entry[0].appendChild(div).getElementsByTagName('ul')[0];
-        var that = this;
-        Sortable.create(el, {
-            onEnd: function (e) {
-                that.ID = that.getActive$li();
-            }
-        });
-    },
-    getActive$li: function () {
-        return this.$.lis().index(this.$.entry.find('li.active'));
+    add$EntryFrame: function (key, name) {
+        var div = createDOM('div', {class: 'plts-group', id: '__' + key});
+        div.appendChild(createDOM('div', {class: 'plts-title'}, name));
+        div.appendChild(createDOM('ul', {class: 'nav nav-sidebar'}));
+        Sortable.create(this.$.entry[0].appendChild(div).getElementsByTagName('ul')[0]);
     },
     /**
      * @description add playlist
@@ -163,51 +119,31 @@ var category = {
             //没有时间戳
             ts = pltModel.timestamp = (new Date()).getTime();
         }
-        var li = createDOM('li', {
-            'data-target': ts
-        });
-        var a = createDOM('a', {
-            title: pltModel.name,
-            href: 'javascript:void(0)'
-        });
-        var divName = createDOM('div', {
-            class: 'name'
-        }, pltModel.name);
 
-        var divLimark = createDOM('div', {
-            class: 'limark'
-        });
-        if (entry.getMode(pltModel.type, 1)) {
-            divLimark.appendChild(createDOM('span', {
-                class: 'glyphicon glyphicon-trash'
-            }));
-        }
+        var li = createDOM('li', {'data-target': ts});
+        var a = createDOM('a', {title: pltModel.name, href: 'javascript:void(0)'});
+        var divName = createDOM('div', {class: 'name'}, pltModel.name);
+        var divLimark = createDOM('div', {class: 'limark'});
 
-        divLimark.appendChild(createDOM('span', {
-            class: 'badge'
-        }, pltModel.songList.length));
-
+        entry.getMode(pltModel.type, 1) &&
+        divLimark.appendChild(createDOM('span', {class: 'glyphicon glyphicon-trash'}));
+        divLimark.appendChild(createDOM('span', {class: 'badge'}, pltModel.songList.length));
         li.appendChild(a);
         a.appendChild(divName);
         a.appendChild(divLimark);
 
-        this.domCache.push({
-            key: pltModel.type,
-            dom: li
-        });
-        if (this.plts.length <= this.pLength) {
+        this.domCache.push({type: pltModel.type, dom: li});
+        if (this.refreshable) {//没有在loadPlt过程中
             this.plts.push(pltModel);
         }
         this.pLength++;
         this.create$plt(ts, pltModel.songList);
+
         if (instant) {
             this.addtoDOM();
-            this.ID = this.getActive$li();
             this.setState(this.$.lis().index(li));
         }
-
-    }
-    ,
+    },
     /**
      * @description switch to last or "id"th playlist.
      *
@@ -216,38 +152,18 @@ var category = {
      * @throw index out of range
      */
     setState: function (id) {
-        if (!utils.isNumber(id)) {
-            id = this.pLength - 1;
-        }
         if (id < 0 || id >= this.pLength)throw 'index out of range' + id;
-        var $lis = this.$.lis();
-        if (this.ID == id) return;
-        if (this.ID >= 0) {
-            var old$li = $lis.eq(this.ID);
-            old$li.removeClass('active');
-            this.$plts[old$li.data('target')].hide();
+        var lis = this.$.lis();
+        var curli = this.$.entry.find('li.active');
+        var curID = lis.index(curli);
+        if (curID == id)return;
+        if (curID != -1) {
+            curli.removeClass('active');
+            this.$plts[curli.data('target')].hide();
         }
-        var new$li = $lis.eq(id);
-        new$li.addClass('active');
-        this.$plts[new$li.data('target')].show();
-        this.ID = id;
-    }
-    ,
-    /**
-     * @description get playlist object by id
-     *
-     * @param {number} [id=category.ID] - index of the playlist in category
-     *
-     * @return {object} playlist object
-     *
-     * @throw index out of range
-     */
-    get$plt: function (id) {
-        if (!utils.isNumber(id))id = this.ID;
-        if (id < 0 || id >= this.pLength)throw 'index out of range';
-        var $li = this.$.lis();
-        var target = $li.eq(id).data('target');
-        return this.$plts[target];
+        var newli = lis.eq(id);
+        newli.addClass('active');
+        this.$plts[newli.data('target')].show();
     },
     /**
      * @description remove playlist by id.
@@ -258,11 +174,15 @@ var category = {
      */
     removeItem: function (id) {
         if (id < 0 || id >= this.pLength)throw 'index out of range';
-        var $lis = this.$.lis();
-        var now$plt = this.get$plt(id);
-        var liID = $lis.eq(id);
-        liID.slideUp(600, function () {
-            liID.remove();
+        var li = this.$.lis().eq(id);
+        var now$plt = this.$plts[li.data('target')];
+
+        var that = this;
+        li.slideUp(600, function () {
+            if (li.hasClass('active')) {
+                that.setState(0);
+            }
+            li.remove();
             now$plt.$.frame.remove();
         });
         if (now$plt == controls.playlist) {
@@ -280,13 +200,6 @@ var category = {
 
         delete now$plt;
         this.pLength--;
-
-        if (id == this.ID) {
-            this.ID = -1;
-            this.setState(0);
-        } else if (id < this.ID) {
-            this.ID--;
-        }
     },
     addUserPlt: function (name) {
         var plt = new PltM({
@@ -361,11 +274,11 @@ var category = {
         var tmp$ = {};
         var that = this;
         this.domCache.forEach(function (o) {
-            if (!tmp$[o.key]) {
-                tmp$[o.key] = that.$.entry.find('#__' + o.key).find('ul');
+            if (!tmp$[o.type]) {
+                tmp$[o.type] = that.$.entry.find('#__' + o.type).find('ul');
             }
             o.dom.style.display = 'none';
-            tmp$[o.key][0].appendChild(o.dom);
+            tmp$[o.type][0].appendChild(o.dom);
             $(o.dom).slideDown(600);
         });
         //flush dom cache
@@ -381,6 +294,11 @@ var category = {
             if (count == this.eLength) {
                 //All playgroup load ready! flush domCache to dom!
                 this.$.refresh.removeClass('loading');
+                //sort plts to fix some bugs
+                if (this.plts.length > 1)
+                    this.plts = this.plts.sort(function (a, b) {
+                        return a.timestamp - b.timestamp;
+                    });
                 count = 0;
                 this.refreshable = true;
                 account.setAssessable(true);

@@ -33,6 +33,7 @@ var config = {
 var scheme = {
     path: toAbsolute('data', 'scheme.json'),
     content: [],
+    isChanged: 0,
     indexOf: function (pltm) {
         return utils.binarySearch(this.content, pltm.timestamp, function (o) {
             return o.timestamp;
@@ -55,19 +56,11 @@ var fileManager = function () {
     }
 }
 fileManager.prototype.SaveChanges = function (callback) {
-    async.parallel([
-        function (callback) {
-            if (config.isChanged) {
-                fs.writeFile(config.path,
-                    JSON.stringify(config.content),
-                    callback)
-            } else callback(null);
-        }, function (callback) {
-            fs.writeFile(scheme.path,
-                JSON.stringify(scheme.content),
-                callback);
-        }
-    ], callback);
+    async.each([config, scheme], function (item, callback) {
+        if (item.isChanged) {
+            fs.writeFile(item.path, JSON.stringify(item.content), callback);
+        } else callback(null);
+    }, callback);
 }
 
 fileManager.prototype.setMusicDir = function (dir) {
@@ -110,6 +103,7 @@ fileManager.prototype.getLocal = function (callback) {
     });
 }
 fileManager.prototype.loadScheme = function (callback) {
+    scheme.isChanged = 1;
     fs.readFile(scheme.path, 'utf-8', function (err, contents) {
         if (err)callback(err);
         else callback(null, modefy(JSON.parse(contents)));
@@ -117,7 +111,7 @@ fileManager.prototype.loadScheme = function (callback) {
 }
 
 fileManager.prototype.getScheme = function (callback) {
-    if (scheme.content.length == 0) {
+    if (scheme.isChanged == 0) {
         this.loadScheme(function (err, content) {
             if (err) callback('getScheme error' + err);
             else {
@@ -134,6 +128,7 @@ fileManager.prototype.addScheme = function (plt) {
         console.log('addScheme failed');
         return;
     }
+    scheme.isChanged = 1;
     scheme.content.push(plt);
 }
 fileManager.prototype.setScheme = function (plt) {
@@ -141,9 +136,12 @@ fileManager.prototype.setScheme = function (plt) {
         console.log('setScheme failed');
         return;
     }
+    scheme.isChanged = 1;
     var index = scheme.indexOf(plt);
-    if (index == -1) {
-        scheme.content.push(plt);
+    if (index != -1) {
+        scheme.content[index] = plt;
+    } else {
+        console.log('setScheme failed');
     }
 }
 fileManager.prototype.delScheme = function (plt) {
@@ -151,10 +149,13 @@ fileManager.prototype.delScheme = function (plt) {
         console.log('delScheme failed');
         return;
     }
+    scheme.isChanged = 1;
     var index = scheme.indexOf(plt);
     console.log(index);
     if (index != -1) {
         scheme.content.splice(index, 1);
+    } else {
+        console.log('setScheme failed');
     }
 }
 fileManager.prototype.setUserData = function (data) {
