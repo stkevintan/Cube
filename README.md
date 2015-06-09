@@ -45,7 +45,7 @@ Linux :[x64](http://7xiyak.com1.z0.glb.clouddn.com/1.1.0nwMusicBox_linux64.zip)
 
 
 ###Screenshots   
-<img src="http://7xiyak.com1.z0.glb.clouddn.com/s35.png“/>   
+<img src="http://7xiyak.com1.z0.glb.clouddn.com/s35.png"/>   
 <img src="http://7xiyak.com1.z0.glb.clouddn.com/s36.png"/>   
 <img src="http://7xiyak.com1.z0.glb.clouddn.com/s37.png"/>   
 
