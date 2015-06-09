@@ -2,7 +2,6 @@
 
 使用html5和node.js构建的网易云音乐的跨平台第三方客户端。    
 
-<img src="http://7xiyak.com1.z0.glb.clouddn.com/nw-musicbox.gif" />
 
 
 ###Release
@@ -43,6 +42,13 @@ Linux :[x64](http://7xiyak.com1.z0.glb.clouddn.com/1.1.0nwMusicBox_linux64.zip)
 
 ###Update  
 `cd /path/to/NetEaseMusic/ && git pull`  
+
+
+###Screenshots   
+<img src="http://7xiyak.com1.z0.glb.clouddn.com/s35.png“/>   
+<img src="http://7xiyak.com1.z0.glb.clouddn.com/s36.png"/>   
+<img src="http://7xiyak.com1.z0.glb.clouddn.com/s37.png"/>   
+
 
 ###troubleshooting  
 遇到什么问题可以尝试一下删除项目主目录中data目录再重启。  
