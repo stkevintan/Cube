@@ -6,8 +6,8 @@
 
 
 ###Release
-__version 1.2.0__  
-Linux:[x64](http://7xiyak.com1.z0.glb.clouddn.com/1.2.0nwMusicBox_linux64.zip)  
+__version 1.2.1__  
+Linux:[x64](http://7xiyak.com1.z0.glb.clouddn.com/1.2.1nw_musicbox_linux64.zip)  
 
 
 __version 1.1.0__     
