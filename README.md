@@ -1,5 +1,5 @@
-# NetEaseMusic  
-
+# NW Musicbox  
+![Alt icon](http://7xiyak.com1.z0.glb.clouddn.com/icon.png)  
 使用html5和node.js构建的网易云音乐的跨平台第三方客户端。    
 
 
