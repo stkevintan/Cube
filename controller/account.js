@@ -7,7 +7,7 @@
  */
 var Account = function () {
     this.$ = {
-        launcher: $('#launcher'),
+        userProfile: $('#user-profile'),
         login: $('#login'),
         submit: $('#login').find('button.submit'),
         label: $('#login').find('label'),
@@ -24,16 +24,15 @@ Account.prototype = {
         //获得登录信息
         var userData = fm.getUserData();
         if (userData) {
-            var profile = userData.profile;
-            this.setState(profile);
+            this.setUserProfile(userData.profile);
         } else {
-            this.setState();
+            this.setUserProfile();
         }
     },
     unsign: function () {
         fm.setUserData(null);
-        this.setState();
-        category.$.refresh.trigger('click');
+        this.setUserProfile();
+        category.loadPlaylists({'net': true});
     },
     showlogin: function () {
         this.$.label.hide();
@@ -44,40 +43,24 @@ Account.prototype = {
         this.$.label.text(msg);
         this.$.label.show();
     },
-    loginSuccess: function (data) {
+    loginSuccess: function (profile) {
         this.$.label.text('');
         this.$.login.modal('hide');
-        this.setState(data);
-        category.loadPlaylists({
-            net: true
-        });
+        this.setUserProfile(profile);
+        category.loadPlaylists({net: true});
     },
     setAssessable: function (f) {
         if (f) {
-            this.$.launcher.removeClass('disabled');
+            this.$.userProfile.attr('data-toggle', 'dropdown');
         } else {
-            this.$.launcher.addClass('disabled');
+            this.$.userProfile.removeAttr('data-toggle');
         }
     },
     /**
-     * @description set the User Profile by "data"
-     *
-     * @param {object} [data] - contains nickname && avatarUrl property
      */
-    setState: function (data) {
-        data = data || {};
-        //设置用户头像
-        var nickname = data.nickname;
-        var avatarUrl = data.avatarUrl;
-        //userinfo.setState(nickname, avatarUrl);
-        if (nickname) {
-            this.isLogin = true;
-            nav.setMenu(1);
-        }
-        else {
-            this.isLogin = false;
-            nav.setMenu(0);
-        }
+    setUserProfile: function (profile) {
+        profile = profile || {nickname: '未登录', avatarUrl: ''};
+        nav.setMenu(profile.nickname, profile.avatarUrl);
     },
     listen: function (that) {
         this.$.submit.click(function () {

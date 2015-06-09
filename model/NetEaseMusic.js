@@ -26,10 +26,10 @@ NetEaseMusic.prototype = {
     httpRequest: function (method, url, data, callback) {
         var header = this.header;
         if (method == 'post') {
-            request.post(url).set(header).send(data).end(callback);
+            request.post(url).set(header).send(data).timeout(6000).end(callback);
 
         } else {
-            request.get(url).set(header).query(data).end(callback);
+            request.get(url).set(header).query(data).timeout(6000).end(callback);
         }
     },
     login: function (username, password, callback) {
@@ -156,7 +156,6 @@ NetEaseMusic.prototype = {
         var offset = argv[2] || 0;
         var total = argv[3] || 'true';
         var limit = argv[4] || fm.getSearchLimit();
-
         var url = 'http://music.163.com/api/search/get/web';
         var data = {
             's': s,
@@ -203,6 +202,10 @@ NetEaseMusic.prototype = {
             for (var k = 0; k < num; k++) {
                 var idTmp = idArray.slice(k * 100, Math.min((k + 1) * 100, idArray.length));
                 that.songsDetail(idTmp, function (err, songs) {
+                    if (err) {
+                        console.log('songsDetail error' + err);
+                        return;
+                    }
                     for (var i = 0; i < songs.length; i++) {
                         var index = idMap[songs[i].id];
                         songList[index].src = songs[i].mp3Url;

@@ -143,11 +143,7 @@ Controls.prototype = {
             case 1:
                 progress.setState(0, 0, data.title);
                 this.player.setSrc(data.src);
-                if (data.pic) {
-                    this.$.songPic.attr('src', data.pic);
-                } else {
-                    this.$.songPic.attr('src', 'assets/img/Ever%20Eternity.jpg');
-                }
+                this.$.songPic.attr('src', data.pic);
                 break;
             case 2:
                 var _data = this.playlist.next(data);
@@ -156,7 +152,7 @@ Controls.prototype = {
             default:
                 Event.emit('playerStop');
                 data = data || "未选择歌曲";
-                this.$.songPic.attr('src', 'assets/img/Ever%20Eternity.jpg');
+                this.$.songPic.attr('src', '');
                 progress.setState(0, 0, data);
         }
     },

@@ -9,9 +9,19 @@
  */
 var Nav = function () {
     this.ID = 0;
+    var tabName = ['#main', '#settings', '#about'];
     this.$ = {
-        tabs: ['#main', '#settings', '#about'],
-        search: '#search'
+        tabBody: tabName.map(function (s) {
+            return $(s);
+        }),
+        tabHead: tabName.map(function (s) {
+            return $(s + '-nav');
+        }),
+        search: $('#search'),
+        UserImg: $('#user-profile img'),
+        UserTxt: $('#user-profile p'),
+        MenuItem0: $('#menugo-0'),
+        MenuItem1: $('#menugo-1')
     };
     this.listen(this);
 }
@@ -24,12 +34,11 @@ Nav.prototype = {
     setState: function (id) {
         id = id || 0;
         if (id == this.ID)return;
-        var Old = this.$.tabs[this.ID];
-        var New = this.$.tabs[id];
-        $(Old).fadeOut(100, function () {
-            $(New).fadeIn(100);
+        var that=this;
+        this.$.tabBody[this.ID].fadeOut(100, function () {
+            that.$.tabBody[id].fadeIn(100);
         });
-        $([$(Old + '-nav'), $(New + '-nav')]).toggleClass('active');
+        $([this.$.tabHead[this.ID], this.$.tabHead[id]]).toggleClass('active');
         this.ID = id;
     }
     ,
@@ -39,16 +48,16 @@ Nav.prototype = {
      * @throw search api returns an error
      */
     search: function () {
-        var key = $(this.$.search).val();
+        var key = this.$.search.val();
         api.search(key, function (err, results) {
             if (err) throw 'search api returns an error:' + err;
             var name = '"' + key + '"的搜索结果';
-            var data = results;
-            category.addItem({
+            var songList = results;
+            category.addItem(new PltM({
                 name: name,
-                data: data
-            });
-            category.setState();
+                type: 'user',
+                songList: songList
+            }), true);
         });
     }
     ,
@@ -80,16 +89,17 @@ Nav.prototype = {
      *
      * @param type  0 - unsigned, 1 - signed
      */
-    setMenu: function (type) {
-        if (type) {
-            $('#menugo-0').hide();
-            $('#menugo-1').show();
+    setMenu: function (nickname, avatarUrl) {
+        if (avatarUrl) {
+            this.$.MenuItem0.hide();
+            this.$.MenuItem1.show();
         } else {
-            $('#menugo-1').hide();
-            $('#menugo-0').show();
+            this.$.MenuItem1.hide();
+            this.$.MenuItem0.show();
         }
-    }
-    ,
+        this.$.UserImg.attr('src', avatarUrl);
+        this.$.UserTxt.text(nickname);
+    },
     /**
      * @description define the action after click a MenuItem
      *
@@ -101,8 +111,7 @@ Nav.prototype = {
         } else {
             account.unsign();
         }
-    }
-    ,
+    },
     /**
      * @description attach handler to events
      *

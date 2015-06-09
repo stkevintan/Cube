@@ -26,7 +26,7 @@ Settings.prototype = {
             if (fm.setMusicDir(newDir)) {
                 that.$.musicDir.val(newDir);
                 //reload localdir
-                category.loadPlaylists(null, true);
+                category.loadPlaylists({'local': true});
             }
         });
         this.$.searchLimit.change(function () {

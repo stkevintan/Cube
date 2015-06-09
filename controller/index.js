@@ -40,12 +40,6 @@ var createDOM = function (name, options, inner) {
     return dom;
 }
 
-//nav.init();
-//account.init();
-//progress.init();
-//controls.init();
-//settings.init();
-//category.init();
 var nav = new Nav();
 var account = new Account();
 var progress = new Progress();
@@ -54,6 +48,7 @@ var settings = new Settings();
 var category = new Category();
 
 category.loadPlaylists(null, true);
+
 //table屏蔽选中
 $('table').on('selectstart', function (e) {
     e.preventDefault();

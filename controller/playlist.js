@@ -25,7 +25,13 @@ var Playlist = function (frame, songList) {
 
 Playlist.prototype = {
     show: function () {
-        this.$.frame.fadeIn();
+        var table = category.$.table;
+        if (table.css('display') == 'none') {
+            this.$.frame.show();
+            table.fadeIn();
+        } else {
+            this.$.frame.fadeIn();
+        }
     },
     hide: function () {
         this.$.frame.hide();

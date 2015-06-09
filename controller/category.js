@@ -1,6 +1,5 @@
 /**
  * Created by kevin on 15-5-8.
- * @constructor category.init
  *
  * @author Kevin Tan
  *
@@ -32,14 +31,6 @@ function Category() {
 }
 
 Category.prototype = {
-    /**
-     * load entries defined in source object.
-     *
-     * @param {object} [options] - {sourceName:true|false}
-     *                             only load source which sourceName's value is true.
-     *                             if null,load all the sources.
-     * @param {boolean} [isClean] - if to remove all the playlist at first.
-     */
     loadPlaylists: function (options, isClean) {
         if (loading) return;
         if (isClean) {
@@ -52,7 +43,7 @@ Category.prototype = {
 
             Event.emit('playerExit');
             Event.once('setActive', function () {
-                this.setState(0);
+                this.setActive();
             }, this);
         }
         var schema = entry.schema;
@@ -60,7 +51,6 @@ Category.prototype = {
             options = {};
             for (var key in schema) {
                 if (schema.hasOwnProperty(key)) {
-                    this.add$EntryFrame(key, schema[key].name);
                     options[key] = true;
                 }
             }
@@ -69,35 +59,44 @@ Category.prototype = {
         loadSize = 0;
         var that = this;
         for (var key in options) {
-            if (!options[key] || !options.hasOwnProperty(key)) continue;
-            loadSize++;
-            var loader = schema[key].loader;
-            if (utils.isFunction(loader)) {
-                loader(callback);
+            if (options.hasOwnProperty(key) && options[key]) {
+                loadSize++;
+                this.add$EntryFrame(key, schema[key].name);
             }
         }
+
         if (loadSize) {
             //enter loading state
             account.setAssessable(false);
             this.$.refresh.addClass('loading');
             loading = true;
-        }
 
+            for (var key in options) {
+                if (options.hasOwnProperty(key) && options[key]) {
+                    var loader = schema[key].loader;
+                    if (utils.isFunction(loader)) loader(callback);
+                }
+            }
+        }
         function callback(err, plts) {
             if (err || !utils.isArray(plts)) {
                 console.log(err || "the source doesn't return an Array!");
-                Event.emit('entryLoad');
-                return;
-            }
-
-            that.plts = that.plts.concat(plts);
-            for (var i = 0; i < plts.length; i++) {
-                that.addItem(plts[i]);
+            } else {
+                that.plts = that.plts.concat(plts);
+                for (var i = 0; i < plts.length; i++) that.addItem(plts[i]);
             }
             Event.emit('entryLoad');
         }
     },
     add$EntryFrame: function (key, name) {
+        var old = this.$.entry.find('#__' + key);
+        if (old.length) {
+            var that = this;
+            old.find('li').each(function () {
+                that.removeItem($(this));
+            });
+            return;
+        }
         var div = createDOM('div', {class: 'plts-group', id: '__' + key});
         div.appendChild(createDOM('div', {class: 'plts-title'}, name));
         div.appendChild(createDOM('ul', {class: 'nav nav-sidebar'}));
@@ -137,6 +136,9 @@ Category.prototype = {
 
         this.domCache.push({type: pltModel.type, dom: li});
         if (!loading) {//not in loading process
+            if (pltModel.type == 'user') {
+                fm.addScheme(pltModel);
+            }
             this.plts.push(pltModel);
         }
         this.pLength++;
@@ -144,48 +146,39 @@ Category.prototype = {
         this.$plts[ts] = new Playlist(tbody, pltModel.songList);
         if (instant) {
             this.addtoDOM();
-            this.setState(this.$.lis().index(li));
+            this.setActive($(li));
         }
     },
-    /**
-     * @description switch to last or "id"th playlist.
-     *
-     * @param {number} [id=lastIndex] - the index of playlist to switch,
-     *
-     * @throw index out of range
-     */
-    setState: function (id) {
-        if (id < 0 || id >= this.pLength)throw 'index out of range' + id;
-        var lis = this.$.lis();
-        var curli = this.$.entry.find('li.active');
-        var curID = lis.index(curli);
-        if (curID == id)return;
-        if (curID != -1) {
+    getActive: function () {
+        return this.$.entry.find('li.active');
+    },
+    setActive: function (li) {
+        li = li || this.$.lis().eq(0);
+        if (li.length == 0) return;
+        var curli = this.getActive();
+        if (curli == li)return;
+        if (curli.length) {
             curli.removeClass('active');
             this.$plts[curli.data('target')].hide();
         }
-        var newli = lis.eq(id);
-        newli.addClass('active');
-        this.$plts[newli.data('target')].show();
+        li.addClass('active');
+        this.$plts[li.data('target')].show();
     },
     /**
-     * @description remove playlist by id.
+     * @description remove playlist by $li.
      *
-     * @param {number} id - index of the playlist in category
+     * @param {object} li - index of the playlist in category
      *
      * @throw index out of range
      */
-    removeItem: function (id) {
-        if (id < 0 || id >= this.pLength)throw 'index out of range';
-        var li = this.$.lis().eq(id);
+    removeItem: function (li) {
         var now$plt = this.$plts[li.data('target')];
-
         var that = this;
         li.slideUp(600, function () {
-            if (li.hasClass('active')) {
-                that.setState(0);
-            }
             li.remove();
+            if (li.hasClass('active')) {
+                that.setActive();
+            }
             now$plt.$.frame.remove();
         });
         if (now$plt == controls.playlist) {
@@ -201,20 +194,15 @@ Category.prototype = {
         delete now$plt;
         this.pLength--;
     },
-    addUserPlt: function (name) {
-        var plt = new PltM({name: name, type: 'user'});
-        this.addItem(plt, true);
-        fm.addScheme(plt);
-    },
     listen: function (that) {
         //事件委托
         this.$.entry.on('click', 'li', function () {
-            that.setState(that.$.lis().index(this));
+            that.setActive($(this));
         });
 
         this.$.entry.on('click', 'li span.glyphicon-trash', function (e) {
             var it = $(this).closest('li');
-            that.removeItem(that.$.lis().index(it));
+            that.removeItem(it);
             e.stopPropagation();
         });
 
@@ -241,7 +229,8 @@ Category.prototype = {
             });
             if (flag) {
                 model.modal('hide');
-                that.addUserPlt(val);
+                var plt = new PltM({name: val, type: 'user'});
+                that.addItem(plt, true);
             } else {
                 model.find('label').fadeIn();
                 model.addClass('has-error');
