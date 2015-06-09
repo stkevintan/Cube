@@ -1,7 +1,7 @@
 # NW Musicbox  
-<img style="vertical-align:middle;" src="http://7xiyak.com1.z0.glb.clouddn.com/icon.png"/>
-使用html5和node.js构建的网易云音乐的跨平台第三方客户端。    
 
+使用html5和node.js构建的网易云音乐的跨平台第三方客户端。    
+<img style="vertical-align:middle;margin-right:50px" src="http://7xiyak.com1.z0.glb.clouddn.com/icon.png"/>  
 ###Release
 __version 1.2.2__  
 Linux:[x64](http://7xiyak.com1.z0.glb.clouddn.com/1.2.2linux64.zip)  
