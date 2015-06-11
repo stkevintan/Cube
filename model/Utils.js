@@ -16,6 +16,7 @@ base.binarySearch = function (array, value, compare) {
     }
     return res;
 }
+
 var isType = function (name) {
     return function (v) {
         return Object.prototype.toString.call(v) === '[object ' + name + ']';

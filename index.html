@@ -6,6 +6,7 @@
     <title>NetEaseMusic</title>
     <link href="assets/css/bootstrap.min.css" rel="stylesheet">
     <link href="assets/css/my.css" rel="stylesheet">
+    <link href="http://cdn.bootcss.com/bootstrap-slider/4.8.3/css/bootstrap-slider.min.css" rel="stylesheet">
 </head>
 <body>
 <div id="wrapper">
@@ -52,6 +53,7 @@
                         <a id='user-profile' href="javascript:0" class="dropdown-toggle" data-toggle="dropdown"
                            role="button" aria-expanded="false">
                             <img src="" onError="this.src='assets/img/avater.jpg'" class="img-circle">
+
                             <p>未登录</p>
                             <span class="caret"></span></a>
                         <ul class="dropdown-menu" role="menu">
@@ -62,7 +64,7 @@
                                 <span class="glyphicon glyphicon-log-out"></span>注销</a></li>
                         </ul>
                     </li>
-                    <li><a href="javascript:controls.toggleWindow(false);">
+                    <li><a href="javascript:nav.toggleWindow(false);">
                         <span title="Mini模式" class="glyphicon glyphicon-resize-small"></span>
                     </a></li>
                 </ul>
@@ -196,19 +198,17 @@
             <div class="row">
                 <div class="col-sm-2 ">
                     <div class="audio-control">
-                        <a id="open-side" href="javascript:controls.openSide();">
-                            <span class="glyphicon glyphicon-list"></span>
-                        </a>
-                        <a id="backward" href="javascript:controls.backward();">
+
+                        <a id="backward" href="javascript:player.playNext(-1);">
                             <span class="glyphicon glyphicon-step-backward"></span>
                         </a>
-                        <a id="play" href="javascript:Event.emit('playerPlay');">
+                        <a id="play" href="javascript:player.play();">
                             <span class="glyphicon glyphicon-play"></span>
                         </a>
-                        <a id="pause" style="display:none" href="javascript:Event.emit('playerPause');">
+                        <a id="pause" style="display:none" href="javascript:player.pause();">
                             <span class="glyphicon glyphicon-pause"></span>
                         </a>
-                        <a id="forward" href="javascript:controls.forward();">
+                        <a id="forward" href="javascript:player.playNext(1)">
                             <span class="glyphicon glyphicon-step-forward"></span>
                         </a>
                     </div>
@@ -226,17 +226,20 @@
                             <h4 class="media-heading">未选择音乐</h4>
 
                             <p class="media-time"><span id="cur-time">00.00</span>/<span id="tot-time">00.00</span></p>
-                            <input id='progress' type="range" value="0" min="0" max="60" step="1"/>
+                            <input/>
                         </div>
                     </div>
                 </div>
                 <div class="col-sm-3">
                     <div class="audio-adjust">
-                        <a id="vol-icon" href="javascript:controls.volPanel()">
+                        <a href="javascript:category.toggleOpen();">
+                            <span class="glyphicon glyphicon-list"></span>
+                        </a>
+                        <a id="vol-icon" href="javascript:player.volPanel()">
                             <span title="音量" class="glyphicon glyphicon-volume-up"></span>
                         </a>
 
-                        <a id="order" href="javascript:controls.order();">
+                        <a id="order" href="javascript:player.setOrder();">
                             <span title="列表循环" class="glyphicon glyphicon-repeat"></span>
                         </a>
 
@@ -244,7 +247,7 @@
                     </div>
                 </div>
                 <div class="mini-tool">
-                    <a href="javascript:controls.toggleWindow(true)">
+                    <a href="javascript:nav.toggleWindow(true)">
                         <span title="正常模式" class="glyphicon glyphicon-new-window"></span></a>
                 </div>
             </div>
@@ -259,7 +262,6 @@
             <input id="volume" type="range" min="0" max="1" step="0.01" val="0.3">
         </div>
     </div>
-    <audio></audio>
 </div>
 
 <div id="inputListName" class="modal fade">
@@ -319,15 +321,15 @@
 <!-- /.modal -->
 <script src="assets/js/jquery.min.js"></script>
 <script src="assets/js/bootstrap.min.js"></script>
+<script src="assets/js/bootstrap-slider.min.js"></script>
 <script src="assets/js/sortable.js"></script>
-<script src="controller/entry.js" type="text/javascript"></script>
-<script src="controller/nav.js" type="text/javascript"></script>
-<script src="controller/account.js" type="text/javascript"></script>
-<script src="controller/category.js" type="text/javascript"></script>
-<script src="controller/controls.js" type="text/javascript"></script>
-<script src="controller/playlist.js" type="text/javascript"></script>
-<script src="controller/progress.js" type="text/javascript"></script>
-<script src="controller/settings.js" type="text/javascript"></script>
-<script src="controller/index.js" type="text/javascript"></script>
+<script src="controller/entry.js"></script>
+<script src="controller/nav.js"></script>
+<script src="controller/account.js"></script>
+<script src="controller/category.js"></script>
+<script src="controller/player.js"></script>
+<script src="controller/playlist.js"></script>
+<script src="controller/settings.js"></script>
+<script src="controller/index.js"></script>
 </body>
 </html>

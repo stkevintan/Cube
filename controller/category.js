@@ -25,6 +25,7 @@ function Category() {
         addlist: $('#addlist'),
         table: $('table')
     }
+    this.isOpen = true;
     this.domCache = [];
     this.listen(this);
     this.addEvents();
@@ -41,7 +42,7 @@ Category.prototype = {
             this.$.entry.empty();
             this.$.table.children('tbody').remove();
 
-            Event.emit('playerExit');
+            player.stop();
             Event.once('setActive', function () {
                 this.setActive();
             }, this);
@@ -181,8 +182,8 @@ Category.prototype = {
             }
             now$plt.$.frame.remove();
         });
-        if (now$plt == controls.playlist) {
-            Event.emit('playerExit');
+        if (now$plt == player.playlist) {
+            player.stop();
         }
         var index = this.findPltIndexByTs(now$plt.timestamp);
         if (index != -1) {
@@ -193,6 +194,27 @@ Category.prototype = {
         }
         delete now$plt;
         this.pLength--;
+    },
+    toggleOpen: function () {
+        var list = $('.list');
+        var side = category.$.sidebar;
+        if (this.isOpen) {
+            list.animate({
+                'padding-left': '0px'
+            }, 600);
+            side.animate({
+                right: '100%'
+            }, 600)
+        } else {
+            side.animate({
+                right: '75%'
+            }, 600);
+            list.animate({
+                'padding-left': '25%'
+            }, 600);
+        }
+        this.isOpen ^= 1;
+
     },
     listen: function (that) {
         //事件委托

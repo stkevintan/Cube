@@ -23,6 +23,11 @@ var Nav = function () {
         MenuItem0: $('#menugo-0'),
         MenuItem1: $('#menugo-1')
     };
+    this.WinMode = {
+        isSimp: 0,
+        width: null,
+        height: null
+    }
     this.listen(this);
 }
 Nav.prototype = {
@@ -34,7 +39,7 @@ Nav.prototype = {
     setState: function (id) {
         id = id || 0;
         if (id == this.ID)return;
-        var that=this;
+        var that = this;
         this.$.tabBody[this.ID].fadeOut(100, function () {
             that.$.tabBody[id].fadeIn(100);
         });
@@ -82,8 +87,23 @@ Nav.prototype = {
             win.maximize();
         }
         this.WinMode.isMaxi ^= 1;
-    }
-    ,
+    },
+    /**
+     * toggle Window between normal size and mini size
+     * this is a bug of nw.js. temporary solution.
+     * @param {boolean} [flag=false] - if true,force to normal size,vice verse.
+     */
+    toggleWindow: function (flag) {
+        if (flag || this.WinMode.isSimp) {
+            win.resizeTo(this.WinMode.width, this.WinMode.height);
+        } else {
+            win.unmaximize();
+            this.WinMode.width = win.width;
+            this.WinMode.height = win.height;
+            win.resizeTo(560, 60);
+        }
+        this.WinMode.isSimp ^= 1;
+    },
     /**
      * @description set menu display state
      *

@@ -38,12 +38,13 @@ a {
     background: url('../img/avater.jpg') no-repeat;
     background-size: cover;
 }
-#user-profile p{
+
+#user-profile p {
     margin: 0;
     display: inline-block;
 }
 
-#menugo-0 span,#menugo-1 span {
+#menugo-0 span, #menugo-1 span {
     margin-right: 10px;
 }
 
@@ -329,7 +330,7 @@ div#main {
 }
 
 #footer .audio-control #open-side {
-    margin-right: 10px;
+    /*margin-right: 10px;*/
 }
 
 #footer .audio-adjust a {
@@ -350,6 +351,10 @@ div#main {
     height: 60px;
 }
 
+#footer .audio-body .media {
+    overflow: visible;
+}
+
 #footer .audio-body .media-left {
     position: absolute;
     top: 6px;
@@ -357,8 +362,9 @@ div#main {
 
 #footer .audio-body .media-body {
     width: 100%;
-    padding-left: 60px;
+    padding-left: 65px;
     position: relative;
+    overflow: visible;
 }
 
 #footer .audio-body .media-left a {
@@ -375,8 +381,8 @@ div#main {
     vertical-align: middle;
 }
 
-#footer .audio-body .media-body .media-heading {
-    margin-top: 10px;
+#footer .audio-body .media-heading {
+    margin-top: 12px;
     margin-bottom: 5px;
     white-space: nowrap;
     display: inline-block;
@@ -386,11 +392,45 @@ div#main {
     padding-right: 85px;
 }
 
-#footer .audio-body .media-body .media-time {
+#footer .audio-body .media-time {
     display: block;
     position: absolute;
     right: 0;
     top: 10px;
+}
+
+#footer #progress {
+    width: 100%;
+    margin-top: -10px;
+}
+
+#footer #progress .slider-track {
+    -webkit-box-shadow: 0 1px 0 0px #424242,
+    0 1px 0 #060607 inset,
+    0px 2px 10px 0px black inset,
+    1px 0px 2px rgba(0, 0, 0, 0.4) inset,
+    0 0px 1px rgba(0, 0, 0, 0.6) inset;
+    /*margin-top: 2px;*/
+    background-image: none;
+    width: 100%;
+    border-radius: 15px;
+}
+
+#footer #progress .slider-selection {
+    background: none repeat scroll 0 0 #9CA2A5;
+    border-top-right-radius: 0;
+    border-bottom-right-radius: 0;
+}
+
+#footer #progress .slider-handle {
+    margin-left: -7px;
+    margin-top: -2px;
+    height: 14px;
+    width: 14px;
+    border-radius: 14px;
+    cursor: default;
+    background: none repeat scroll 0 0 #777;
+    -webkit-box-shadow: 0 -1px 1px black inset;
 }
 
 #footer .mini-tool {
@@ -450,29 +490,7 @@ input[type="range"]::-webkit-slider-thumb {
     background: #5e5e5e;
 }
 
-#footer input[type="range"] {
-    -webkit-appearance: none;
-    -webkit-box-shadow: 0 1px 0 0px #424242,
-    0 1px 0 #060607 inset,
-    0px 2px 10px 0px black inset,
-    1px 0px 2px rgba(0, 0, 0, 0.4) inset,
-    0 0px 1px rgba(0, 0, 0, 0.6) inset;
-    margin-top: 2px;
-    background-color: #272728;
-    border-radius: 15px;
-}
-
 input[type="range"]:focus {
     outline: none;
 }
 
-#footer .media-body input[type="range"]::-webkit-slider-thumb {
-    -webkit-appearance: none;
-    cursor: default;
-    top: 1px;
-    height: 9px;
-    width: 20px;
-    background: none repeat scroll 0 0 #777;
-    border-radius: 15px;
-    -webkit-box-shadow: 0 -1px 1px black inset;
-}

@@ -104,7 +104,7 @@ Playlist.prototype = {
 
         if (id == this.ID) {
             this.ID = -1;
-            Event.emit('playerExit');
+            player.stop();
         }
         if (this.ID > id) this.ID--;
         var Tr = this.$.tr();
@@ -175,16 +175,16 @@ Playlist.prototype = {
             case 2:
                 id = this.ID + 1;
                 if (id == this.length) {
-                    Event.emit('playerExit');
                     return;
                 }
                 break;
             case 3:
                 id = Math.round(Math.random() * this.length);
                 break;
+            default:
+                if (!utils.isNumber(id))id = this.ID;
         }
         this.setState(id);
-        //获得真实的序号
         return this.songList[id];
     },
     addtoDOM: function () {
@@ -214,13 +214,14 @@ Playlist.prototype = {
         var that = this;
         this.$.frame.on('dblclick', 'tr', function () {
             //去掉之前播放列表的播放状态
-            var old = controls.playlist;
+
+            var old = player.playlist;
             if (old && old != that)old.setState(-1);
             //获取要播放歌曲的数据
             var songModel = that.next(0, $(this).index());
             //更新controls的playlist
-            controls.playlist = that;
-            Event.emit('playerPlay', 1, songModel);
+            player.playlist = that;
+            player.play(songModel);
         });
         this.$.frame.on('click', 'span.glyphicon-plus', function (e) {
             var menuDOM = that.create$DropDownMenus();
