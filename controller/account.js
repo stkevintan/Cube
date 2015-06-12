@@ -49,13 +49,6 @@ Account.prototype = {
         this.setUserProfile(profile);
         category.loadPlaylists({net: true});
     },
-    setAssessable: function (f) {
-        if (f) {
-            this.$.userProfile.attr('data-toggle', 'dropdown');
-        } else {
-            this.$.userProfile.removeAttr('data-toggle');
-        }
-    },
     /**
      */
     setUserProfile: function (profile) {

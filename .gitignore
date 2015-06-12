@@ -4,3 +4,4 @@ data/
 bin/
 release/
 *.exe
+*.py

@@ -6,16 +6,17 @@
  *
  * @constructor playlist.init
  */
-var Playlist = function (frame, songList) {
+var Playlist = function (frame, index) {
     this.$ = {
         frame: $(frame),
         tr: function () {
             return this.frame.find('tr');
         }
     };
-
-    this.timestamp = new Number(frame.id.substr(1));
-    this.songList = songList;
+    this.index = index;
+    this.timestamp = category.plts[index].timestamp;
+    this.songList = category.plts[index].songList;
+    this.canDel = entry.getMode(category.plts[index].type, 1);
     this.domCache = [];
     this.ID = -1;
     this.length = 0;
@@ -65,19 +66,22 @@ Playlist.prototype = {
 
         var td = createDOM('td', null);
         var span = createDOM('span', {class: 'dropdown'});
-        var aPlus = createDOM('a', {'data-toggle': 'dropdown', href: 'javascript:0'});
-        var aHeart = createDOM('a', {href: 'javascript:0'});
-        var aTrash = createDOM('a', {href: 'javascript:0'});
-        aPlus.appendChild(createDOM('span', {class: 'glyphicon glyphicon-plus'}));
-        aHeart.appendChild(createDOM('span', {class: 'glyphicon glyphicon-heart'}));
-        aTrash.appendChild(createDOM('span', {class: 'glyphicon glyphicon-trash'}));
 
+        var aPlus = createDOM('a', {'data-toggle': 'dropdown', href: 'javascript:0'});
+        aPlus.appendChild(createDOM('span', {class: 'glyphicon glyphicon-plus'}));
         span.appendChild(aPlus);
         span.appendChild(createDOM('ul', {class: 'dropdown-menu', role: 'menu'}));
 
         td.appendChild(span);
+        var aHeart = createDOM('a', {href: 'javascript:0'});
+        aHeart.appendChild(createDOM('span', {class: 'glyphicon glyphicon-heart'}));
         td.appendChild(aHeart);
-        td.appendChild(aTrash);
+
+        if (this.canDel) {//check permission
+            var aTrash = createDOM('a', {href: 'javascript:0'});
+            aTrash.appendChild(createDOM('span', {class: 'glyphicon glyphicon-trash'}));
+            td.appendChild(aTrash);
+        }
         tr.appendChild(td);
 
         this.domCache.push(tr);
@@ -99,9 +103,7 @@ Playlist.prototype = {
      */
     removeItem: function (id) {
         if (id < 0 || id > this.length)throw 'index out of range';
-        var index = category.findPltIndexByTs(this.timestamp);
-        if (!entry.getMode(category.plts[index].type, 1))throw 'local file cannot remove';
-
+        if (!this.canDel)throw 'insufficient permission to remove';
         if (id == this.ID) {
             this.ID = -1;
             player.stop();
@@ -214,7 +216,6 @@ Playlist.prototype = {
         var that = this;
         this.$.frame.on('dblclick', 'tr', function () {
             //去掉之前播放列表的播放状态
-
             var old = player.playlist;
             if (old && old != that)old.setState(-1);
             //获取要播放歌曲的数据
@@ -228,7 +229,10 @@ Playlist.prototype = {
             if (menuDOM.length == 0) e.stopPropagation();
             else $(this).closest('tr').find('.dropdown-menu').html(menuDOM);
         });
-
+        this.$.frame.on('dblclick', 'span.glyphicon-plus', function (e) {
+            //to avoid trigger
+            e.stopPropagation();
+        });
         this.$.frame.on('click', '.dropdown-menu li', function () {
             var index = $(this).closest('tr').index();
             var ts = $(this).data('target');

@@ -27,13 +27,17 @@ function Category() {
     }
     this.isOpen = true;
     this.domCache = [];
+    this.loadQue = new utils.queue();//队列
     this.listen(this);
     this.addEvents();
 }
 
 Category.prototype = {
     loadPlaylists: function (options, isClean) {
-        if (loading) return;
+        if (loading) {
+            this.loadQue.push([options, isClean]);
+            return;
+        }
         if (isClean) {
             this.$plts = {};
             this.plts = [];
@@ -68,10 +72,8 @@ Category.prototype = {
 
         if (loadSize) {
             //enter loading state
-            account.setAssessable(false);
             this.$.refresh.addClass('loading');
             loading = true;
-
             for (var key in options) {
                 if (options.hasOwnProperty(key) && options[key]) {
                     var loader = schema[key].loader;
@@ -83,8 +85,9 @@ Category.prototype = {
             if (err || !utils.isArray(plts)) {
                 console.log(err || "the source doesn't return an Array!");
             } else {
+                var offset = that.plts.length;
                 that.plts = that.plts.concat(plts);
-                for (var i = 0; i < plts.length; i++) that.addItem(plts[i]);
+                for (var i = 0; i < plts.length; i++) that.addItem(offset + i);
             }
             Event.emit('entryLoad');
         }
@@ -96,9 +99,10 @@ Category.prototype = {
             old.find('li').each(function () {
                 that.removeItem($(this));
             });
+            old.slideUp(600);
             return;
         }
-        var div = createDOM('div', {class: 'plts-group', id: '__' + key});
+        var div = createDOM('div', {class: 'plts-group', id: '__' + key, style: 'display:none'});
         div.appendChild(createDOM('div', {class: 'plts-title'}, name));
         div.appendChild(createDOM('ul', {class: 'nav nav-sidebar'}));
         Sortable.create(this.$.entry[0].appendChild(div).getElementsByTagName('ul')[0]);
@@ -111,10 +115,18 @@ Category.prototype = {
     /**
      * @description add playlist
      *
-     * @param {object} pltModel -  instance of the PlaylistModel
-     * @param {boolean} [instant] - if true,instantly add to html dom without add to cache.
      */
-    addItem: function (pltModel, instant) {
+    addItem: function (opt, instant) {
+        var pltModel = opt;
+        var index = opt;
+        if (utils.isNumber(opt) && opt >= 0 && opt < this.plts.length) {
+            pltModel = this.plts[opt];
+        } else {//plt don't have this model,push it in
+            index = this.plts.length;
+            this.plts.push(pltModel);
+            entry.schema[pltModel.type].onadd(pltModel);
+        }
+        console.log(index);
         //change view (html)
         var ts = pltModel.timestamp;
         if (utils.isUndefined(ts)) {
@@ -134,17 +146,10 @@ Category.prototype = {
         li.appendChild(a);
         a.appendChild(divName);
         a.appendChild(divLimark);
-
         this.domCache.push({type: pltModel.type, dom: li});
-        if (!loading) {//not in loading process
-            if (pltModel.type == 'user') {
-                fm.addScheme(pltModel);
-            }
-            this.plts.push(pltModel);
-        }
         this.pLength++;
         this.$.table.append(tbody);
-        this.$plts[ts] = new Playlist(tbody, pltModel.songList);
+        this.$plts[ts] = new Playlist(tbody, index);
         if (instant) {
             this.addtoDOM();
             this.setActive($(li));
@@ -187,9 +192,7 @@ Category.prototype = {
         }
         var index = this.findPltIndexByTs(now$plt.timestamp);
         if (index != -1) {
-            if (this.plts[index].type == 'user') {
-                fm.delScheme(this.plts[index]);//及时删除
-            }
+            entry.schema[this.plts[index].type].onremove(this.plts[index]);
             this.plts.splice(index, 1);
         }
         delete now$plt;
@@ -272,7 +275,9 @@ Category.prototype = {
         var that = this;
         this.domCache.forEach(function (o) {
             if (!tmp$[o.type]) {
-                tmp$[o.type] = that.$.entry.find('#__' + o.type).find('ul');
+                var $group = that.$.entry.find('#__' + o.type);
+                $group.slideDown(600);
+                tmp$[o.type] = $group.find('ul');
             }
             o.dom.style.display = 'none';
             tmp$[o.type][0].appendChild(o.dom);
@@ -290,15 +295,22 @@ Category.prototype = {
             if (count == loadSize) {
                 //All playgroup load ready! flush domCache to dom!
                 count = 0;
-                this.$.refresh.removeClass('loading');
                 loading = false;
-                account.setAssessable(true);
-
+                this.$.refresh.removeClass('loading');
                 //sort plts to fix some bugs
                 if (this.plts.length > 1)
                     this.plts = this.plts.sort(function (a, b) {
                         return a.timestamp - b.timestamp;
                     });
+
+                //load rest task in queue
+                if (!this.loadQue.empty()) {
+                    var task = this.loadQue.front();
+                    this.loadQue.pop();
+                    if (utils.isArray(task)) {
+                        this.loadPlaylists.apply(this, task);
+                    }
+                }
             }
         }, this);
         Event.on('rfshBadge', function () {

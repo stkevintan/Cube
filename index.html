@@ -235,8 +235,16 @@
                         <a href="javascript:category.toggleOpen();">
                             <span class="glyphicon glyphicon-list"></span>
                         </a>
-                        <a id="vol-icon" href="javascript:player.volPanel()">
-                            <span title="音量" class="glyphicon glyphicon-volume-up"></span>
+                        <a id="vol-wrapper" href="javascript:0">
+                            <div id="vol-panel" class="popover top in">
+                                <div class="layer"></div>
+                                <div class="arrow"></div>
+                                <div class="popover-content">
+                                    <input id="volume"/>
+                                </div>
+                            </div>
+                            <span onclick="player.toggleVolMute()" id="vol-icon" title="音量"
+                                  class="glyphicon glyphicon-volume-up"></span>
                         </a>
 
                         <a id="order" href="javascript:player.setOrder();">
@@ -251,15 +259,6 @@
                         <span title="正常模式" class="glyphicon glyphicon-new-window"></span></a>
                 </div>
             </div>
-        </div>
-    </div>
-    <div id="vol-pop" class="popover top in" role="tooltip"
-         style="display: none;">
-        <div class="arrow"></div>
-        <h3 class="popover-title" style="display: none;"></h3>
-
-        <div class="popover-content">
-            <input id="volume" type="range" min="0" max="1" step="0.01" val="0.3">
         </div>
     </div>
 </div>
@@ -323,7 +322,6 @@
 <script src="assets/js/bootstrap.min.js"></script>
 <script src="assets/js/bootstrap-slider.min.js"></script>
 <script src="assets/js/sortable.js"></script>
-<script src="controller/entry.js"></script>
 <script src="controller/nav.js"></script>
 <script src="controller/account.js"></script>
 <script src="controller/category.js"></script>

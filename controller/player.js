@@ -15,18 +15,18 @@ var Player = function () {
         play: $('#play'),
         pause: $('#pause'),
         order: $('#order span'),
-        volPanel: $('#vol-icon'),
-        volPop: $('#vol-pop'),
         volume: $('#volume'),
+        volIcon: $('#vol-icon'),
         songPic: $('#song-pic'),
         totTime: $('#tot-time'),
         curTime: $('#cur-time'),
-        title: $('h4.media-heading')
+        title: $('h4.media-heading'),
+        progress: $('.media-body input')
     }
     //初始化播放器
     this.audio = new Audio();
     //初始化进度条
-    this.progress = $('.media-body').find('input').slider({
+    this.progress = this.$.progress.slider({
         id: 'progress',
         value: 0,
         min: 0,
@@ -34,10 +34,17 @@ var Player = function () {
         step: 1,
         formatter: this.timeFormartter
     });
+    this.volume = this.$.volume.slider({
+        value: 0.5,
+        min: 0,
+        max: 1,
+        step: 0.01
+    });
     this.ID = 1;
     this.playlist = null;
     this.duration = -1;
     this.setOrder(this.ID);
+    this.setVolume(0.5);
     this.listen();
 }
 Player.prototype = {
@@ -103,12 +110,13 @@ Player.prototype = {
     },
 
     setMetaData: function (songM) {
-        console.log(songM);
         //set Song's Metadata tags with songModel
         this.$.songPic.attr('src', songM.pic);
         this.$.title.text(songM.title);
         if (songM.src) {
             this.audio.src = songM.src;
+        } else {
+            this.playlist = null;
         }
     },
 
@@ -122,6 +130,26 @@ Player.prototype = {
         this.duration = duration;
         this.progress.slider('setAttribute', 'max', duration);
         this.$.totTime.text(this.timeFormartter(duration));
+    },
+    setVolume: function (val) {
+        if (utils.isNumber(val) && val >= 0 && val <= 1) {
+            this.volume.slider('setValue', val);
+            this.audio.volume = val;
+        }
+    },
+    toggleVolMute: function () {
+        var state = this.volume.slider('isEnabled');
+        if (state) {
+            //mute
+            this.audio.muted = true;
+            this.volume.slider('disable');
+            this.$.volIcon.attr('class', 'glyphicon glyphicon-volume-off');
+        } else {
+            //unmute
+            this.audio.muted = false;
+            this.volume.slider('enable');
+            this.$.volIcon.attr('class', 'glyphicon glyphicon-volume-up');
+        }
     },
     /**
      * set cur mode to the 'mode'th playMode:single-repeat->list-repeat->no-repeat->random
@@ -152,11 +180,9 @@ Player.prototype = {
     listen: function () {
         var that = this;
         this.audio.onloadedmetadata = function () {
-            console.log('audio loaded,duration:', this.duration);
             that.setDuration(this.duration);
         };
         this.audio.onerror = function () {
-            console.log('audio loaded failed');
             var msg;
             switch (this.error.code) {
                 case 1:
@@ -181,7 +207,6 @@ Player.prototype = {
             if (!ondrag) that.setCurrentTime(this.currentTime);
         };
         this.audio.onended = function () {
-            console.log('at the end');
             that.playNext();
         };
         this.progress.slider('on', 'slideStart', function () {
@@ -193,5 +218,13 @@ Player.prototype = {
             that.setCurrentTime(nowTime);
             ondrag = false;
         });
+        this.volume.slider('on', 'slide', function (val) {
+            that.audio.volume = val
+        });
+        this.volume.slider('on', 'change', function (o) {
+            if (o.oldValue != o.newValue) {
+                that.audio.volume = o.newValue;
+            }
+        })
     }
 }
