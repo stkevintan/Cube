@@ -3,6 +3,7 @@ data/
 .idea/
 bin/
 release/
+node_modules/
 *.exe
 *.py
 .directory
