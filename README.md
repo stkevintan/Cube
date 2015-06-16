@@ -30,7 +30,7 @@ Linux :[x64](http://7xiyak.com1.z0.glb.clouddn.com/1.1.0nwMusicBox_linux64.zip)
 
 ###Manual Install  
 1. 首先安装[nw.js](https://github.com/nwjs/nw.js)
-2. 拷贝chrome安装目录下的`libffmpegsumo.so`(windows下是`libffmpegsumo.dll`)至nw.js的安装目录下。
+2. 拷贝chrome安装目录下的`libffmpegsumo.so`(windows下是`libffmpegsumo.dll`)至nw.js的安装目录下
 3. 下载并切换至项目：`git clone https://github.com/stkevintan/nw_musicbox.git && cd nw_musicbox/`
 4. 安装模块: `npm i`
 4. 运行： `/path/to/nw .`

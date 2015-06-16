@@ -10,6 +10,7 @@ var api = require('./model/NetEaseMusic');
 var utils = require('./model/Utils');
 var PltM = require('./model/PlaylistModel');
 var EntryM = require('./model/EntryModel');
+//var lrcParser = require('./model/LrcParser');
 var Event = (function () {
     var w = $(window);
     return {
@@ -28,7 +29,11 @@ var Event = (function () {
         }
     }
 })();
-
+var showNotify = function (msg) {
+    var notification = new Notification('nw_musicbox', {
+        body: msg
+    });
+}
 var createDOM = function (name, options, inner) {
     var dom = document.createElement(name);
     for (var key in options) {
@@ -83,9 +88,8 @@ var entry = {
 
 var nav = new Nav();
 var account = new Account();
+var lrc = new Lrc();
 var player = new Player();
-//var progress = new Progress();
-//var controls = new Controls();
 var settings = new Settings();
 var category = new Category();
 

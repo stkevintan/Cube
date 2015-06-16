@@ -126,7 +126,6 @@ Category.prototype = {
             this.plts.push(pltModel);
             entry.schema[pltModel.type].onadd(pltModel);
         }
-        console.log(index);
         //change view (html)
         var ts = pltModel.timestamp;
         if (utils.isUndefined(ts)) {

@@ -41,7 +41,7 @@ var Player = function () {
         step: 0.01
     });
     this.ID = 1;
-    this.playlist = null;
+    this.stop();
     this.duration = -1;
     this.setOrder(this.ID);
     this.setVolume(0.5);
@@ -67,6 +67,7 @@ Player.prototype = {
             this.$.pause.show();
             songM && this.setMetaData(songM);
             this.audio.play();
+
         }
     },
     playNext: function (type) {
@@ -82,16 +83,24 @@ Player.prototype = {
         this.$.pause.hide();
         this.audio.pause();
     },
-    stop: function (msg) {
-        msg = msg || '未选择歌曲';
-        this.audio.pause();
-        this.$.play.show();
-        this.$.pause.hide();
-        this.setDuration(0);
-        this.setMetaData({
-            title: msg,
-            pic: ''
-        });
+    stop: function (msg, noExit) {
+        if (noExit) {
+            this.setCurrentTime(0);
+        } else {
+            this.audio.pause();
+            msg = msg || '未选择歌曲';
+            lrc.load({
+                    title: msg,
+                    album: '未知',
+                    artist: '未知'
+                }
+            );
+            this.playlist = null;
+            this.$.play.show();
+            this.$.pause.hide();
+            this.setDuration(0);
+            this.setHead(msg, '');
+        }
     },
     /**
      * format 'val' (s) to 'mm:ss'
@@ -108,24 +117,26 @@ Player.prototype = {
         var strm = (mm < 10 ? '0' : '') + mm;
         return strm + ':' + strs;
     },
-
+//UI
+    setHead: function (title, pic) {
+        this.$.songPic.attr('src', pic);
+        this.$.title.text(title);
+    }
+    ,
     setMetaData: function (songM) {
-        //set Song's Metadata tags with songModel
-        this.$.songPic.attr('src', songM.pic);
-        this.$.title.text(songM.title);
-        if (songM.src) {
-            this.audio.src = songM.src;
-        } else {
-            this.playlist = null;
-        }
+        //load lrc
+        lrc.load(songM);
+        this.setHead(songM.title, songM.pic);
+        this.audio.src = songM.src;
+        showNotify('现在播放：' + songM.title);
     },
-
+//UI
     setCurrentTime: function (curTime) {
         if (curTime > this.duration) curTime = this.duration;
         this.$.curTime.text(this.timeFormartter(curTime));
         this.progress.slider('setValue', curTime);
     },
-
+//UI
     setDuration: function (duration) {
         this.duration = duration;
         this.progress.slider('setAttribute', 'max', duration);
@@ -166,17 +177,6 @@ Player.prototype = {
         this.$.order.attr('class', 'glyphicon glyphicon-' + tag.value);
         this.$.order.attr('title', tag.name);
     },
-    /**
-     * figure out the position of volume panel before display
-     */
-    volPanel: function () {
-        var offs = this.$.volPanel.offset();
-        this.$.volPop.css("top", (offs.top - 40) + 'px');
-        this.$.volPop.css("left", (offs.left - 70) + 'px');
-        //controls._volPop.offset({top: offs.top - 50, left: offs.left - 70});
-        this.$.volPop.fadeIn(100);
-        this.$.volume.focus();
-    },
     listen: function () {
         var that = this;
         this.audio.onloadedmetadata = function () {
@@ -205,6 +205,7 @@ Player.prototype = {
         var ondrag = false;
         this.audio.ontimeupdate = function () {
             if (!ondrag) that.setCurrentTime(this.currentTime);
+            lrc.seek(this.currentTime);
         };
         this.audio.onended = function () {
             that.playNext();
@@ -225,6 +226,6 @@ Player.prototype = {
             if (o.oldValue != o.newValue) {
                 that.audio.volume = o.newValue;
             }
-        })
+        });
     }
 }

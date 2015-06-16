@@ -30,23 +30,8 @@
                 <ul class="nav navbar-nav">
                     <li id="main-nav" class="active"><a href="javascript:nav.setState(0)">首页</a></li>
                     <li id="settings-nav"><a href="javascript:nav.setState(1)">设置</a></li>
-                    <li id="about-nav"><a href="javascript:nav.setState(2)">关于</a></li>
+                    <!--<li id="about-nav"><a href="javascript:nav.setState(2)">关于</a></li>-->
                 </ul>
-                <!--<ul class="nav navbar-nav navbar-right win-control">-->
-                <!--&lt;!&ndash;<li>&ndash;&gt;-->
-                <!--&lt;!&ndash;<a href="javascript:nav.minimize()"><span class="glyphicon glyphicon-minus"></span></a>&ndash;&gt;-->
-                <!--&lt;!&ndash;</li>&ndash;&gt;-->
-                <!--<li>-->
-                <!--<a href="javascript:nav.simplize()"><span class="glyphicon glyphicon-log-in"></span></a>-->
-                <!--</li>-->
-                <!--&lt;!&ndash;<li>&ndash;&gt;-->
-                <!--&lt;!&ndash;<a href="javascript:nav.maximize()"><span class="glyphicon glyphicon-resize-full"></span></a>&ndash;&gt;-->
-                <!--&lt;!&ndash;</li>&ndash;&gt;-->
-                <!--&lt;!&ndash;<li>&ndash;&gt;-->
-                <!--&lt;!&ndash;<a href="javascript:nav.close()"><span class="glyphicon glyphicon-remove"></span></a>&ndash;&gt;-->
-                <!--&lt;!&ndash;</li>&ndash;&gt;-->
-                <!--</ul>-->
-
 
                 <ul class="nav navbar-nav navbar-right">
                     <li class="dropdown">
@@ -93,24 +78,7 @@
     <div id="page" class="container-fluid">
         <div id="main" class="row">
             <div id="sidebar">
-                <!--<div class="userinfo">-->
-                <!--<div class="avater">-->
-                <!--<a href="javascript:void(0);">-->
-                <!--<img class="img-thumbnail" ,-->
-                <!--src="assets/img/avater.jpg" ,alt="...">-->
-                <!--</a>-->
-                <!--</div>-->
-                <!--<div class="title">-->
-                <!--<h4>未登录</h4>-->
-                <!--<span id="totsong" class="label label-primary"></span>&nbsp;-->
-                <!--<span id="totlist" class="label label-success"></span>-->
-                <!--</div>-->
-                <!--</div>-->
                 <div id="entry">
-                    <div class="plts-group">
-                        <div class="plts-title">本地音乐</div>
-                        <ul class="nav nav-sidebar"></ul>
-                    </div>
                 </div>
                 <div id="ptls-tools">
                     <span id="refresh" title="更新列表" class="glyphicon glyphicon-refresh"></span>
@@ -119,6 +87,32 @@
             </div>
             <div class="list">
                 <div class="twrap">
+                    <div class="song-detail">
+                        <div class="detail">
+                            <div class="cover">
+                                <img src="" alt="album cover" onError="this.src='assets/img/album.png'"
+                                     class="img-thumbnail">
+                            </div>
+                            <ul class="info">
+                                <li><h3 id="info-title">胡萝卜须</h3></li>
+                                <li><span class="glyphicon glyphicon-cd"></span>专辑：<span id="info-album">xxxx</span>
+                                </li>
+                                <li><span class="glyphicon glyphicon-user"></span>艺术家：<span id="info-artist">xxxx</span>
+                                </li>
+                            </ul>
+                        </div>
+                        <div class="lyric">
+                            <ul>
+                                <li>woshiyige xxxx</li>
+                                <li>woshiyige xxxx</li>
+                                <li>woshiyige xxxx</li>
+                                <li class="current">woshiyige xxxx</li>
+                                <li>woshiyige xxxx</li>
+                                <li>woshiyige xxxx</li>
+                                <li>woshiyige xxxx</li>
+                            </ul>
+                        </div>
+                    </div>
                     <table style="display:none" class="table table-hover">
                         <thead>
                         <tr>
@@ -216,7 +210,7 @@
                 <div class="col-sm-7 audio-body">
                     <div class="media">
                         <div class="media-left">
-                            <a href="#">
+                            <a href="javascript:lrc.toggle()">
                                 <img id='song-pic' style="background-color:white" class="img-thumbnail media-object"
                                      src=""
                                      onError="this.src='assets/img/album.png'" alt="...">
@@ -324,6 +318,7 @@
 <script src="assets/js/sortable.js"></script>
 <script src="controller/nav.js"></script>
 <script src="controller/account.js"></script>
+<script src="controller/lrc.js"></script>
 <script src="controller/category.js"></script>
 <script src="controller/player.js"></script>
 <script src="controller/playlist.js"></script>

@@ -188,6 +188,7 @@ NetEaseMusic.prototype = {
             idArray.push(r.id);
             idMap[r.id] = i;
             var o = {src: ''};
+            o.id = r.id;
             o.title = r.name;
             o.album = r.album.name;
             o.artist = r.artists.map(function (v) {
@@ -227,6 +228,37 @@ NetEaseMusic.prototype = {
             if (doc.code != 200)callback('server return a error code:' + doc.code);
             else callback(null, doc.songs);
         });
+    },
+    songDetail: function (id, callback) {
+        var url = "http://music.163.com/api/song/detail";
+        this.httpRequest('get', url, {id: id, ids: '[' + id + ']'}, function (err, res) {
+            if (err) {
+                callback(err);
+                return;
+            }
+            var doc = JSON.parse(res.text);
+            console.log(doc);
+            callback(null, doc);
+        });
+    },
+    songLyric: function (id, callback) {
+        var url = "http://music.163.com/api/song/lyric";
+        this.httpRequest('get', url, {os: 'android', id: id, lv: -1, tv: -1}, function (err, res) {
+            if (err) {
+                callback(err);
+                return;
+            }
+            var doc = JSON.parse(res.text);
+            console.log('lyric:', doc);
+            if (doc.lrc) {
+                callback(err, doc.lrc.lyric);
+
+            }
+            else {
+                callback('no lyric');
+            }
+
+        })
     }
 }
 module.exports = new NetEaseMusic();
