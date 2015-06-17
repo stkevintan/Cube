@@ -317,16 +317,33 @@ div#main {
     padding: 0 10px;
     width: 260px;
     margin-left: 32px;
+}
 
+.song-detail .lrc-tools {
+    position: absolute;
+    right: 70px;
+    top: 100px;
+    border-radius: 4px;
+    box-shadow: rgba(159, 159, 159, 0.5) 0px 0px 12px;
+}
+
+.song-detail .lrc-tools .btn {
+    background-color: white;
+}
+
+.song-detail .lrc-tools .btn:active,
+.song-detail .lrc-tools .btn:hover {
+    box-shadow: inset 0 0 5px rgba(0, 0, 0, .125);
 }
 
 .song-detail .lyric {
     position: relative;
     min-height: 350px;
+    padding-left: 360px;
+    padding-right: 100px;
     height: 100%;
     width: 100%;
     overflow: hidden;
-    padding-left: 280px;
 }
 
 /*.song-detail .lyric::before {*/
@@ -380,6 +397,29 @@ div#main {
 .song-detail .lyric li.current {
     color: #000;
     font-size: 18px;
+}
+
+.song-detail .cover {
+    position: relative;
+}
+
+.song-detail .cover:after,
+.song-detail .cover:before {
+    content: "";
+    position: absolute;
+    z-index: -1;
+    bottom: 15px;
+    left: 10px;
+    width: 50%;
+    height: 20%;
+    -webkit-box-shadow: 0 15px 10px rgba(125, 125, 125, 0.8);
+    -webkit-transform: rotate(-3deg);
+}
+
+.song-detail .cover:after {
+    right: 10px;
+    left: auto;
+    -webkit-transform: rotate(3deg);
 }
 
 .song-detail .cover img {
@@ -530,6 +570,10 @@ a#vol-wrapper:hover #vol-panel {
     vertical-align: middle;
 }
 
+#footer .audio-body img:hover {
+    -webkit-filter: brightness(0.5);
+}
+
 #footer .audio-body .media-heading {
     margin-top: 12px;
     margin-bottom: 5px;
@@ -554,21 +598,26 @@ a#vol-wrapper:hover #vol-panel {
 }
 
 #footer #progress .slider-track {
-    -webkit-box-shadow: 0 1px 0 0px #424242,
-    0 1px 0 #060607 inset,
-    0px 2px 10px 0px black inset,
-    1px 0px 2px rgba(0, 0, 0, 0.4) inset,
-    0 0px 1px rgba(0, 0, 0, 0.6) inset;
+    background: none repeat scroll 0 0 #E8E8E8;
+    /*-webkit-box-shadow: 0 1px 0 0px #424242,*/
+    /*0 1px 0 #060607 inset,*/
+    /*0px 2px 10px 0px black inset,*/
+    /*1px 0px 2px rgba(0, 0, 0, 0.4) inset,*/
+    /*0 0px 1px rgba(0, 0, 0, 0.6) inset;*/
     /*margin-top: 2px;*/
-    background-image: none;
     width: 100%;
     border-radius: 15px;
 }
 
 #footer #progress .slider-selection {
-    background: none repeat scroll 0 0 #9CA2A5;
+    background: none repeat scroll 0 0 #0099CC;
     border-top-right-radius: 0;
     border-bottom-right-radius: 0;
+    /*-webkit-box-shadow: 0 1px 0 0px #424242,*/
+    /*0 1px 0 #060607,*/
+    /*0px 2px 10px 0px black,*/
+    /*1px 0px 2px rgba(0, 0, 0, 0.4),*/
+    /*0 0px 1px rgba(0, 0, 0, 0.6);*/
 }
 
 #footer #progress .slider-handle {
@@ -576,9 +625,8 @@ a#vol-wrapper:hover #vol-panel {
     margin-top: -2px;
     height: 14px;
     width: 14px;
-    border-radius: 14px;
-    background: none repeat scroll 0 0 #777;
-    -webkit-box-shadow: 0 -1px 1px black inset;
+    background: none repeat scroll 0 0 #FFFFFF;
+    -webkit-box-shadow: 0 0px 10px black;
 }
 
 #footer .mini-tool {

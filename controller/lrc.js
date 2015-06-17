@@ -25,6 +25,24 @@ Lrc.prototype = {
             this.state = false;
         }
     },
+    scroll: function (type) {
+        var d = 0;
+        var tmp = this.$.ulDOM.style.marginTop;
+        var curTop = Number(tmp.substr(0, tmp.length - 2));
+        if (type > 0 && curTop < 0) {
+            //scroll up
+            d = Math.min(this.$.ulDOM.offsetHeight >> 1, -curTop);
+        }
+        var h = -36 * this.$.liDOM.length + this.$.ulDOM.offsetHeight;
+        if (type < 0 && curTop > h) {
+            //scroll down
+            d = Math.max(-this.$.ulDOM.offsetHeight >> 1, h);
+            console.log(d);
+        }
+        if (d) {
+            this.$.ulDOM.style.marginTop = curTop + d + 'px';
+        }
+    },
     setDesc: function (opt) {
         this.$.pic.attr('src', opt.pic);
         this.$.title.text(opt.title);
@@ -88,7 +106,6 @@ Lrc.prototype = {
             var index = utils.binarySearch(this.lrcObj.lines, time, function (o) {
                 return o.time;
             });
-
             if (index != -1) {
                 if (this._index !== index) {
                     if (this._index >= 0) {
@@ -114,12 +131,16 @@ Lrc.prototype = {
             , by: 'by'
         };
         var trim = function (lrc) {
-            return lrc.replace(/(^\s*|\s*$)/m, '')
+            return lrc && lrc.replace(/(^\s*|\s*$)/m, '')
         }
         var isLrc = function (lrc) {
             return timeExp.test(lrc);
         }
         return function (lrc) {
+            if (!utils.isString(lrc)) {
+                console.log('invalid param');
+                return;
+            }
             this.lrc = trim(lrc);
             var lines = lrc.split(/\n/);
             if (!isLrc(this.lrc)) {

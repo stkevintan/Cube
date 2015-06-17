@@ -9,6 +9,9 @@ function EntryModel(raw) {
         }
     this.onadd = raw.onadd || function () {
         }
+    this.onload = raw.onload || function () {
+            return true;
+        }
     this.onremove = raw.onremove || function () {
         }
 }

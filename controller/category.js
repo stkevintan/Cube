@@ -64,7 +64,7 @@ Category.prototype = {
         loadSize = 0;
         var that = this;
         for (var key in options) {
-            if (options.hasOwnProperty(key) && options[key]) {
+            if (options.hasOwnProperty(key) && options[key] && schema[key].onload()) {
                 loadSize++;
                 this.add$EntryFrame(key, schema[key].name);
             }
@@ -84,6 +84,7 @@ Category.prototype = {
         function callback(err, plts) {
             if (err || !utils.isArray(plts)) {
                 console.log(err || "the source doesn't return an Array!");
+                err && showNotify(err);
             } else {
                 var offset = that.plts.length;
                 that.plts = that.plts.concat(plts);

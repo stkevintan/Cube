@@ -22,7 +22,7 @@
                     <span class="icon-bar"></span>
                     <span class="icon-bar"></span>
                 </button>
-                <a class="navbar-brand" href="#">网易云音乐</a>
+                <a class="navbar-brand" href="#">网易音乐盒</a>
             </div>
 
             <!-- Collect the nav links, forms, and other content for toggling -->
@@ -90,27 +90,27 @@
                     <div class="song-detail">
                         <div class="detail">
                             <div class="cover">
-                                <img src="" alt="album cover" onError="this.src='assets/img/album.png'"
-                                     class="img-thumbnail">
+                                <img src="" alt="album cover" onError="this.src='assets/img/album.png'">
                             </div>
                             <ul class="info">
-                                <li><h3 id="info-title">胡萝卜须</h3></li>
-                                <li><span class="glyphicon glyphicon-cd"></span>专辑：<span id="info-album">xxxx</span>
+                                <li><h3 id="info-title"></h3></li>
+                                <li><span class="glyphicon glyphicon-cd"></span>专辑：<span id="info-album"></span>
                                 </li>
-                                <li><span class="glyphicon glyphicon-user"></span>艺术家：<span id="info-artist">xxxx</span>
+                                <li><span class="glyphicon glyphicon-user"></span>艺术家：<span id="info-artist"></span>
                                 </li>
                             </ul>
                         </div>
                         <div class="lyric">
-                            <ul>
-                                <li>woshiyige xxxx</li>
-                                <li>woshiyige xxxx</li>
-                                <li>woshiyige xxxx</li>
-                                <li class="current">woshiyige xxxx</li>
-                                <li>woshiyige xxxx</li>
-                                <li>woshiyige xxxx</li>
-                                <li>woshiyige xxxx</li>
-                            </ul>
+                            <ul></ul>
+                        </div>
+                        <div class="btn-group-vertical lrc-tools" role="group">
+                            <a href="javascript:lrc.toggle(0)" class="btn"><span
+                                    class="glyphicon glyphicon-minus"></span></a>
+                            <a href="javascript:lrc.scroll(1)" class="btn"><span
+                                    class="glyphicon glyphicon-arrow-up"></span></a>
+                            <a href="javascript:lrc.scroll(-1)" class="btn"><span
+                                    class="glyphicon glyphicon-arrow-down"></span>
+                            </a>
                         </div>
                     </div>
                     <table style="display:none" class="table table-hover">
@@ -118,8 +118,8 @@
                         <tr>
                             <th>#</th>
                             <th>标题</th>
-                            <th>艺术家</th>
                             <th>专辑</th>
+                            <th>艺术家</th>
                             <th>操作</th>
                         </tr>
                         </thead>

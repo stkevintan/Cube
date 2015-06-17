@@ -30,7 +30,7 @@ var Event = (function () {
     }
 })();
 var showNotify = function (msg) {
-    var notification = new Notification('nw_musicbox', {
+    var notification = new Notification('网易音乐盒', {
         body: msg
     });
 }
@@ -69,6 +69,9 @@ var entry = {
         net: new EntryM({
             mode: 0,
             name: '云音乐',
+            onload: function () {
+                return fm.getUserData();
+            },
             loader: function (callback) {
                 api.getNet(callback);
             }
