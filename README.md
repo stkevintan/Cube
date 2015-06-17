@@ -2,10 +2,12 @@
 
 使用html5和node.js构建的网易云音乐的跨平台第三方客户端。    
 <img style="vertical-align:middle;margin-right:50px" src="http://7xiyak.com1.z0.glb.clouddn.com/icon.png"/>  
-###Release
+###Release  
+__version 1.3.0_Beta__  
+Linux:[x64](http://7xiyak.com1.z0.glb.clouddn.com/1.3.0linux64Beta.zip)  
+
 __version 1.2.2__  
 Linux:[x64](http://7xiyak.com1.z0.glb.clouddn.com/1.2.2linux64.zip)  
-
 
 __version 1.1.0__     
 Linux :[x64](http://7xiyak.com1.z0.glb.clouddn.com/1.1.0nwMusicBox_linux64.zip)     
@@ -19,6 +21,7 @@ Linux :[x64](http://7xiyak.com1.z0.glb.clouddn.com/1.1.0nwMusicBox_linux64.zip)
 4. 手机帐号或邮箱帐号登录
 5. UI响应式布局优化，实现mini模式
 6. 侧栏列表鼠标拖动排序  
+7. 滚动歌词  
 
 ###TO DO    
 ~~1. 其他方式登录~~  
@@ -26,15 +29,16 @@ Linux :[x64](http://7xiyak.com1.z0.glb.clouddn.com/1.1.0nwMusicBox_linux64.zip)
 3. 托盘图标  
 4. 列表项目的自由拖动排序    
 5. 私人fm  
-6. 歌词  
+~~6. 歌词~~  
 
 ###Manual Install  
 1. 首先安装[nw.js](https://github.com/nwjs/nw.js)
 2. 拷贝chrome安装目录下的`libffmpegsumo.so`(windows下是`libffmpegsumo.dll`)至nw.js的安装目录下
 3. 下载并切换至项目：`git clone https://github.com/stkevintan/nw_musicbox.git && cd nw_musicbox/`
 4. 安装模块: `npm i`
-4. 运行： `/path/to/nw .`
-####Notice
+4. 运行： `/path/to/nw .`   
+
+####Notice  
 <b>`libffmpegsumo`的版本一定要与nw.js版本对应，否则会出现问题。</b>
 比如：nw.js v0.12.0对应chrome 41.0.2272.76
 
@@ -44,9 +48,9 @@ Linux :[x64](http://7xiyak.com1.z0.glb.clouddn.com/1.1.0nwMusicBox_linux64.zip)
 
 
 ###Screenshots
-<img src="http://7xiyak.com1.z0.glb.clouddn.com/s35.png"/>
-<img src="http://7xiyak.com1.z0.glb.clouddn.com/s36.png"/>
-<img src="http://7xiyak.com1.z0.glb.clouddn.com/s37.png"/>
+<img src="http://7xiyak.com1.z0.glb.clouddn.com/s50.png"/>
+<img src="http://7xiyak.com1.z0.glb.clouddn.com/s51.png"/>
+<img src="http://7xiyak.com1.z0.glb.clouddn.com/s52.png"/>
 
 
 ###troubleshooting
