@@ -1,4 +1,4 @@
-# NW Musicbox  
+# 网易音乐盒 
 
 使用html5和node.js构建的网易云音乐的跨平台第三方客户端。    
 <img style="vertical-align:middle;margin-right:50px" src="http://7xiyak.com1.z0.glb.clouddn.com/icon.png"/>  
