@@ -4,7 +4,7 @@
   "version": "1.1.0",
   "window": {
     "title": "NetEaseMusic",
-    "toolbar": false,
+    "toolbar": true,
     "frame": true,
     "width": 1122,
     "height": 600,

@@ -1,71 +1,67 @@
 var request = require('superagent');
-var process = require('process');
+//var process = require('process');
 var async = require('async');
 var crypto = require('crypto');
 var fm = require('./FileManager');
 var PltM = require('./PlaylistModel');
 var SongM = require('./SongModel');
-
-
-var NetEaseMusic = function () {
-    this.header = {
-        'Accept': '*/*',
-        'Accept-Encoding': 'gzip,deflate,sdch',
-        'Accept-Language': 'zh-CN,zh;q=0.8,gl;q=0.6,zh-TW;q=0.4',
-        'Connection': 'keep-alive',
-        'Content-Type': 'application/x-www-form-urlencoded',
-        'Host': 'music.163.com',
-        'Referer': 'http://music.163.com/search/',
-        'User-Agent': 'Mozilla/5.0 (Macintosh; Intel Mac OS X 10_9_2) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/33.0.1750.152 Safari/537.36'
-    }
-    this.cookies = {
-        'appver': '1.5.2'
-    }
+header = {
+    'Accept': '*/*',
+    'Accept-Encoding': 'gzip,deflate,sdch',
+    'Accept-Language': 'zh-CN,zh;q=0.8,gl;q=0.6,zh-TW;q=0.4',
+    'Connection': 'keep-alive',
+    'Content-Type': 'application/x-www-form-urlencoded',
+    'Host': 'music.163.com',
+    'Referer': 'http://music.163.com/search/',
+    'User-Agent': 'Mozilla/5.0 (Macintosh; Intel Mac OS X 10_9_2) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/33.0.1750.152 Safari/537.36'
 }
-NetEaseMusic.prototype = {
-    httpRequest: function (method, url, data, callback) {
-        var header = this.header;
-        if (method == 'post') {
-            request.post(url).set(header).send(data).timeout(10000).end(callback);
 
-        } else {
-            request.get(url).set(header).query(data).timeout(10000).end(callback);
-        }
-    },
+var httpRequest = function (method, url, data, callback) {
+    var ret;
+    if (method == 'post') {
+        ret = request.post(url).send(data);
+    } else {
+        ret = request.get(url).query(data);
+    }
+    var cookie = fm.getCookie();
+    if (cookie)ret.set('Cookie', cookie);
+    ret.set(header).timeout(10000).end(callback);
+}
+
+module.exports = {
     login: function (username, password, callback) {
         var url, name, pattern = /^0\d{2,3}\d{7,8}$|^1[34578]\d{9}$/
         if (pattern.test(username)) {
             //手机登录
             name = 'phone';
             url = 'http://music.163.com/api/login/cellphone';
-
         } else {
             //邮箱登录
             name = 'username';
             url = 'http://music.163.com/api/login/';
         }
         //对password加密
-        var hasher = crypto.createHash('md5');
-        hasher.update(password);
+        var hasher = crypto.createHash('md5').update(password);
         password = hasher.digest('hex');
         var data = {
             'password': password,
             'rememberLogin': 'true'
         };
         data[name] = username;
-        this.httpRequest('post', url, data, function (err, res) {
+        httpRequest('post', url, data, function (err, res) {
             if (err) {
-                console.log("login request error!");
-                callback("http请求出错!");
+                console.log("login request error: " + err);
+                callback("http request error on login: " + err);
+                return;
+            }
+            var data = JSON.parse(res.text);
+
+            if (data.code != 200) {
+                //登录失败
+                callback("用户名或密码错误");
             } else {
-                var data = JSON.parse(res.text);
-                if (data.code != 200) {
-                    //登录失败
-                    callback("用户名或密码错误");
-                } else {
-                    fm.setUserData(data);
-                    callback(null, data.profile);
-                }
+                fm.setCookie(res.header['set-cookie']);
+                callback(null, data.profile);
             }
         });
     },
@@ -97,16 +93,34 @@ NetEaseMusic.prototype = {
             });
         })
     },
+    userProfile: function (uid, callback) {
+        uid = uid || fm.getUserID();
+        if (!uid) {
+            callback('cannot get userProfile without uid');
+        } else {
+            var url = 'http://music.163.com/api/user/detail/' + uid;
+            httpRequest('get', url, {'userId': uid}, function (err, res) {
+                if (err) {
+                    console.log('userProfile error: ', err);
+                    callback('userProfile error: ' + err);
+                } else if (res.body.code != 200) {
+                    callback('userProfile error: code -' + res.body.code);
+                } else {
+                    callback(null, res.body.profile);
+                }
+            })
+        }
+    },
     userPlaylist: function () {
         // [uid],[offset],[limit],callback
         var argv = [].slice.call(arguments);
         var callback = argv.pop();
-        var userData = fm.getUserData();
-        if (!userData) {
-            callback('user data not found or invalid');
+        var uid = fm.getUserID();
+        if (!uid) {
+            callback('user not login');
             return;
         }
-        var uid = argv[0] || userData.account.id;
+        var uid = argv[0] || uid;
 
         var offset = argv[1] || 0;
         var limit = argv[2] || 100;
@@ -116,14 +130,13 @@ NetEaseMusic.prototype = {
             "limit": limit,
             "uid": uid
         }
-        this.httpRequest('get', url, data, function (err, res) {
+        httpRequest('get', url, data, function (err, res) {
             if (err) {
                 callback('http timeout');
             } else {
-                var data = JSON.parse(res.text);
-                if (data.code != 200)callback('code - ', data.code);
+                if (res.body.code != 200)callback('code - ', data.code);
                 else {
-                    callback(null, data.playlist);
+                    callback(null, res.body.playlist);
                 }
             }
         });
@@ -132,12 +145,11 @@ NetEaseMusic.prototype = {
         var url = 'http://music.163.com/api/playlist/detail';
         var data = {"id": id}
         var that = this;
-        this.httpRequest('get', url, data, function (err, res) {
+        httpRequest('get', url, data, function (err, res) {
             if (err)callback('http timeout');
             else {
-                res = JSON.parse(res.text);
-                if (res.code != 200)callback('code - ', res.code);
-                else callback(null, that.transfer(res.result.tracks));
+                if (res.body.code != 200)callback('code - ', res.code);
+                else callback(null, that.transfer(res.body.result.tracks));
             }
         });
     },
@@ -160,13 +172,13 @@ NetEaseMusic.prototype = {
             'limit': limit
         }
         var that = this;
-        this.httpRequest('post', url, data, function (err, res) {
+        httpRequest('post', url, data, function (err, res) {
             if (err) {
                 callback(err);
                 return;
             }
             var doc = JSON.parse(res.text);
-            if (doc.code != 200)callback('server return a error code:' + doc.code);
+            if (doc.code != 200)callback('code -' + doc.code);
             else {
                 var results = doc.result.songs;
                 var data = that.transfer(results);
@@ -214,7 +226,7 @@ NetEaseMusic.prototype = {
     },
     songsDetail: function (ids, callback) {
         var url = 'http://music.163.com/api/song/detail';
-        this.httpRequest('get', url, {ids: '[' + ids.join() + ']'}, function (err, res) {
+        httpRequest('get', url, {ids: '[' + ids.join() + ']'}, function (err, res) {
             if (err) {
                 callback(err);
                 return;
@@ -226,34 +238,38 @@ NetEaseMusic.prototype = {
     },
     songDetail: function (id, callback) {
         var url = "http://music.163.com/api/song/detail";
-        this.httpRequest('get', url, {id: id, ids: '[' + id + ']'}, function (err, res) {
+        httpRequest('get', url, {id: id, ids: '[' + id + ']'}, function (err, res) {
             if (err) {
                 callback(err);
                 return;
             }
             var doc = JSON.parse(res.text);
-            console.log(doc);
             callback(null, doc);
         });
     },
     songLyric: function (id, callback) {
         var url = "http://music.163.com/api/song/lyric";
-        this.httpRequest('get', url, {os: 'android', id: id, lv: -1, tv: -1}, function (err, res) {
+        httpRequest('get', url, {os: 'android', id: id, lv: -1, tv: -1}, function (err, res) {
             if (err) {
                 callback(err);
                 return;
             }
             var doc = JSON.parse(res.text);
-            console.log('lyric:', doc);
             if (doc.lrc) {
                 callback(err, doc.lrc.lyric);
-
             }
             else {
-                callback('no lyric');
+                callback(-1);
             }
 
         })
+    },
+    radio: function (callback) {
+        var url = 'http://music.163.com/api/radio/get';
+        httpRequest('get', url, null, function (err, res) {
+            console.log(res);
+            callback(err, res);
+        })
     }
 }
-module.exports = new NetEaseMusic();
+

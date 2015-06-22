@@ -14,19 +14,27 @@ var Account = function () {
         phone: $('#login').find('input[name="phone"]'),
         password: $('#login').find('input[name="password"]')
     }
-    this.isLogin = false;
     this.listen(this);
-    this.load();
 }
 
 Account.prototype = {
-    load: function () {
+    loadUser: function (uid) {
         //获得登录信息
-        var userData = fm.getUserData();
-        if (userData) {
-            this.setUserProfile(userData.profile);
+        uid = uid || fm.getUserID();
+        var that = this;
+        if (uid) {
+            api.userProfile(uid, function (err, res) {
+                if (err) {
+                    console.log(err);
+                    that.setUserProfile();
+                    showNotify('获取用户信息失败，请重新登录');
+                } else {
+                    that.setUserProfile(res);
+                }
+            });
         } else {
-            this.setUserProfile();
+            console.log('user not login');
+            that.setUserProfile();
         }
     },
     unsign: function () {

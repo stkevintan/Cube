@@ -10,7 +10,7 @@ var api = require('./model/NetEaseMusic');
 var utils = require('./model/Utils');
 var PltM = require('./model/PlaylistModel');
 var EntryM = require('./model/EntryModel');
-//var lrcParser = require('./model/LrcParser');
+
 var Event = (function () {
     var w = $(window);
     return {
@@ -30,7 +30,7 @@ var Event = (function () {
     }
 })();
 var showNotify = function (msg) {
-    var notification = new Notification('网易音乐盒', {
+    new Notification('网易音乐盒', {
         body: msg
     });
 }
@@ -69,11 +69,11 @@ var entry = {
         net: new EntryM({
             mode: 0,
             name: '云音乐',
-            onload: function () {
-                return fm.getUserData();
-            },
             loader: function (callback) {
                 api.getNet(callback);
+            },
+            onload: function () {
+                return fm.getUserID() === null ? false : true;
             }
         })
     },
@@ -96,6 +96,9 @@ var player = new Player();
 var settings = new Settings();
 var category = new Category();
 
+//加载用户信息
+account.loadUser();
+//加载播放列表
 category.loadPlaylists(null, true);
 
 //table屏蔽选中

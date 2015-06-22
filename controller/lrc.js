@@ -37,14 +37,13 @@ Lrc.prototype = {
         if (type < 0 && curTop > h) {
             //scroll down
             d = Math.max(-this.$.ulDOM.offsetHeight >> 1, h);
-            console.log(d);
         }
         if (d) {
             this.$.ulDOM.style.marginTop = curTop + d + 'px';
         }
     },
     setDesc: function (opt) {
-        this.$.pic.attr('src', opt.pic);
+        this.$.pic.attr('src', opt.pic || '');
         this.$.title.text(opt.title);
         this.$.album.text(opt.album);
         this.$.artist.text(opt.artist);
@@ -76,14 +75,11 @@ Lrc.prototype = {
         this.lrcObj = null;
         this._index = -1;
         if (!songM.id) {
-            console.log('this is local file');
             this.setLrc();
         } else {
             var that = this;
             api.songLyric(songM.id, function (err, res) {
-                if (err) {
-                    console.log(err);
-                } else {
+                if (!err) {
                     that.lrcObj = new that.parse(res);
                 }
                 that.setLrc();

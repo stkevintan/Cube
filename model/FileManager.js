@@ -7,7 +7,7 @@ var path = require('path');
 var utils = require('./Utils');
 var PltM = require('./PlaylistModel');
 var SongM = require('./SongModel');
-var sup = ['.mp3', '.ogg', '.wav'];
+
 
 function modefy(arr) {
     arr = arr.map(function (o) {
@@ -25,9 +25,10 @@ function toAbsolute() {
     return path.resolve(__dirname, '../' + dir);
 }
 
-var DefaultMusicDir = toAbsolute('music');
-var DefaultSearchLimit = 20;
-var RECURSEARCH = false;
+const EXTLIST = ['.mp3', '.ogg', '.wav'];
+const DEFAULTMUSICDIR = toAbsolute('music');
+const DEFAULTSEARCHLIMIT = 20;
+const RECURSEARCH = false;
 
 var config = {
     path: toAbsolute('data', 'config.json'),
@@ -52,15 +53,17 @@ var fileManager = function () {
     } catch (e) {
         config.isChanged = 1;
         if (e.errno = -2) {//data目录不存在
-            fs.mkdir(toAbsolute('data'), function (err) {
-                console.log('mkdir "data" error', err);
+            fs.mkdir(toAbsolute('data'), function (e) {
+                console.log('warning:', e);
             });
         } else {
-            console.log(e, e.message);
+            console.log('warning:', e.message);
         }
     }
 }
-fileManager.prototype.SaveChanges = function (callback) {
+var __ = fileManager.prototype;
+
+__.SaveChanges = function (callback) {
     async.each([config, scheme], function (item, callback) {
         if (item.isChanged) {
             fs.writeFile(item.path, JSON.stringify(item.content), callback);
@@ -68,7 +71,8 @@ fileManager.prototype.SaveChanges = function (callback) {
     }, callback);
 }
 
-fileManager.prototype.setMusicDir = function (dir) {
+/*********MusicDir**********/
+__.setMusicDir = function (dir) {
     dir = toAbsolute(dir);
     if (this.getMusicDir() !== dir) {
         config.content.musicDir = dir;
@@ -78,20 +82,26 @@ fileManager.prototype.setMusicDir = function (dir) {
     return false;
 }
 
-fileManager.prototype.getMusicDir = function () {
-    return config.content.musicDir || DefaultMusicDir;
+__.getMusicDir = function () {
+    return config.content.musicDir || DEFAULTMUSICDIR;
 }
 
-fileManager.prototype.getSearchLimit = function () {
-    return config.content.searchLimit || DefaultSearchLimit;
+
+/*********SearchLimit**********/
+__.getSearchLimit = function () {
+    return config.content.searchLimit || DEFAULTSEARCHLIMIT;
 }
-fileManager.prototype.setSearchLimit = function (limit) {
+
+__.setSearchLimit = function (limit) {
     if (typeof limit === 'number' && limit >= 0) {
         config.content.searchLimit = limit;
         config.isChanged = 1;
     }
 }
-fileManager.prototype.getLocal = function (callback) {
+
+
+/*********Local music file**********/
+__.getLocal = function (callback) {
     var that = this;
     this.loadMusicDir(null, function (err, songList) {
 
@@ -107,75 +117,11 @@ fileManager.prototype.getLocal = function (callback) {
         }]));
     });
 }
-fileManager.prototype.loadScheme = function (callback) {
-    scheme.isChanged = 1;
-    fs.readFile(scheme.path, 'utf-8', function (err, contents) {
-        if (err)callback(err);
-        else callback(null, modefy(JSON.parse(contents)));
-    });
-}
 
-fileManager.prototype.getScheme = function (callback) {
-    if (scheme.isChanged == 0) {
-        this.loadScheme(function (err, content) {
-            if (err) callback('getScheme error' + err);
-            else {
-                scheme.content = content;
-                callback(null, content);
-            }
-        });
-    } else {
-        callback(null, scheme.content);
-    }
-}
-fileManager.prototype.addScheme = function (plt) {
-    if (!(plt instanceof PltM)) {
-        console.log('addScheme failed');
-        return;
-    }
-    scheme.isChanged = 1;
-    scheme.content.push(plt);
-}
-fileManager.prototype.setScheme = function (plt) {
-    if (!(plt instanceof PltM)) {
-        console.log('setScheme failed');
-        return;
-    }
-    scheme.isChanged = 1;
-    var index = scheme.indexOf(plt);
-    if (index != -1) {
-        scheme.content[index] = plt;
-    } else {
-        console.log('setScheme failed');
-    }
-}
-fileManager.prototype.delScheme = function (plt) {
-    if (!(plt instanceof PltM)) {
-        console.log('delScheme failed');
-        return;
-    }
-    scheme.isChanged = 1;
-    var index = scheme.indexOf(plt);
-    console.log(index);
-    if (index != -1) {
-        scheme.content.splice(index, 1);
-    } else {
-        console.log('setScheme failed');
-    }
-}
-fileManager.prototype.setUserData = function (data) {
-    config.content.userData = data;
-    config.isChanged = 1;
-}
-fileManager.prototype.getUserData = function () {
-    return config.content.userData;
-}
-
-fileManager.prototype.loadMusicDir = function (musicDir, callback) {
+__.loadMusicDir = function (musicDir, callback) {
     musicDir = musicDir || this.getMusicDir();
     var ret = [];
     fs.readdir(musicDir, handleFiles);
-
     function handleFiles(err, files) {
         if (err) {
             callback(null, []);
@@ -216,7 +162,7 @@ fileManager.prototype.loadMusicDir = function (musicDir, callback) {
             }
             files.forEach(function (f) {
                 var ext = path.extname(f);
-                if (sup.indexOf(ext) == -1)return;
+                if (EXTLIST.indexOf(ext) == -1)return;
                 var song = {
                     "title": path.basename(f, f.substr(f.lastIndexOf('.'))),
                     "artist": "",
@@ -230,8 +176,7 @@ fileManager.prototype.loadMusicDir = function (musicDir, callback) {
     }
 }
 
-
-fileManager.prototype.loadMusicDirSync = function (musicDir) {
+__.loadMusicDirSync = function (musicDir) {
     var musicDir = musicDir || this.getMusicDir();
     var ret = [];
     var files = [];
@@ -251,8 +196,8 @@ fileManager.prototype.loadMusicDirSync = function (musicDir) {
             return false;
         }
         var ext = path.extname(f);
-        for (var i = 0; i < sup.length; i++) {
-            if (ext == sup[i])return true;
+        for (var i = 0; i < EXTLIST.length; i++) {
+            if (ext == EXTLIST[i])return true;
         }
         return false;
     });
@@ -268,4 +213,97 @@ fileManager.prototype.loadMusicDirSync = function (musicDir) {
     }
     return ret;
 }
+
+
+/*********Scheme inventory**********/
+__.loadScheme = function (callback) {
+    scheme.isChanged = 1;
+    fs.readFile(scheme.path, 'utf-8', function (err, contents) {
+        if (err)callback(err);
+        else callback(null, modefy(JSON.parse(contents)));
+    });
+}
+
+__.getScheme = function (callback) {
+    if (scheme.isChanged == 0) {
+        this.loadScheme(function (err, content) {
+            if (err) callback('getScheme error' + err);
+            else {
+                scheme.content = content;
+                callback(null, content);
+            }
+        });
+    } else {
+        callback(null, scheme.content);
+    }
+}
+
+__.addScheme = function (plt) {
+    if (!(plt instanceof PltM)) {
+        console.log('addScheme failed');
+        return;
+    }
+    scheme.isChanged = 1;
+    scheme.content.push(plt);
+}
+
+__.setScheme = function (plt) {
+    if (!(plt instanceof PltM)) {
+        console.log('setScheme failed');
+        return;
+    }
+    scheme.isChanged = 1;
+    var index = scheme.indexOf(plt);
+    if (index != -1) {
+        scheme.content[index] = plt;
+    } else {
+        console.log('setScheme failed');
+    }
+}
+
+__.delScheme = function (plt) {
+    if (!(plt instanceof PltM)) {
+        console.log('delScheme failed');
+        return;
+    }
+    scheme.isChanged = 1;
+    var index = scheme.indexOf(plt);
+    console.log(index);
+    if (index != -1) {
+        scheme.content.splice(index, 1);
+    } else {
+        console.log('setScheme failed');
+    }
+}
+
+
+/*********Cookie*********
+ * Sample:
+ * 0: "__remember_me=true; Expires=Fri, 03 Jul 2015 08:02:33 GMT; Path=/; HttpOnly"
+ * 1: "MUSIC_U=9ab02e8154e4b8ac0e2317425f07850b032e54d57d7b8663b2a68daf70158116752d1617f8a1f01701480fe97e495d6f8bafcdfe5ad2b092; Expires=Fri, 03 Jul 2015 08:02:33 GMT; Path=/; HttpOnly"
+ * 2: "__csrf=1339cdfb0ad8a49d7db75b43c5238605; Expires=Fri, 03-Jul-2015 08:02:43 GMT; Path=/"
+ * 3: "NETEASE_WDA_UID=33287225#|#1408078960514; Expires=Tue, 06 Jul 2083 11:16:40 GMT; Path=/; HttpOnly"
+ * */
+__.setCookie = function (cookie) {
+    config.content.cookie = cookie;
+    config.isChanged = 1;
+}
+
+__.getCookie = function () {
+    return config.content.cookie;
+}
+
+__.getUserID = (function () {
+    var userID = null;
+    return function () {
+        if (userID)return userID;
+        var cookie = __.getCookie();
+        if (cookie) {
+            userID = /\d+/.exec(cookie[3]);
+            if (userID) userID = userID[0];
+        }
+        return userID;
+    }
+})();
+
 module.exports = new fileManager();
