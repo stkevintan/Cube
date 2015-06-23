@@ -1,0 +1,189 @@
+//Created by kevin on 15-6-23.
+- var _pc={href:'javascript:void(0)'};
+- var _hide={style:'display:none'};
+- var _title='网易音乐盒';
+mixin _style(name)
+    link(href='assets/css/'+name+'.css',rel='stylesheet')
+mixin _script(name)
+    script(src='assets/js/'+name+'.js')
+mixin _icon(name,attr)
+    if attr
+        span.glyphicon(class='glyphicon-' + name)&attributes(attr)
+    else
+        span.glyphicon(class='glyphicon-' + name)
+mixin _anchor(code,attr)
+    if(attr)
+        a(href="javascript:" + code)&attributes(attr)
+            if block
+                block
+    else
+        a(href="javascript:" + code)
+            if block
+                block
+doctype html
+html(lang="zh-CN")
+    head
+        title=_title
+        meta(charset="UTF-8")
+        meta(name="viewport",content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no")
+        //load style
+        -each name in ['bootstrap.min','bootstrap-slider.min','my']
+            +_style(name)
+
+    body
+        #wrapper
+            // navgation bar
+            nav.navbar.navbar-fixed-top.navbar-default
+                .container-fluid
+                    .navbar-header
+                        button.navbar-toggle.collapsed(data-toggle="collapse",data-target="ncollapse")
+                            span.sr-only 切换导航栏
+                            span.icon-bar
+                            span.icon-bar
+                            span.icon-bar
+                        a.navbar-brand&attributes(_pc)=_title
+
+                    .collapse.navbar-collapse#ncollapse
+                        ul.nav.navbar-nav
+                            li#main-nav.active: +_anchor('nav.setState(0)') 首页
+                            li#settings-nav: +_anchor('nav.setState(1)') 设置
+
+                        ul.nav.navbar-nav.navbar-right
+                            li.dropdown
+                                a#user-profile.dropdown-toggle(data-toggle="dropdown")&attributes(_pc)
+                                    img.img-circle(src="",onError="this.src='assets/img/avater.jpg'")
+                                    p 未登录
+                                    span.caret
+                                    ul.dropdown-menu(role="menu")
+                                        li#menugo-0
+                                            +_anchor('nav.clickMenu(0)')
+                                                +_icon('log-in')
+                                                | 登录
+                                        li#menugo-1
+                                            +_anchor('nav.clickMenu(1)')
+                                                +_icon('log-out')
+                                                | 注销
+
+                            li: +_anchor('nav.toggleWindow(false)'): +_icon('resize-small',{title: 'Mini模式'})
+                        .navbar-right
+                            form.navbar-form.navbar-left
+                                .input-group
+                                    input#search.form-control(type='text',placeholder='搜索音乐...')
+                                    span.input-group-btn
+                                        +_anchor('nav.search()',{class: 'btn btn-default'}): +_icon('search')
+            //end of navgation bar
+            #page.container-fluid
+                #main.row
+                    #sidebar
+                        #entry
+                        #plts-tools
+                            +_icon('refresh',{title: '更新列表', id: 'refresh'})
+                            +_icon('plus',{title: '添加自定义列表', id: 'addlist'})
+                    .list: .twrap
+                        .song-detail
+                            .detail
+                                .cover: img(src='',alt='专辑封面',onError="this.src='assets/img/album.png'")
+                                ul.info
+                                    li: h3#info-title
+                                    li
+                                        +_icon('cd')
+                                        | 专辑：
+                                        span#info-album
+                                    li
+                                        +_icon('user')
+                                        | 艺术家：
+                                        span#info-artist
+                            .lyric: ul
+
+                            .btn-group-vertical.lrc-tools(role='group')
+                                - var _icons=['minus','arrow-up','arrow-down'];
+                                - var _actions=['lrc.toggle(0)','lrc.scroll(1)','lrc.scroll(-1)']
+                                - for(var i=0;i<3;i++)
+                                    +_anchor(_actions[i],{class: 'btn'}): +_icon(_icons[i])
+
+                        table.table.table-hover&attributes(_hide)
+                            - var _heads=['#','标题','专辑','艺术家','操作'];
+                            thead: tr
+                                - each _item in _heads
+                                    th=_item
+                            tbody
+
+
+            #settings.row&attributes(_hide)
+                .panel.panel-default
+                    .panel-heading: h3.panel-title 基本设置
+                    .panel-body: form.form-horizontal
+                        .form-group
+                            label.col-sm-3.control-label(for='music-dir') 自定义音乐文件夹
+                            .col-sm-9: .input-group
+                                input#music-dir.form-control(disabled='disabled',type='text')
+                                span.input-group-btn
+                                    button#openDialog.btn.btn-default(type="button") 选择...
+
+                        input#dialog(nwdirectory,type='file')&attributes(_hide)
+
+                .panel.panel-default
+                    .panel-heading: h3.panel-title 云音乐设置
+                    .panel-body: form.form-horizontal
+                        .form-group
+                            label.col-sm-3.control-label(for='search-limit') 歌曲最大搜索数
+                            .col-sm-9: input#search-limit.form-control(type='number')
+
+                .panel.panel-default: .panel-body
+                    h3 设计&&实现: Kevin
+                    p Email:stkevintan@foxmail.com
+
+            #footer: .container-fluid: .row
+                .col-sm-2.audio-control
+                    +_anchor('player.playNext(-1)',{id: 'backward'}): +_icon('step-backward')
+                    +_anchor('player.play()',{id: 'play'}): +_icon('play')
+                    +_anchor('player.pause()',{id: 'pause'}): +_icon('pause')
+                    +_anchor('player.playNext(1)',{id: 'forward'}): +_icon('step-forward')
+                .col-sm-7.audio-body
+                    .media
+                        .media-left: +_anchor('lrc.toggle()')
+                            img#song-pic.img-thumbnail.media-object(src="",onError="this.src='assets/img/album.png'")
+                        .media-body
+                            h4.media-heading 未选择音乐
+                            p.media-time!='<span id="cur-time">00.00</span>/<span id="tot-time">00.00</span>'
+                            input
+                .col-sm-3.audio-adjust
+                    +_anchor('category.toggleOpen()'): +_icon('list')
+                    a#vol-wrapper&attributes(_pc)
+                        #vol-panel.popover.top.in
+                            .layer
+                            .arrow
+                            .popover-content: input#volume
+                        +_icon('volume-up',{title: '音量', id: 'vol-icon', onclick: 'player.toggleVolMute()'})
+                    +_anchor('player.setOrder()',{id: 'order'}): +_icon('repeat',{title: '列表循环'})
+
+                .mini-tool: +_anchor('nav.toggleWindow(true)'): +_icon('new-window',{title: '正常模式'})
+
+        // modal input
+        #inputListName.modal.fade: .modal-dialog: .modal-content
+            .modal-header
+                button.close(type='button',data-dismiss='modal',aria-label='Close'): span(aria-hidden="true") &times;
+                h4.modal-title 添加自定义播放列表
+            .modal-body: form
+                label.control-label&attributes(_hide) 糟糕，输入为空或者重名
+                input.form-control(type='text',placeholder='输入自定义播放列表')
+            .modal-footer
+                button.btn.btn-default(type='button',data-dismiss='modal') 撤销
+                button.btn.btn-primary#submit-name(type='button') 确定
+
+        #login.modal.fade: .modal-dialog: .modal-content
+            .modal-header
+                button.close(type='button',data-dismiss='modal',aria-label='Close'): span(aria-hidden="true") &times;
+                h4.modal-title 手机或邮箱登录
+            .modal-body: form
+                label.control-label&attributes(_hide) 糟糕，登录失败
+                .form-group: input.form-control(name='phone',type='text',placeholder='手机号或者邮箱')
+                .form-group: input.form-control(name='password',type='password',placeholder='密码')
+            .modal-footer
+                button.btn.btn-default(type='button',data-dismiss='modal') 撤销
+                button.btn.btn-primary.submit(type='button',data-loading-text='加载中...') 确定
+
+
+        //load script
+        - each name in ['jquery.min','bootstrap.min','bootstrap-slider.min','sortable','my']
+            +_script(name)

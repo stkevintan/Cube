@@ -5,11 +5,11 @@
 var gui = require('nw.gui');
 // Get the current window
 var win = gui.Window.get();
-var fm = require('./model/FileManager');
-var api = require('./model/NetEaseMusic');
-var utils = require('./model/Utils');
-var PltM = require('./model/PlaylistModel');
-var EntryM = require('./model/EntryModel');
+var fm = require('./libs/FileManager');
+var api = require('./libs/NetEaseMusic');
+var utils = require('./libs/Utils');
+var PltM = require('./libs/PlaylistModel');
+var EntryM = require('./libs/EntryModel');
 
 var Event = (function () {
     var w = $(window);
