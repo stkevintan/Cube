@@ -11,6 +11,10 @@ var Lrc = function () {
         album: $('#info-album'),
         artist: $('#info-artist')
     }
+    this.delay = {
+        time: 3000,
+        id: null
+    }
     this.state = false;
     this.listen();
 }
@@ -31,15 +35,22 @@ Lrc.prototype = {
         var curTop = Number(tmp.substr(0, tmp.length - 2));
         if (type > 0 && curTop < 0) {
             //scroll up
-            d = Math.min(this.$.ulDOM.offsetHeight >> 1, -curTop);
+            d = Math.min(this.$.lyric[0].offsetHeight >> 1, -curTop);
         }
-        var h = -36 * this.$.liDOM.length + this.$.ulDOM.offsetHeight;
+        var h = -this.$.ulDOM.offsetHeight + 20;
         if (type < 0 && curTop > h) {
             //scroll down
-            d = Math.max(-this.$.ulDOM.offsetHeight >> 1, h);
+            d = Math.max(-this.$.lyric[0].offsetHeight >> 1, h - curTop);
         }
         if (d) {
             this.$.ulDOM.style.marginTop = curTop + d + 'px';
+            var that = this;
+            if (this.delay.id !== null)clearTimeout(this.delay.id);
+            this.delay.id = setTimeout(function () {
+                that.delay.id = null;
+                that.autoScroll();
+            }, this.delay.time);
+
         }
     },
     setDesc: function (opt) {
@@ -61,9 +72,7 @@ Lrc.prototype = {
                 this.appendline(this.lrcObj.txt[i]);
             }
         } else {
-            //console.log(this.lrcObj.lines.map(function (o) {
-            //    return o.time
-            //}));
+
 
             for (var i = 0; i < this.lrcObj.lines.length; i++) {
                 this.appendline(this.lrcObj.lines[i].txt);
@@ -91,11 +100,16 @@ Lrc.prototype = {
         this.$.liDOM.push(li);
         this.$.ulDOM.appendChild(li);
     },
-    scrollDist: function (target) {
-        var top = target.offsetTop;
-        var pos = this.$.ulDOM.offsetHeight >> 2;
-        if (top > pos) return pos - top;
-        return 0;
+    autoScroll: function (target) {
+        if (this.delay.id !== null)return;
+        if (this._index == -1 && !target) {
+            this.$.ulDOM.style.marginTop = 0;
+        } else {
+            target = target || this.$.liDOM[this._index];
+            var top = target.offsetTop;
+            var pos = this.$.lyric[0].offsetHeight >> 2;
+            this.$.ulDOM.style.marginTop = top > pos ? pos - top + 'px' : 0;
+        }
     },
     seek: function (time) {
         if (this.state && this.lrcObj && !this.lrcObj.noTime) {
@@ -108,12 +122,11 @@ Lrc.prototype = {
                         this.$.liDOM[this._index].className = '';
                     }
                     this.$.liDOM[index].className = 'current';
-                    var dist = this.scrollDist(this.$.liDOM[index]);
-                    this.$.ulDOM.style.marginTop = dist + 'px';
                     this._index = index;
+                    this.autoScroll();
                 }
             } else {
-                this.$.ulDOM.style.marginTop = 0;
+                this.autoScroll();
             }
         }
     },

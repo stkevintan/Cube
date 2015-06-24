@@ -29,11 +29,24 @@ var Event = (function () {
         }
     }
 })();
+
+var errorHandle = function (err) {
+    if (!err)return;
+    if (utils.isString(err)) {
+        console.log(err);
+    } else if (err.type) {
+        showNotify(err.msg);
+    } else {
+        console.log(err.msg);
+    }
+}
+
 var showNotify = function (msg) {
     new Notification('网易音乐盒', {
         body: msg
     });
 }
+
 var createDOM = function (name, options, inner) {
     var dom = document.createElement(name);
     for (var key in options) {
@@ -71,9 +84,6 @@ var entry = {
             name: '云音乐',
             loader: function (callback) {
                 api.getNet(callback);
-            },
-            onload: function () {
-                return fm.getUserID() === null ? false : true;
             }
         })
     },

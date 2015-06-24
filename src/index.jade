@@ -3,9 +3,9 @@
 - var _hide={style:'display:none'};
 - var _title='网易音乐盒';
 mixin _style(name)
-    link(href='assets/css/'+name+'.css',rel='stylesheet')
+    link(href='assets/css/' + name + '.css',rel='stylesheet')
 mixin _script(name)
-    script(src='assets/js/'+name+'.js')
+    script(src='assets/js/' + name + '.js')
 mixin _icon(name,attr)
     if attr
         span.glyphicon(class='glyphicon-' + name)&attributes(attr)
@@ -46,6 +46,7 @@ html(lang="zh-CN")
                     .collapse.navbar-collapse#ncollapse
                         ul.nav.navbar-nav
                             li#main-nav.active: +_anchor('nav.setState(0)') 首页
+                            li#radio: +_anchor('radio.on') 私人FM
                             li#settings-nav: +_anchor('nav.setState(1)') 设置
 
                         ul.nav.navbar-nav.navbar-right
@@ -109,29 +110,29 @@ html(lang="zh-CN")
                             tbody
 
 
-            #settings.row&attributes(_hide)
-                .panel.panel-default
-                    .panel-heading: h3.panel-title 基本设置
-                    .panel-body: form.form-horizontal
-                        .form-group
-                            label.col-sm-3.control-label(for='music-dir') 自定义音乐文件夹
-                            .col-sm-9: .input-group
-                                input#music-dir.form-control(disabled='disabled',type='text')
-                                span.input-group-btn
-                                    button#openDialog.btn.btn-default(type="button") 选择...
+                #settings.row&attributes(_hide)
+                    .panel.panel-default
+                        .panel-heading: h3.panel-title 基本设置
+                        .panel-body: form.form-horizontal
+                            .form-group
+                                label.col-sm-3.control-label(for='music-dir') 自定义音乐文件夹
+                                .col-sm-9: .input-group
+                                    input#music-dir.form-control(disabled='disabled',type='text')
+                                    span.input-group-btn
+                                        button#openDialog.btn.btn-default(type="button") 选择...
 
-                        input#dialog(nwdirectory,type='file')&attributes(_hide)
+                            input#dialog(nwdirectory,type='file')&attributes(_hide)
 
-                .panel.panel-default
-                    .panel-heading: h3.panel-title 云音乐设置
-                    .panel-body: form.form-horizontal
-                        .form-group
-                            label.col-sm-3.control-label(for='search-limit') 歌曲最大搜索数
-                            .col-sm-9: input#search-limit.form-control(type='number')
+                    .panel.panel-default
+                        .panel-heading: h3.panel-title 云音乐设置
+                        .panel-body: form.form-horizontal
+                            .form-group
+                                label.col-sm-3.control-label(for='search-limit') 歌曲最大搜索数
+                                .col-sm-9: input#search-limit.form-control(type='number')
 
-                .panel.panel-default: .panel-body
-                    h3 设计&&实现: Kevin
-                    p Email:stkevintan@foxmail.com
+                    .panel.panel-default: .panel-body
+                        h3 设计&&实现: Kevin
+                        p Email:stkevintan@foxmail.com
 
             #footer: .container-fluid: .row
                 .col-sm-2.audio-control

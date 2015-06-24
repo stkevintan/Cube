@@ -25,20 +25,18 @@ Account.prototype = {
         if (uid) {
             api.userProfile(uid, function (err, res) {
                 if (err) {
-                    console.log(err);
+                    errorHandle(err);
                     that.setUserProfile();
-                    showNotify('获取用户信息失败，请重新登录');
                 } else {
                     that.setUserProfile(res);
                 }
             });
         } else {
-            console.log('user not login');
             that.setUserProfile();
         }
     },
     unsign: function () {
-        fm.setUserData(null);
+        fm.setCookie(null);
         this.setUserProfile();
         category.loadPlaylists({'net': true});
     },
@@ -70,7 +68,8 @@ Account.prototype = {
             var password = that.$.password.val();
             api.login(phone, password, function (err, data) {
                 if (err) {
-                    that.loginErr(err);
+                    errorHandle(err);
+                    that.loginErr(err.msg);
                 } else {
                     that.loginSuccess(data);
                 }

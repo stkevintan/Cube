@@ -64,12 +64,11 @@ Category.prototype = {
         loadSize = 0;
         var that = this;
         for (var key in options) {
-            if (options.hasOwnProperty(key) && options[key] && schema[key].onload()) {
+            if (options.hasOwnProperty(key) && options[key]) {
                 loadSize++;
                 this.add$EntryFrame(key, schema[key].name);
             }
         }
-
         if (loadSize) {
             //enter loading state
             this.$.refresh.addClass('loading');
@@ -82,9 +81,9 @@ Category.prototype = {
             }
         }
         function callback(err, plts) {
-            if (err || !utils.isArray(plts)) {
-                console.log(err || "the source doesn't return an Array!");
-                err && showNotify(err);
+            if (err) errorHandle(err);
+            else if (!utils.isArray(plts)) {
+                errorHandle("the source doesn't return an Array!");
             } else {
                 var offset = that.plts.length;
                 that.plts = that.plts.concat(plts);
@@ -305,6 +304,7 @@ Category.prototype = {
 
                 //load rest task in queue
                 if (!this.loadQue.empty()) {
+                    console.log('load task in queue');
                     var task = this.loadQue.front();
                     this.loadQue.pop();
                     if (utils.isArray(task)) {
