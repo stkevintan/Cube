@@ -101,6 +101,7 @@ var entry = {
 
 var nav = new Nav();
 var account = new Account();
+var radio = new Radio();
 var lrc = new Lrc();
 var player = new Player();
 var settings = new Settings();

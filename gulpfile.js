@@ -18,7 +18,7 @@ gulp.task('css', function () {
     })).pipe(gulp.dest('./dist/assets/css/'));
 });
 gulp.task('js', function () {
-    var components = ['nav', 'lrc', 'player', 'account', 'playlist', 'settings', 'category', 'index'];
+    var components = ['nav', 'lrc', 'radio', 'player', 'account', 'playlist', 'settings', 'category', 'index'];
     return gulp.src(components.map(function (n) {
         return './src/controller/' + n + '.js';
     })).pipe(concat('my.js')).pipe(gulp.dest('./dist/assets/js/'));

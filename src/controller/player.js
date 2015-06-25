@@ -15,6 +15,7 @@ var Player = function () {
         play: $('#play'),
         pause: $('#pause'),
         order: $('#order span'),
+        backward: $('#backward'),
         volume: $('#volume'),
         volIcon: $('#vol-icon'),
         songPic: $('#song-pic'),
@@ -34,6 +35,7 @@ var Player = function () {
         step: 1,
         formatter: this.timeFormartter
     });
+    this.playling = false;
     this.volume = this.$.volume.slider({
         value: 0.5,
         min: 0,
@@ -62,12 +64,11 @@ Player.prototype = {
         value: 'random'
     }],
     play: function (songM) {
-        if (this.playlist && this.playlist.ID != -1) {
+        if (this.playlist && this.playlist.ID != -1 || radio.state) {
             this.$.play.hide();
             this.$.pause.show();
             songM && this.setMetaData(songM);
             this.audio.play();
-
         }
     },
     playNext: function (type) {
@@ -76,6 +77,9 @@ Player.prototype = {
             var nextSong = this.playlist.next(type);
             if (nextSong) this.play(nextSong);
             else this.stop();
+        }
+        if (radio.state && type == 1) {
+            radio.playNext();
         }
     },
     pause: function () {
@@ -90,11 +94,12 @@ Player.prototype = {
             this.audio.pause();
             msg = msg || '未选择歌曲';
             lrc.load({
-                    title: msg,
-                    album: '未知',
-                    artist: '未知'
-                }
-            );
+                title: msg,
+                album: '未知',
+                artist: '未知'
+            });
+            if (this.playlist)
+                this.playlist.setState(-1);
             this.playlist = null;
             this.$.play.show();
             this.$.pause.hide();
@@ -183,6 +188,7 @@ Player.prototype = {
             that.setDuration(this.duration);
         };
         this.audio.onerror = function () {
+            that.playing = false;
             var msg;
             switch (this.error.code) {
                 case 1:
@@ -208,8 +214,16 @@ Player.prototype = {
             lrc.seek(this.currentTime);
         };
         this.audio.onended = function () {
+            that.playing = false;
             that.playNext();
         };
+        this.audio.onpause = function () {
+            that.playing = false;
+        }
+        this.audio.onplaying = function () {
+            that.playing = true;
+        }
+
         this.progress.slider('on', 'slideStart', function () {
             ondrag = true;
         });

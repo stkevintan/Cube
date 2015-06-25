@@ -46,8 +46,8 @@ html(lang="zh-CN")
                     .collapse.navbar-collapse#ncollapse
                         ul.nav.navbar-nav
                             li#main-nav.active: +_anchor('nav.setState(0)') 首页
-                            li#radio: +_anchor('radio.on') 私人FM
-                            li#settings-nav: +_anchor('nav.setState(1)') 设置
+                            li#radio-nav: +_anchor('nav.setState(1)') 私人FM
+                            li#settings-nav: +_anchor('nav.setState(2)') 设置
 
                         ul.nav.navbar-nav.navbar-right
                             li.dropdown
@@ -81,34 +81,30 @@ html(lang="zh-CN")
                             +_icon('refresh',{title: '更新列表', id: 'refresh'})
                             +_icon('plus',{title: '添加自定义列表', id: 'addlist'})
                     .list: .twrap
-                        .song-detail
-                            .detail
-                                .cover: img(src='',alt='专辑封面',onError="this.src='assets/img/album.png'")
-                                ul.info
-                                    li: h3#info-title
-                                    li
-                                        +_icon('cd')
-                                        | 专辑：
-                                        span#info-album
-                                    li
-                                        +_icon('user')
-                                        | 艺术家：
-                                        span#info-artist
-                            .lyric: ul
-
-                            .btn-group-vertical.lrc-tools(role='group')
-                                - var _icons=['minus','arrow-up','arrow-down'];
-                                - var _actions=['lrc.toggle(0)','lrc.scroll(1)','lrc.scroll(-1)']
-                                - for(var i=0;i<3;i++)
-                                    +_anchor(_actions[i],{class: 'btn'}): +_icon(_icons[i])
-
                         table.table.table-hover&attributes(_hide)
-                            - var _heads=['#','标题','专辑','艺术家','操作'];
                             thead: tr
-                                - each _item in _heads
+                                - each _item in ['#','标题','专辑','艺术家','操作']
                                     th=_item
                             tbody
-
+                .song-detail
+                    .detail
+                        .cover: img(src='',alt='专辑封面',onError="this.src='assets/img/album.png'")
+                        ul.info
+                            li: h3#info-title
+                            li
+                                +_icon('cd')
+                                | 专辑：
+                                span#info-album
+                            li
+                                +_icon('user')
+                                | 艺术家：
+                                span#info-artist
+                    .lyric: ul
+                    .btn-group-vertical.lrc-tools(role='group')
+                        - var _icons=['minus','arrow-up','arrow-down'];
+                        - var _actions=['lrc.toggle(0)','lrc.scroll(1)','lrc.scroll(-1)']
+                        - for(var i=0;i<3;i++)
+                            +_anchor(_actions[i],{class: 'btn'}): +_icon(_icons[i])
 
                 #settings.row&attributes(_hide)
                     .panel.panel-default
@@ -133,6 +129,7 @@ html(lang="zh-CN")
                     .panel.panel-default: .panel-body
                         h3 设计&&实现: Kevin
                         p Email:stkevintan@foxmail.com
+                #radio&attributes(_hide)
 
             #footer: .container-fluid: .row
                 .col-sm-2.audio-control

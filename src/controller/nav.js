@@ -7,9 +7,9 @@
  * @constructor nav.init
  *
  */
+var tabName = ['#main', '#radio', '#settings'];
 var Nav = function () {
     this.ID = 0;
-    var tabName = ['#main', '#settings', '#about'];
     this.$ = {
         tabBody: tabName.map(function (s) {
             return $(s);
@@ -45,8 +45,12 @@ Nav.prototype = {
         });
         $([this.$.tabHead[this.ID], this.$.tabHead[id]]).toggleClass('active');
         this.ID = id;
-    }
-    ,
+        if (id == 1) {
+            radio.show();
+        } else {
+            lrc.toggle(false);
+        }
+    },
     /**
      * @description search keywords from UI,add result playlist to category
      *
@@ -64,8 +68,7 @@ Nav.prototype = {
                 songList: songList
             }), true);
         });
-    }
-    ,
+    },
     close: function () {
         win.hide();
         console.log('save the config changes...');
@@ -74,12 +77,10 @@ Nav.prototype = {
             else console.log('saved');
             win.close(true);
         });
-    }
-    ,
+    },
     minimize: function () {
         win.minimize();
-    }
-    ,
+    },
     maximize: function () {
         if (this.WinMode.isMaxi) {
             win.unmaximize();

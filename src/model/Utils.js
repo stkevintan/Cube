@@ -32,9 +32,10 @@ base.queue.prototype = {
     },
     pop: function () {
         if (this.empty())return undefined;
-        var ret = this._source(this._front++);
+        var ret = this._source[this._front++];
         if ((this._front << 1) >= this._source.length) {
             this._source = this._source.slice(this._front);
+            this._front = 0;
         }
         return ret;
     },

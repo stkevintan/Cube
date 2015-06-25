@@ -218,9 +218,10 @@ Playlist.prototype = {
             //去掉之前播放列表的播放状态
             var old = player.playlist;
             if (old && old != that)old.setState(-1);
+            //close radio
+            radio.close();
             //获取要播放歌曲的数据
             var songModel = that.next(0, $(this).index());
-            //更新controls的playlist
             player.playlist = that;
             player.play(songModel);
         });

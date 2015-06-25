@@ -20,11 +20,14 @@ var Lrc = function () {
 }
 Lrc.prototype = {
     toggle: function (flag) {
+        if (flag === this.state)return;
         flag = flag || !this.state;
         if (flag) {
             this.$.panel.css('transform', 'none');
             this.state = true;
         } else {
+            //if current tab is radio,prevent this action
+            if (nav.ID == 1)return;
             this.$.panel.css('transform', 'scale(0,0)');
             this.state = false;
         }
@@ -45,11 +48,13 @@ Lrc.prototype = {
         if (d) {
             this.$.ulDOM.style.marginTop = curTop + d + 'px';
             var that = this;
-            if (this.delay.id !== null)clearTimeout(this.delay.id);
-            this.delay.id = setTimeout(function () {
-                that.delay.id = null;
-                that.autoScroll();
-            }, this.delay.time);
+            if (player.playing) {
+                if (this.delay.id !== null)clearTimeout(this.delay.id);
+                this.delay.id = setTimeout(function () {
+                    that.delay.id = null;
+                    that.autoScroll();
+                }, this.delay.time);
+            }
 
         }
     },

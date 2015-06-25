@@ -7,9 +7,9 @@
  * @constructor nav.init
  *
  */
+var tabName = ['#main', '#radio', '#settings'];
 var Nav = function () {
     this.ID = 0;
-    var tabName = ['#main', '#settings', '#about'];
     this.$ = {
         tabBody: tabName.map(function (s) {
             return $(s);
@@ -45,8 +45,12 @@ Nav.prototype = {
         });
         $([this.$.tabHead[this.ID], this.$.tabHead[id]]).toggleClass('active');
         this.ID = id;
-    }
-    ,
+        if (id == 1) {
+            radio.show();
+        } else {
+            lrc.toggle(false);
+        }
+    },
     /**
      * @description search keywords from UI,add result playlist to category
      *
@@ -64,8 +68,7 @@ Nav.prototype = {
                 songList: songList
             }), true);
         });
-    }
-    ,
+    },
     close: function () {
         win.hide();
         console.log('save the config changes...');
@@ -74,12 +77,10 @@ Nav.prototype = {
             else console.log('saved');
             win.close(true);
         });
-    }
-    ,
+    },
     minimize: function () {
         win.minimize();
-    }
-    ,
+    },
     maximize: function () {
         if (this.WinMode.isMaxi) {
             win.unmaximize();
@@ -170,11 +171,14 @@ var Lrc = function () {
 }
 Lrc.prototype = {
     toggle: function (flag) {
+        if (flag === this.state)return;
         flag = flag || !this.state;
         if (flag) {
             this.$.panel.css('transform', 'none');
             this.state = true;
         } else {
+            //if current tab is radio,prevent this action
+            if (nav.ID == 1)return;
             this.$.panel.css('transform', 'scale(0,0)');
             this.state = false;
         }
@@ -195,11 +199,13 @@ Lrc.prototype = {
         if (d) {
             this.$.ulDOM.style.marginTop = curTop + d + 'px';
             var that = this;
-            if (this.delay.id !== null)clearTimeout(this.delay.id);
-            this.delay.id = setTimeout(function () {
-                that.delay.id = null;
-                that.autoScroll();
-            }, this.delay.time);
+            if (player.playing) {
+                if (this.delay.id !== null)clearTimeout(this.delay.id);
+                this.delay.id = setTimeout(function () {
+                    that.delay.id = null;
+                    that.autoScroll();
+                }, this.delay.time);
+            }
 
         }
     },
@@ -337,6 +343,70 @@ Lrc.prototype = {
     }
 }
 /**
+ * Created by kevin on 15-6-25.
+ */
+var Radio = function () {
+    this.state = false;
+    this.loadState = null;
+    this.loadQue = new utils.queue();
+    this.curplay = null;
+    this.listen();
+}
+Radio.prototype = {
+    load: function () {
+        if (this.loadState == 'loading')return;
+        var that = this;
+        api.radio(function (err, songList) {
+            if (err)errorHandle(err);
+            else {
+                Event.emit('songloaded', songList);
+            }
+            that.loadState = 'loaded';
+        });
+        this.loadState = 'loading';
+    },
+    show: function () {
+        if (this.state == false) {
+            player.stop('loading...');
+            player.$.backward.hide();
+            player.$.order.hide();
+            this.state = true;
+            this.play();
+        }
+        lrc.toggle(true);
+    },
+    close: function () {
+        this.state = false;
+        player.$.backward.show();
+        player.$.order.show();
+    },
+    play: function () {
+        if (this.curplay) {
+            player.play(this.curplay);
+        } else {
+            if (this.loadQue.empty()) {
+                this.load();
+            } else {
+                this.curplay = this.loadQue.pop();
+                player.play(this.curplay);
+            }
+        }
+    },
+    playNext: function () {
+        if (this.curplay == null)return;
+        this.curplay = null;
+        this.play();
+    },
+    listen: function () {
+        Event.on('songloaded', function (songList) {
+            for (var i = 0; i < songList.length; i++) {
+                this.loadQue.push(songList[i]);
+            }
+            this.play();
+        }, this);
+    }
+}
+/**
  * Created by kevin on 15-6-10.
  */
 /**
@@ -353,6 +423,7 @@ var Player = function () {
         play: $('#play'),
         pause: $('#pause'),
         order: $('#order span'),
+        backward: $('#backward'),
         volume: $('#volume'),
         volIcon: $('#vol-icon'),
         songPic: $('#song-pic'),
@@ -372,6 +443,7 @@ var Player = function () {
         step: 1,
         formatter: this.timeFormartter
     });
+    this.playling = false;
     this.volume = this.$.volume.slider({
         value: 0.5,
         min: 0,
@@ -400,12 +472,11 @@ Player.prototype = {
         value: 'random'
     }],
     play: function (songM) {
-        if (this.playlist && this.playlist.ID != -1) {
+        if (this.playlist && this.playlist.ID != -1 || radio.state) {
             this.$.play.hide();
             this.$.pause.show();
             songM && this.setMetaData(songM);
             this.audio.play();
-
         }
     },
     playNext: function (type) {
@@ -414,6 +485,9 @@ Player.prototype = {
             var nextSong = this.playlist.next(type);
             if (nextSong) this.play(nextSong);
             else this.stop();
+        }
+        if (radio.state && type == 1) {
+            radio.playNext();
         }
     },
     pause: function () {
@@ -428,11 +502,12 @@ Player.prototype = {
             this.audio.pause();
             msg = msg || '未选择歌曲';
             lrc.load({
-                    title: msg,
-                    album: '未知',
-                    artist: '未知'
-                }
-            );
+                title: msg,
+                album: '未知',
+                artist: '未知'
+            });
+            if (this.playlist)
+                this.playlist.setState(-1);
             this.playlist = null;
             this.$.play.show();
             this.$.pause.hide();
@@ -521,6 +596,7 @@ Player.prototype = {
             that.setDuration(this.duration);
         };
         this.audio.onerror = function () {
+            that.playing = false;
             var msg;
             switch (this.error.code) {
                 case 1:
@@ -546,8 +622,16 @@ Player.prototype = {
             lrc.seek(this.currentTime);
         };
         this.audio.onended = function () {
+            that.playing = false;
             that.playNext();
         };
+        this.audio.onpause = function () {
+            that.playing = false;
+        }
+        this.audio.onplaying = function () {
+            that.playing = true;
+        }
+
         this.progress.slider('on', 'slideStart', function () {
             ondrag = true;
         });
@@ -878,9 +962,10 @@ Playlist.prototype = {
             //去掉之前播放列表的播放状态
             var old = player.playlist;
             if (old && old != that)old.setState(-1);
+            //close radio
+            radio.close();
             //获取要播放歌曲的数据
             var songModel = that.next(0, $(this).index());
-            //更新controls的playlist
             player.playlist = that;
             player.play(songModel);
         });
@@ -1382,6 +1467,7 @@ var entry = {
 
 var nav = new Nav();
 var account = new Account();
+var radio = new Radio();
 var lrc = new Lrc();
 var player = new Player();
 var settings = new Settings();

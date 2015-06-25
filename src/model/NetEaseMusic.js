@@ -5,7 +5,7 @@ var crypto = require('crypto');
 var fm = require('./FileManager');
 var PltM = require('./PlaylistModel');
 var SongM = require('./SongModel');
-header = {
+var header = {
     'Accept': '*/*',
     'Accept-Encoding': 'gzip,deflate,sdch',
     'Accept-Language': 'zh-CN,zh;q=0.8,gl;q=0.6,zh-TW;q=0.4',
@@ -266,9 +266,25 @@ module.exports = {
     radio: function (callback) {
         var url = 'http://music.163.com/api/radio/get';
         httpRequest('get', url, null, function (err, res) {
-            console.log(res);
-            callback(err, res);
-        })
+            if (err) {
+                callback({msg: '[radio]http error ' + err, type: 1});
+                return;
+            }
+            var doc = JSON.parse(res.text);
+            if (doc.code != 200)callback({msg: '[radio]http code ' + doc.code, type: 1});
+            else callback(null, doc.data.map(function (o) {
+                return new SongM({
+                    id: o.id,
+                    src: o.mp3Url,
+                    pic: o.album.picUrl,
+                    artist: o.artists.map(function (v) {
+                        return v.name;
+                    }).join(),
+                    album: o.album.name,
+                    title: o.name
+                });
+            }));
+        });
     }
 }
 
