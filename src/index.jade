@@ -30,6 +30,8 @@ html(lang="zh-CN")
         -each name in ['bootstrap.min','bootstrap-slider.min','my']
             +_style(name)
 
+        //link(href='http://cdn.bootcss.com/bootstrap-material-design/0.3.0/css/material-fullpalette.min.css',rel='stylesheet')
+
     body
         #wrapper
             // navgation bar
@@ -185,3 +187,4 @@ html(lang="zh-CN")
         //load script
         - each name in ['jquery.min','bootstrap.min','bootstrap-slider.min','sortable','my']
             +_script(name)
+       // script(src='http://cdn.bootcss.com/bootstrap-material-design/0.3.0/js/material.min.js')
