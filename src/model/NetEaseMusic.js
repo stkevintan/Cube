@@ -1,7 +1,7 @@
 var request = require('superagent');
 //var process = require('process');
 var async = require('async');
-var CryptoJS = require('./weCrypto');
+var crypto = require('./Crypto');
 var fm = require('./FileManager');
 var PltM = require('./PlaylistModel');
 var SongM = require('./SongModel');
@@ -40,12 +40,12 @@ module.exports = {
             url = 'http://music.163.com/weapi/login/';
         }
         //对password加密
-        password = CryptoJS.MD5(password);
+        password = crypto.MD5(password);
         var data = {};
         data[name] = username;
         data.password = password;
         data.rememberLogin = 'true';
-        var ret = CryptoJS.aesRsaEncrypt(JSON.stringify(data));
+        var ret = crypto.aesRsaEncrypt(JSON.stringify(data));
         var encData = {
             params: ret.encText,
             encSecKey: ret.encSecKey

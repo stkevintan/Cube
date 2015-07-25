@@ -1,19 +1,19 @@
 var request = require('superagent');
 //var process = require('process');
 var async = require('async');
-var crypto = require('crypto');
+var crypto = require('./Crypto');
 var fm = require('./FileManager');
 var PltM = require('./PlaylistModel');
 var SongM = require('./SongModel');
 var header = {
     'Accept': '*/*',
     'Accept-Encoding': 'gzip,deflate,sdch',
-    'Accept-Language': 'zh-CN,zh;q=0.8,gl;q=0.6,zh-TW;q=0.4',
+    'Accept-Language': 'zh-CN,en-US;q=0.7,en;q=0.3',
     'Connection': 'keep-alive',
-    'Content-Type': 'application/x-www-form-urlencoded',
+    'Content-Type': 'application/x-www-form-urlencoded; charset=UTF-8',
     'Host': 'music.163.com',
-    'Referer': 'http://music.163.com/search/',
-    'User-Agent': 'Mozilla/5.0 (Macintosh; Intel Mac OS X 10_9_2) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/33.0.1750.152 Safari/537.36'
+    'Referer': 'http://music.163.com/',
+    'User-Agent': 'Mozilla/5.0 (X11; Linux x86_64; rv:39.0) Gecko/20100101 Firefox/39.0'
 }
 
 var httpRequest = function (method, url, data, callback) {
@@ -27,34 +27,41 @@ var httpRequest = function (method, url, data, callback) {
     if (cookie)ret.set('Cookie', cookie);
     ret.set(header).timeout(10000).end(callback);
 }
-
 module.exports = {
     login: function (username, password, callback) {
         var url, name, pattern = /^0\d{2,3}\d{7,8}$|^1[34578]\d{9}$/
         if (pattern.test(username)) {
             //手机登录
             name = 'phone';
-            url = 'http://music.163.com/api/login/cellphone';
+            url = 'http://music.163.com/weapi/login/cellphone/';
         } else {
             //邮箱登录
             name = 'username';
-            url = 'http://music.163.com/api/login/';
+            url = 'http://music.163.com/weapi/login/';
         }
         //对password加密
-        var hasher = crypto.createHash('md5').update(password);
-        password = hasher.digest('hex');
-        var data = {
-            'password': password,
-            'rememberLogin': 'true'
-        };
+        password = crypto.MD5(password);
+        var data = {};
         data[name] = username;
-        httpRequest('post', url, data, function (err, res) {
+        data.password = password;
+        data.rememberLogin = 'true';
+        var ret = crypto.aesRsaEncrypt(JSON.stringify(data));
+        var encData = {
+            params: ret.encText,
+            encSecKey: ret.encSecKey
+        }
+        //var encData = {
+        //    params:'QN2FMbwsIPjwPhDrqNIPQ7kUz9jnw4I6XaLwWPLJFY6V3jJqzmAaXBHOreIWctHBGk+ICB5IXTC6zlF4juOjoTfdauP26olOi/b3dF+GZMKFWmHekWwPU039w2RlrVMLlOmqdFheZ5b4jikcONZaNajpSodIJaRSkT/V79oGM3/GtljK2ESAntfTvZ3WbBcnAJ5h6pqZrHPhe4Y/PpWbBQ==',
+        //    encSecKey: '4a2313415c12a1f29bd3e2219bafcaf1f7e8d888f0209253e7239fa01eec544961931102850d4acf10f9c624319672e97f7fa7b1998bce0148e66184f8256f207bbedbcb58e13b6855b5479f79d5819ae4a0681c3289bd67f59e172c13af5fc63c48ce549bf125a05e8824e89070c84ef67f6583e8ce18d2b474b7782ff779ae'
+        //};
+        httpRequest('post', url, encData, function (err, res) {
             if (err) {
                 callback({msg: '[login]http error ' + err, type: 1});
                 return;
             }
+            console.log('http return', err, res);
             var data = JSON.parse(res.text);
-
+            console.log('resultdata', data);
             if (data.code != 200) {
                 //登录失败
                 callback({msg: "[login]username or password incorrect", type: 0});

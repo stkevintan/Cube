@@ -727,8 +727,9 @@ Account.prototype = {
                 } else {
                     that.loginSuccess(data);
                 }
+                $btn.button('reset');
             });
-            $btn.button('reset');
+
         });
         this.$.phone.keydown(function (e) {
             if (e.which == 13) {
