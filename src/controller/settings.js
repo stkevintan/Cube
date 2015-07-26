@@ -22,7 +22,6 @@ Settings.prototype = {
 
         this.$.dialog.change(function () {
             var newDir = $(this).val();
-            console.log('newDir', newDir);
             if (fm.setMusicDir(newDir)) {
                 that.$.musicDir.val(newDir);
                 //reload localdir

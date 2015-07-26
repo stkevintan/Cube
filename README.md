@@ -16,28 +16,24 @@ Changelog: 修复登录功能
 4. 手机帐号或邮箱帐号登录
 5. UI响应式布局与mini模式  
 6. 侧栏列表鼠标拖动排序  
-7. 滚动歌词  
+7. 滚动歌词
 8. 私人fm  
-9. 系统播放提示  
+9. 系统播放提示
+10. 托盘图标
 
-###TO DO    
-1. 托盘图标  
-2. 推荐歌单  
-3. 喜爱、收藏
 
 ###Manual Install  
-1. 首先安装[nw.js](https://github.com/nwjs/nw.js)
+1. 下载安装[nw.js](https://github.com/nwjs/nw.js)
 2. 拷贝chrome安装目录下的`libffmpegsumo.so`(windows下是`libffmpegsumo.dll`)至nw.js的安装目录下  
 3. 下载并切换至项目：`git clone https://github.com/stkevintan/nw_musicbox.git && cd nw_musicbox/`  
-4. 安装模块: `npm i`  
+4. 安装模块: `npm i`
 4. 运行： `/path/to/nw .`   
 
-`libffmpegsumo`的版本一定要与nw.js版本对应，否则会出现问题。比如：nw.js v0.12.0对应chrome 41.0.2272.76
+`libffmpegsumo`的版本一定要与nw.js版本对应，否则放不出声音。nw.js v0.12.0对应chrome 41.x +
 
 
 ###Update
 `cd /path/to/NetEaseMusic/ && git pull`
-
 
 ###Screenshots
 <img src="http://7xiyak.com1.z0.glb.clouddn.com/s59.png"/>
@@ -48,25 +44,27 @@ Changelog: 修复登录功能
 本项目前端使用jade、stylus与bootstrap框架，源文件包括在src中，使用gulp自动构建至dist文件夹中。  
 本项目结构类似于MVC结构，所有定义ui交互等运行于web context中的文件皆置于controller文件夹中，所有定义数据模型、处理网络或本地事务等运行于node context中的文件皆置于model文件夹中。  
 controller中包括：   
-- category 管理播放列表目录（sidebar）
-- account  管理账户
-- nav  管理顶栏
-- lrc  歌词面板
-- player  底部播放器
-- playlist 歌曲列表
-- radio 私人fm
-- settings 设置面板
-- index 程序入口，会调用loadPlaylists方法加载entry对象中所有定义的播放源。  
+- `category` 管理播放列表目录（sidebar）
+- `account`  管理账户
+- `nav`  管理顶栏
+- `lrc`  歌词面板
+- `player`  底部播放器
+- `playlist` 歌曲列表
+- `radio` 私人fm
+- `settings` 设置面板
+- `tray` 托盘图标
 
 model中包括：   
-- EntryModel 定义播放源
-- PlaylistModel 定义播放列表
-- SongModel 定义歌曲
-- FileManager 处理本地文件系统
-- NetEaseMusic 处理网络（既api）
-- Utils 对node.js中util的扩展，包括二分查找、队列等实用工具  
+- `EntryModel` 定义播放列表源
+- `PlaylistModel` 定义播放列表
+- `SongModel` 定义歌曲
+- `FileManager` 处理本地文件系统
+- `NetEaseMusic` 处理网络（既api）
+- `Crypto` 加密模块
+- `BigInt` 支持加密模块的大数模块
+- `Utils` 对node.js中util的扩展，包括二分查找、队列等实用工具
 
-目前已经定义了本地、用户、云音乐三个播放源。可以通过扩展index.js中的entry对象添加新的播放源比如豆瓣、虾米等。  
+目前已经定义了本地、用户、云音乐三个播放列表源。可以通过扩展entry对象添加新的播放列表源。
 
 ###Troubleshooting
 遇到什么问题可以尝试一下删除项目主目录中data目录再重启。

@@ -15,19 +15,7 @@ module.exports = {
     },
     isInstance: isInstance,
     setLimit: setMaxDigits,
-    highIndex: biHighIndex,
-    add: biAdd,
-    subtract: biSubtract,
-    multiply: function (x, y) {
-        isInstance(y) ? biMultiply(x, y) : biMultiplyDigit(x, y);
-    },
-    divide: biDivide,
-    modulo: biModulo,
-    shiftLeft: biShiftLeft,
-    shiftRight: biShiftRight,
-    pow: biPow,
-    powMod: biPowMod,
-    compare: biCompare
+    highIndex: biHighIndex
 }
 
 BigInt.prototype.toString = function (encoding) {
@@ -44,7 +32,7 @@ BigInt.prototype.toString = function (encoding) {
  * Dave Shapiro
  * dave@ohdave.com
  */
-    
+
 var biRadixBase = 2;
 var biRadixBits = 16;
 var bitsPerDigit = biRadixBits;

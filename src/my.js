@@ -2,15 +2,13 @@
  * Created by kevin on 15-5-4.
  */
 //初始化
-var gui = require('nw.gui');
-// Get the current window
-var win = gui.Window.get();
+// transfer Window.localStorage to node context
+global.storage = localStorage;
 var fm = require('./libs/FileManager');
 var api = require('./libs/NetEaseMusic');
 var utils = require('./libs/Utils');
 var PltM = require('./libs/PlaylistModel');
 var EntryM = require('./libs/EntryModel');
-
 var Event = (function () {
     var w = $(window);
     return {
@@ -31,14 +29,9 @@ var Event = (function () {
 })();
 
 var errorHandle = function (err) {
-    if (!err)return;
-    if (utils.isString(err)) {
-        console.log(err);
-    } else if (err.type) {
-        showNotify(err.msg);
-    } else {
-        console.log(err.msg);
-    }
+    if (!err) return;
+    if (err.type)showNotify(err.msg);
+    console.log(err.msg ? err.msg : err);
 }
 
 var showNotify = function (msg) {
@@ -104,34 +97,19 @@ var account = new Account();
 var radio = new Radio();
 var lrc = new Lrc();
 var player = new Player();
+var tray = new Tray();
 var settings = new Settings();
 var category = new Category();
 
 //加载用户信息
 account.loadUser();
+
 //加载播放列表
 category.loadPlaylists(null, true);
 
 //table屏蔽选中
 $('table').on('selectstart', function (e) {
     e.preventDefault();
-});
-
-win.setMinimumSize(560, 60);
-
-win.on('close', function () {
-    win.hide();
-    console.log('save the config changes...');
-    fm.SaveChanges(function (err) {
-        if (err)console.log('save failed', err);
-        else console.log('saved');
-        win.close(true);
-    });
-    //5s to save changes or close directly.
-    setTimeout(function () {
-        console.log('errors may be occurred , exit');
-        win.close(true);
-    }, 5000);
 });
 
 

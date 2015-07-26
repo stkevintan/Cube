@@ -50,18 +50,12 @@ module.exports = {
             params: ret.encText,
             encSecKey: ret.encSecKey
         }
-        //var encData = {
-        //    params:'QN2FMbwsIPjwPhDrqNIPQ7kUz9jnw4I6XaLwWPLJFY6V3jJqzmAaXBHOreIWctHBGk+ICB5IXTC6zlF4juOjoTfdauP26olOi/b3dF+GZMKFWmHekWwPU039w2RlrVMLlOmqdFheZ5b4jikcONZaNajpSodIJaRSkT/V79oGM3/GtljK2ESAntfTvZ3WbBcnAJ5h6pqZrHPhe4Y/PpWbBQ==',
-        //    encSecKey: '4a2313415c12a1f29bd3e2219bafcaf1f7e8d888f0209253e7239fa01eec544961931102850d4acf10f9c624319672e97f7fa7b1998bce0148e66184f8256f207bbedbcb58e13b6855b5479f79d5819ae4a0681c3289bd67f59e172c13af5fc63c48ce549bf125a05e8824e89070c84ef67f6583e8ce18d2b474b7782ff779ae'
-        //};
         httpRequest('post', url, encData, function (err, res) {
             if (err) {
                 callback({msg: '[login]http error ' + err, type: 1});
                 return;
             }
-            console.log('http return', err, res);
             var data = JSON.parse(res.text);
-            console.log('resultdata', data);
             if (data.code != 200) {
                 //登录失败
                 callback({msg: "[login]username or password incorrect", type: 0});

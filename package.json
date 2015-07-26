@@ -12,12 +12,16 @@
   },
   "dependencies": {
     "async": "^1.2.0",
+    "home": "^0.1.8",
     "superagent": "^1.2.0"
   },
   "devDependencies": {
+    "del": "^1.2.0",
     "gulp": "^3.9.0",
     "gulp-concat": "^2.5.2",
     "gulp-jade": "^1.0.1",
-    "gulp-stylus": "^2.0.5"
+    "gulp-stylus": "^2.0.5",
+    "gulp-uglify": "^1.2.0",
+    "nw-builder": "^2.0.1"
   }
 }

@@ -1,18 +1,1 @@
-/**
- * Created by kevin on 15-6-12.
- */
-function EntryModel(raw) {
-    this.mode = raw.mode;
-    this.name = raw.name;
-    this.loader = raw.loader || function (callback) {
-            callback(null, null);
-        }
-    this.onadd = raw.onadd || function () {
-        }
-    this.onload = raw.onload || function () {
-            return true;
-        }
-    this.onremove = raw.onremove || function () {
-        }
-}
-module.exports = EntryModel;
+function EntryModel(n){this.mode=n.mode,this.name=n.name,this.loader=n.loader||function(n){n(null,null)},this.onadd=n.onadd||function(){},this.onload=n.onload||function(){return!0},this.onremove=n.onremove||function(){}}module.exports=EntryModel;

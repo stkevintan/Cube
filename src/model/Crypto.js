@@ -18,21 +18,14 @@ function RSAKeyPair(encryptionExponent, decryptionExponent, modulus) {
 function encryptedString(key, s) {
     var a = new Array();
     var sl = s.length;
-    var i = 0;
-    while (i < sl) {
+    for (var i = 0; i < sl; i++) {
         a[i] = s.charCodeAt(i);
-        i++;
     }
-    while (a.length % key.chunkSize != 0) {
-        a[i++] = 0
-    }
-    var al = a.length;
-    var result = '';
-    var j, k, block;
+    while (a.length % key.chunkSize != 0) a[i++] = 0;
+    var al = a.length, result = '', j, k, block;
     for (i = 0; i < al; i += key.chunkSize) {
         block = bi.newInstance();
-        j = 0;
-        for (k = i; k < i + key.chunkSize; ++j) {
+        for (j = 0, k = i; k < i + key.chunkSize; ++j) {
             block.digits[j] = a[k++];
             block.digits[j] += a[k++] << 8;
         }
@@ -43,22 +36,22 @@ function encryptedString(key, s) {
     return result.substring(0, result.length - 1);
 }
 
-function decryptedString(key, s) {
-    var blocks = s.split(" ");
-    var result = "";
-    var i, j, block;
-    for (i = 0; i < blocks.length; ++i) {
-        var b = bi.newInstance(blocks[i], key.radix);
-        block = key.hex.powMod(bi, key.d);
-        for (j = 0; j <= bi.highIndex(block); ++j) {
-            result += String.fromCharCode(block.digits[j] & 255, block.digits[j] >> 8)
-        }
-    }
-    if (result.charCodeAt(result.length - 1) == 0) {
-        result = result.substring(0, result.length - 1)
-    }
-    return result
-}
+//function decryptedString(key, s) {
+//    var blocks = s.split(" ");
+//    var result = "";
+//    var i, j, block;
+//    for (i = 0; i < blocks.length; ++i) {
+//        var b = bi.newInstance(blocks[i], key.radix);
+//        block = key.hex.powMod(bi, key.d);
+//        for (j = 0; j <= b.highIndex(block); ++j) {
+//            result += String.fromCharCode(block.digits[j] & 255, block.digits[j] >> 8)
+//        }
+//    }
+//    if (result.charCodeAt(result.length - 1) == 0) {
+//        result = result.substring(0, result.length - 1)
+//    }
+//    return result
+//}
 
 function aesEncrypt(text, secKey) {
     var cipher = crypto.createCipheriv('AES-128-CBC', secKey, '0102030405060708');

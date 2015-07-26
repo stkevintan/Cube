@@ -88,10 +88,11 @@ Player.prototype = {
         this.audio.pause();
     },
     stop: function (msg, noExit) {
+        this.audio.pause();
         if (noExit) {
+            this.audio.currentTime = 0;
             this.setCurrentTime(0);
         } else {
-            this.audio.pause();
             msg = msg || '未选择歌曲';
             lrc.load({
                 title: msg,

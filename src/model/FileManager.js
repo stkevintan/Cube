@@ -2,14 +2,16 @@
  * Created by kevin on 15-5-5.
  */
 var fs = require('fs');
-var async = require('async');
-var path = require('path');
 var utils = require('./Utils');
 var PltM = require('./PlaylistModel');
 var SongM = require('./SongModel');
+var process = require('process');
+var path = require('path');
+var home = require('home');
 
 
-function modefy(arr) {
+function pack(arr) {
+    if (!utils.isArray(arr))return [];
     arr = arr.map(function (o) {
         var n = new PltM(o);
         n.songList = n.songList.map(function (s) {
@@ -19,26 +21,34 @@ function modefy(arr) {
     });
     return arr;
 }
-function toAbsolute() {
-    dir = path.join.apply(null, arguments);
-    if (path.isAbsolute(dir))return dir;
-    return path.resolve(__dirname, '../' + dir);
-}
 
-const EXTLIST = ['.mp3', '.ogg', '.wav'];
-const DEFAULTMUSICDIR = toAbsolute('music');
+const EXTS = ['.mp3', '.ogg', '.wav'];
+const DEFAULTMUSICDIR = (function () {
+    var choices = ['音乐', 'Music', 'music'].map(function (e) {
+        return home.resolve('~/' + e);
+    });
+    for (var i = 0; i < choices.length; i++) {
+        try {
+            var stats = fs.statSync(choices[i]);
+        } catch (e) {
+            continue;
+        }
+        if (stats && stats.isDirectory()) return choices[i];
+    }
+    return choices[0];
+})();
 const DEFAULTSEARCHLIMIT = 20;
 
 var config = {
-    path: toAbsolute('data', 'config.json'),
+    key: 'config',
     content: {},
     isChanged: 0
 };
 
 var scheme = {
-    path: toAbsolute('data', 'scheme.json'),
-    content: [],
     isChanged: 0,
+    key: 'scheme',
+    content: [],
     indexOf: function (pltm) {
         return utils.binarySearch(this.content, pltm.timestamp, function (o) {
             return o.timestamp;
@@ -46,33 +56,19 @@ var scheme = {
     }
 }
 
-var fileManager = function () {
-    try {
-        config.content = JSON.parse(fs.readFileSync(config.path), 'utf-8');
-    } catch (e) {
-        config.isChanged = 1;
-        if (e.errno = -2) {//data目录不存在
-            try {
-                fs.mkdirSync(toAbsolute('data'));
-            } catch (e) {
-                console.log(e);
-            }
-        }
-    }
-}
-var __ = fileManager.prototype;
+var fm = {};
+config.content = JSON.parse(storage.getItem(config.key)) || {};
+module.exports = fm;
 
-__.SaveChanges = function (callback) {
-    async.each([config, scheme], function (item, callback) {
-        if (item.isChanged) {
-            fs.writeFile(item.path, JSON.stringify(item.content), callback);
-        } else callback(null);
-    }, callback);
+
+fm.SaveChanges = function () {
+    [config, scheme].forEach(function (o) {
+        o.isChanged && storage.setItem(o.key, JSON.stringify(o.content));
+    });
 }
 
 /*********MusicDir**********/
-__.setMusicDir = function (dir) {
-    dir = toAbsolute(dir);
+fm.setMusicDir = function (dir) {
     if (this.getMusicDir() !== dir) {
         config.content.musicDir = dir;
         config.isChanged = 1;
@@ -81,17 +77,17 @@ __.setMusicDir = function (dir) {
     return false;
 }
 
-__.getMusicDir = function () {
+fm.getMusicDir = function () {
     return config.content.musicDir || DEFAULTMUSICDIR;
 }
 
 
 /*********SearchLimit**********/
-__.getSearchLimit = function () {
+fm.getSearchLimit = function () {
     return config.content.searchLimit || DEFAULTSEARCHLIMIT;
 }
 
-__.setSearchLimit = function (limit) {
+fm.setSearchLimit = function (limit) {
     if (typeof limit === 'number' && limit >= 0) {
         config.content.searchLimit = limit;
         config.isChanged = 1;
@@ -100,21 +96,24 @@ __.setSearchLimit = function (limit) {
 
 
 /*********Local music file**********/
-__.getLocal = function (callback) {
+fm.getLocal = function (callback) {
     var that = this;
-    var ret = this.loadMusicDirSync();
-    if (utils.isString(ret))callback(ret);
-    else
-        callback(null, modefy([{
-            timestamp: 0,
-            name: that.getMusicDir(),
-            songList: ret,
-            type: 'local'
-        }]));
+    process.nextTick(function () {
+        var ret = that.loadMusicDirSync();
+        if (utils.isString(ret))callback(ret);
+        else {
+            callback(null, pack([{
+                timestamp: 0,
+                name: that.getMusicDir(),
+                songList: ret,
+                type: 'local'
+            }]));
+        }
+    });
 }
 
 
-__.loadMusicDirSync = function (musicDir) {
+fm.loadMusicDirSync = function (musicDir) {
     var musicDir = musicDir || this.getMusicDir();
     var ret = [];
     var files = [];
@@ -128,28 +127,27 @@ __.loadMusicDirSync = function (musicDir) {
         }
     }
     var that = this;
-    files = files.map(function (f) {
-        return path.join(musicDir, f);
-    });
-    files = files.filter(function (f) {
-        var stat = fs.statSync(f);
+    files = files.map(function (src) {
+        return path.join(musicDir, src);
+    }).filter(function (src) {
+        var stat = fs.statSync(src);
         if (stat && stat.isDirectory()) {
-            ret = ret.concat(that.loadMusicDirSync(f));
+            ret = ret.concat(that.loadMusicDirSync(src));
             return false;
         }
-        var ext = path.extname(f);
-        for (var i = 0; i < EXTLIST.length; i++) {
-            if (ext == EXTLIST[i])return true;
+        var ext = path.extname(src);
+        for (var i = 0; i < EXTS.length; i++) {
+            if (ext == EXTS[i])return true;
         }
         return false;
     });
     for (var i = 0; i < files.length; i++) {
-        var f = files[i];
+        var src = files[i];
         var song = {
-            "title": path.basename(f, f.substr(f.lastIndexOf('.'))),
+            "title": path.basename(src, src.substr(src.lastIndexOf('.'))),
             "artist": "",
             "album": "",
-            "src": f
+            "src": src
         };
         ret.push(song);
     }
@@ -158,15 +156,15 @@ __.loadMusicDirSync = function (musicDir) {
 
 
 /*********Scheme inventory**********/
-__.loadScheme = function (callback) {
-    scheme.isChanged = 1;
-    fs.readFile(scheme.path, 'utf-8', function (err, contents) {
-        if (err) callback({msg: '[loadScheme]read file failed ' + err, type: 0});
-        else callback(null, modefy(JSON.parse(contents)));
-    });
+fm.loadScheme = function (callback) {
+    process.nextTick(function () {
+        scheme.content = JSON.parse(storage.getItem(scheme.key)) || [];
+        scheme.isChanged = 1;
+        callback(null, pack(scheme.content));
+    })
 }
 
-__.getScheme = function (callback) {
+fm.getScheme = function (callback) {
     if (scheme.isChanged == 0) {
         this.loadScheme(function (err, content) {
             if (err) callback(err)
@@ -175,37 +173,35 @@ __.getScheme = function (callback) {
                 callback(null, content);
             }
         });
-    } else {
-        callback(null, scheme.content);
+        return;
     }
+    callback(null, scheme.content);
 }
 
-__.addScheme = function (plt) {
+fm.addScheme = function (plt) {
     if (!(plt instanceof PltM)) {
-        console.log('addScheme failed');
+        console.log('AddScheme failed');
         return;
     }
     scheme.isChanged = 1;
     scheme.content.push(plt);
 }
 
-__.setScheme = function (plt) {
+fm.setScheme = function (plt) {
     if (!(plt instanceof PltM)) {
-        console.log('setScheme failed');
+        console.log('SetScheme failed');
         return;
     }
     scheme.isChanged = 1;
     var index = scheme.indexOf(plt);
     if (index != -1) {
         scheme.content[index] = plt;
-    } else {
-        console.log('setScheme failed');
     }
 }
 
-__.delScheme = function (plt) {
+fm.delScheme = function (plt) {
     if (!(plt instanceof PltM)) {
-        console.log('delScheme failed');
+        console.log('DelScheme failed');
         return;
     }
     scheme.isChanged = 1;
@@ -214,23 +210,21 @@ __.delScheme = function (plt) {
     if (index != -1) {
         scheme.content.splice(index, 1);
     } else {
-        console.log('setScheme failed');
+        console.log('SetScheme failed');
     }
 }
 
-__.setCookie = function (cookie) {
+fm.setCookie = function (cookie) {
     config.content.cookie = cookie;
     config.isChanged = 1;
 }
 
-__.getCookie = function () {
+fm.getCookie = function () {
     return config.content.cookie;
 }
 
-__.getUserID = function () {
+fm.getUserID = function () {
     if (!config.content.cookie)return null;
     var ret = /\d+/.exec(config.content.cookie[3]);
     return ret ? ret[0] : null;
 };
-
-module.exports = new fileManager();
