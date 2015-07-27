@@ -1,7 +1,6 @@
-<h1>网易音乐盒<img style="vertical-align:middle;margin-left:5em" width="2em" height="2em" src="http://7xiyak.com1.z0.glb.clouddn.com/icon.png"/> </h1>   
+#网易音乐盒 
 使用html5和node.js构建的网易云音乐的跨平台第三方客户端。    
  
-
 ###Release    
 百度网盘: [linux64](http://pan.baidu.com/s/1mgrIGVQ)  
 
