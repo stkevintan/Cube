@@ -7,7 +7,9 @@ var stylus = require('gulp-stylus');
 var concat = require('gulp-concat');
 var uglify = require('gulp-uglify');
 var del = require('del');
+var zip = require('gulp-zip');
 var NwBuilder = require('nw-builder');
+var info = require('./package');
 gulp.task('html', function () {
     return gulp.src('./src/index.jade').pipe(jade({
         locals: {}
@@ -38,15 +40,22 @@ gulp.task('node', ['clean'], function () {
 });
 gulp.task('default', ['html', 'css', 'js', 'node']);
 
-gulp.task('release', ['default'], function (cb) {
-    var nw = new NwBuilder({
-        files: './*', // use the glob format
-        platforms: ['linux64']
-    });
 
-    nw.on('log', console.log);
-    nw.build(function (err) {
-        err && console.log(err);
-        cb(err);
+gulp.task('build', ['default'], function (cb) {
+    //get no-dev node_modules
+    var depends = Object.keys(info.dependencies).join(',');
+    var nw = new NwBuilder({
+        files: './{package.json,dist/**,node_modules/{' + depends + '}/**}', // use the glob format
+        platforms: ['linux64'],
+        //buildType: 'versioned',
+        version: '0.12.1'
     });
+    nw.on('log', console.log);
+    nw.build(cb);
+});
+
+gulp.task('release', ['build'], function () {
+    return gulp.src(['./src/shell/*', './build/nwMusicBox/linux64/**'])
+        .pipe(zip(info.version + 'linux64.zip'))
+        .pipe(gulp.dest('./release/' + info.version));
 });

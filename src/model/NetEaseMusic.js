@@ -29,28 +29,23 @@ var httpRequest = function (method, url, data, callback) {
 }
 module.exports = {
     login: function (username, password, callback) {
-        var url, name, pattern = /^0\d{2,3}\d{7,8}$|^1[34578]\d{9}$/
+        var url, pattern = /^0\d{2,3}\d{7,8}$|^1[34578]\d{9}$/,
+            body = {
+                password: crypto.MD5(password),
+                rememberLogin: 'true'
+            };
         if (pattern.test(username)) {
             //手机登录
-            name = 'phone';
+            body.phone = username;
             url = 'http://music.163.com/weapi/login/cellphone/';
         } else {
             //邮箱登录
-            name = 'username';
+            body.name = username;
             url = 'http://music.163.com/weapi/login/';
         }
-        //对password加密
-        password = crypto.MD5(password);
-        var data = {};
-        data[name] = username;
-        data.password = password;
-        data.rememberLogin = 'true';
-        var ret = crypto.aesRsaEncrypt(JSON.stringify(data));
-        var encData = {
-            params: ret.encText,
-            encSecKey: ret.encSecKey
-        }
-        httpRequest('post', url, encData, function (err, res) {
+
+        var encBody = crypto.aesRsaEncrypt(JSON.stringify(body));
+        httpRequest('post', url, encBody, function (err, res) {
             if (err) {
                 callback({msg: '[login]http error ' + err, type: 1});
                 return;

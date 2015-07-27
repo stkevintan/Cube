@@ -1,0 +1,11 @@
+#!/usr/bin/env xdg-open
+[Desktop Entry]
+Type=Application
+Categories=Audio;Music;Player;AudioVideo;Network;
+Name=网易音乐盒
+Comment=nw_musicbox Launcher
+Exec=__Exec
+Icon=__Icon
+Terminal=false
+StartupNotify=true
+

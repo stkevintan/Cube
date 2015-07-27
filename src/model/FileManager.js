@@ -9,7 +9,6 @@ var process = require('process');
 var path = require('path');
 var home = require('home');
 
-
 function pack(arr) {
     if (!utils.isArray(arr))return [];
     arr = arr.map(function (o) {
@@ -60,8 +59,7 @@ var fm = {};
 config.content = JSON.parse(storage.getItem(config.key)) || {};
 module.exports = fm;
 
-
-fm.SaveChanges = function () {
+fm.saveChanges = function () {
     [config, scheme].forEach(function (o) {
         o.isChanged && storage.setItem(o.key, JSON.stringify(o.content));
     });

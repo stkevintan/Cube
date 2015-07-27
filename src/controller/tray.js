@@ -5,6 +5,7 @@ var Tray = (function () {
 // Get the current window
     var gui = require('nw.gui');
     var win = gui.Window.get();
+    //icon source:http://www.easyicon.net/1185106-Cloud_Music_icon.html
     var tray = new gui.Tray({title: '网易音乐盒', icon: 'dist/assets/img/tray.png'});
     var menuItems = {
         playorPause: new gui.MenuItem({
@@ -41,7 +42,7 @@ var Tray = (function () {
             click: function () {
                 win.hide();
                 tray.remove();
-                fm.SaveChanges();
+                fm.saveChanges();
                 win.close(true);
             }
         })
