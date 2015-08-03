@@ -1,0 +1,43 @@
+#body .sidebar
+  float: left
+  width: 25%
+  height:100%
+  box-shadow: -2px 0 5px color-border inset
+  padding:.5rem 1rem
+  font-size:12px
+  .category
+    margin-bottom: 1em
+    h4.title
+      margin-bottom: 0.4rem
+      color: color-text-inactive
+      //font-weight: normal
+      //text-shadow: 0 -.6px 1px color-border-dark
+    ol.entry
+      semimargin:-1rem
+      counter-reset: item
+      a
+        display:block
+        cursor:pointer
+      & > li
+        margin-bottom: 0.4rem
+        display:block
+        semipadding:1rem
+        border-top-width:1px
+        cursor:pointer
+        & a::before
+          content: counter(item)
+          counter-increment:item
+          margin-right: .5em
+          color: lightness(color-text-default,55%)
+        &:hover a::before
+          color:color-text-active
+        &.active
+          @extend .arrow
+          @extend .arrow-right-reverse
+          a,a::before
+            color:color-text-active
+          &::after
+            border-color: transparent color-background-body;
+            box-shadow: 2px 0 0 color-background-body;
+          box-shadow:0 1px 2px color-border inset,0 -1px 2px color-border inset
+          background-color:lightness(color-background-body,88%)

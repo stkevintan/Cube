@@ -1,0 +1,38 @@
+// http://www.zeldman.com/2012/03/01/replacing-the-9999px-hack-new-image-replacement/
+hide-text()
+  text-indent: 100%
+  white-space: nowrap
+  overflow: hidden
+
+// http://codepen.io/shshaw/full/gEiDt
+absolute-center(width, height = width,top = 50%,left = 50%)
+  width: width
+  height: height
+  position: absolute
+  top: top
+  left: left
+  margin-top: height * -0.5
+  margin-left: width * -0.5
+
+avoid-column-break()
+  vendor("column-break-inside", avoid, only: webkit)
+  page-break-inside: avoid // for firefox
+  overflow: hidden // fix for firefox
+  break-inside: avoid-column
+
+
+semimargin(val,dir='horizon')
+  if dir is 'vertial'
+    margin-top: val
+    margin-bottom: val
+  else
+    margin-left: val
+    margin-right: val
+
+semipadding(val,dir='horizon')
+  if dir is 'vertial'
+    padding-top: val
+    padding-bottom: val
+  else
+    padding-left: val
+    padding-right: val

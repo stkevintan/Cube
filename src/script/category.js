@@ -121,7 +121,7 @@ Category.prototype = {
         var index = opt;
         if (utils.isNumber(opt) && opt >= 0 && opt < this.plts.length) {
             pltModel = this.plts[opt];
-        } else {//plt don't have this model,push it in
+        } else {//plt don't have this library,push it in
             index = this.plts.length;
             this.plts.push(pltModel);
             entry.schema[pltModel.type].onadd(pltModel);

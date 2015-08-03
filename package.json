@@ -6,7 +6,7 @@
     "title": "NetEaseMusic",
     "toolbar": true,
     "frame": true,
-    "width": 1122,
+    "width": 1200,
     "height": 600,
     "icon": "dist/assets/img/icon.png"
   },

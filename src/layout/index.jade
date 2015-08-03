@@ -1,0 +1,15 @@
+//Created by kevin on 15-6-23.
+include ./utils.jade
+doctype html
+html(lang="zh-CN")
+    head
+        meta(charset="UTF-8")
+        //load style
+        +_style('font-awesome.min','index')
+    body
+        include ./partial/head.jade
+        include ./partial/body.jade
+        include ./partial/footer.jade
+        //load script
+        //- each name in ['sortable','index']
+        //    +_script(name)

@@ -1,0 +1,67 @@
+#body.container-row
+    .sidebar
+        .category
+            h4.title.txt 云音乐
+            ol.entry
+                li.active: +_anchor(0)(class='txt')  我喜欢的音乐
+                li: +_anchor(0)(class='txt') 日风
+                li: +_anchor(0)(class='txt') 战歌
+                li: +_anchor(0)(class='txt') 喜欢
+                li: +_anchor(0)(class='txt') 那些舍不得删的英文歌
+        .category
+            h4.title.txt 本地音乐
+            ol.entry
+                li: +_anchor(0)(class='txt')  我喜欢的音乐
+                li: +_anchor(0)(class='txt')  日风
+                li: +_anchor(0)(class='txt')  战歌
+                li: +_anchor(0)(class='txt')  喜欢
+                li: +_anchor(0)(class='txt')  那些舍不得删的英文歌    
+    .main
+        section.view-playlist
+            .album-info
+                img.album-cover(src='assets/img/album.png',alt='album cover')
+                ul.album-desc
+                    li
+                        span.item 播放列表名
+                        +_anchor(0)(class='txt') 我喜欢的音乐
+                    li
+                        span.item 创建者
+                        +_anchor(0)(class='txt') 工藤洗衣机0xffffff
+                    li
+                        span.item 曲目数
+                        +_anchor(0)(class='txt') 10 首
+            .album-song
+                .ablum-song-head
+                    h1.title.txt 歌曲列表
+                    a.button: i.fa.fa-list
+                table.album-song-list
+                    thead: tr
+                        th.index
+                        th.title 标题
+                        th.time 时长
+                        th.artist 歌手
+                        th.album 专辑
+                    tbody
+                        - var titles=["La Valse D'amelie","Eversleeping"," 秋姉妹のなく頃に in the autumn sky","她","月光边境","Music Box Dancer","Sky High","Walk Away","Summertrain","H-36 / ヒロシゲ36号~Neo Super-Express [卯酉东海道~Retrospective 53 minutes]"]
+                        - var times=['02:15','03:39','04:23','04:43','05:20','03:05','04:05','04:14','04:32','02:13']
+                        - var artists=['Yann Tiersen','Xandria','ばんばんしー','闫月','林海','理查德克莱德曼','Thomas Prime','Dia Frampton','Greyson Chance','Forest306']
+                        - var albums=["Le Fabuleux Destin d'Amélie Poulain",'Eversleeping','秋満开の风に舞う','月','当代音乐馆','Moonlight & Roses','Sky High','Red',"Hold On ‘Til The Night",'星屑の还る场所']
+                        each title,index in titles
+                            if(index==0)
+                                tr.active
+                                    td.index
+                                        i.active.fa.fa-music 
+                                        i.hover.fa.fa-play
+                                    td.title=title
+                                    td.time= times[index]
+                                    td.artist= artists[index]
+                                    td.album= albums[index] 
+                            else
+                                tr
+                                    td.index
+                                        i.active.fa.fa-music 
+                                        i.hover.fa.fa-play 
+                                    td.title= title
+                                    td.time= times[index]
+                                    td.artist= artists[index]
+                                    td.album= albums[index] 

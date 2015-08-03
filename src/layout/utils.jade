@@ -1,0 +1,21 @@
+// Created by kevin on 15-7-29.
+
+- var _pc={href:'javascript:void(0)'};
+- var _hide={style:'display:none'};
+- var _title='网易音乐盒';
+mixin _style(...names)
+    each name in names
+        link(href='assets/css/' + name + '.css',rel='stylesheet')
+mixin _script(...names)
+    each name in names
+        script(src='assets/js/' + name + '.js')
+mixin _icon(name)
+    span.glyphicon(id!=attributes.id,class!=attributes.class + ' glyphicon-' + name)
+mixin _anchor(code)
+    a(id!=attributes.id,class!=attributes.class, href="javascript:" + code)
+        if block
+            block
+mixin _list(...items)
+    ul(id!=attributes.id,class!=attributes.class)
+        each item in items
+            li=item

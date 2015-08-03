@@ -11,19 +11,19 @@ var zip = require('gulp-zip');
 var NwBuilder = require('nw-builder');
 var info = require('./package');
 gulp.task('html', function () {
-    return gulp.src('./src/index.jade').pipe(jade({
+    return gulp.src('./src/layout/index.jade').pipe(jade({
         locals: {}
     })).pipe(gulp.dest('./dist/'));
 });
 
 gulp.task('css', function () {
-    return gulp.src('./src/my.styl').pipe(stylus({
-        compress: true
+    return gulp.src('./src/style/index.styl').pipe(stylus({
+        //compress: true
     })).pipe(gulp.dest('./dist/assets/css/'));
 });
 gulp.task('js', function () {
-    return gulp.src(['./src/controller/*.js', './src/my.js'])
-        .pipe(concat('my.js'))
+    return gulp.src('./src/script/*.js')
+        .pipe(concat('index.js'))
         .pipe(uglify())
         .pipe(gulp.dest('./dist/assets/js/'))
 });
@@ -34,11 +34,11 @@ gulp.task('clean', function (cb) {
 
 gulp.task('node', ['clean'], function () {
     //glob : https://github.com/isaacs/node-glob#glob-primer
-    return gulp.src('./src/model/!(*Test*)')
+    return gulp.src('./src/library/!(*Test*)')
         .pipe(uglify())
         .pipe(gulp.dest('./dist/libs/'))
 });
-gulp.task('default', ['html', 'css', 'js', 'node']);
+gulp.task('default', ['html', 'css']);
 
 
 gulp.task('build', ['default'], function (cb) {

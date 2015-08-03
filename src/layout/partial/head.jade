@@ -1,0 +1,17 @@
+nav#top-bar.container-flow
+    h1.title: a(href="#")=_title
+    ul.nav.list-seperator.list-inline
+        - var names=['发现音乐','我的音乐','私人FM','设置']
+        - var actions=['0','0','0','0']
+        each name,index in names
+            if(index==1)
+                li.active: +_anchor(actions[index],title=name)=name
+            else
+                li: +_anchor(actions[index],title=name)=name
+    ul.tool.list-seperator.list-inline
+        li.search
+            .input-prefix
+                input(type='text',placeholder='Search')
+                i.fa.fa-search
+            +_anchor('0'): i.fa.fa-bars
+        li.mini: +_anchor('0')(title='mini模式'): i.fa.fa-compress 

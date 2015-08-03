@@ -1,0 +1,100 @@
+.main
+  width:100%
+  height:100%
+  min-height:100%
+  padding-left:25%
+  section
+    height:100%
+    padding:.5rem 1rem
+    overflow:auto
+    .album-info
+        height:15rem
+        padding-top: @height * 0.2
+        img.album-cover
+          height:80%
+          //margin中的百分比是根据父元素的width来算的！！
+          //margin-top: 10%
+          background-color:color-background-panel
+          semimargin:1rem
+          border-radius: 4px;
+          box-shadow: 2px 0 5px color-border,0 2px 5px color-border;
+        ul.album-desc
+          display:inline-block
+          vertical-align:top
+          semimargin:1rem
+          & > li
+            margin-bottom:.5rem
+            span.item
+              font-weight:bold
+              &::after
+                content':'
+                semimargin: .5rem
+    .album-song
+      .ablum-song-head
+        //border-bottom:1px solid color-border
+        padding:.5rem
+        //  margin-bottom:.5rem
+        h1.title
+          display:inline-block
+          vertical-align:middle
+      table.album-song-list
+        width:100%
+        font-size:17px
+        border:1px solid #ddd
+        background-color:color-background-panel
+        table-layout:fixed
+        counter-reset: item
+        th.index
+          width:2em
+        th.time
+          width:4em
+        th.artist
+          width:14%
+        th.album
+          width:20%
+        tr
+          td,th
+            line-height: 1em
+            font-size: 0.77778em
+            padding: 0.5em 0.55556em
+          th
+            font-weight: bold
+            background-color: #F5F5F5
+            padding: 0.44444em 0.55556em 0.55556em
+
+        tbody
+          tr
+            *
+              cursor:pointer
+              color:color-text-default
+            &:hover *,&.active *
+              color:color-text-active
+            &:nth-of-type(2n)
+              background-color:#f9f9f9
+            td
+              @extend .txt
+            td.time
+              text-align:center
+            td.index
+              text-align:right
+              i
+                display:none
+              &::before
+                content:counter(item)
+                counter-increment:item
+                color: lightness(color-text-default,55%)
+            &:hover td.index
+              i.hover
+                display:inline
+              i.active
+                display:none
+              &::before
+                content:''
+            &.active:hover td.index
+            &.active td.index
+              i.active
+                display:inline
+              i.hover
+                display:none
+              &::before
+                content:''

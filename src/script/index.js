@@ -9,6 +9,7 @@ var api = require('./libs/NetEaseMusic');
 var utils = require('./libs/Utils');
 var PltM = require('./libs/PlaylistModel');
 var EntryM = require('./libs/EntryModel');
+var nav, account, radio, lrc, player, tray, settings, category;
 var Event = (function () {
     var w = $(window);
     return {
@@ -92,24 +93,24 @@ var entry = {
     }
 };
 
-var nav = new Nav();
-var account = new Account();
-var radio = new Radio();
-var lrc = new Lrc();
-var player = new Player();
-var tray = new Tray();
-var settings = new Settings();
-var category = new Category();
-
+window.onload = function () {
+    nav = new Nav();
+    account = new Account();
+    radio = new Radio();
+    lrc = new Lrc();
+    player = new Player();
+    tray = new Tray();
+    settings = new Settings();
+    category = new Category();
 //加载用户信息
-account.loadUser();
-
+    account.loadUser();
 //加载播放列表
-category.loadPlaylists(null, true);
+    category.loadPlaylists(null, true);
 
 //table屏蔽选中
-$('table').on('selectstart', function (e) {
-    e.preventDefault();
-});
+    $('table').on('selectstart', function (e) {
+        e.preventDefault();
+    });
+}
 
 
