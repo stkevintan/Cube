@@ -7,26 +7,47 @@ body {
   box-sizing: border-box;
 }
 a {
-  color: #666;
+  color: #404040;
   outline: none;
   text-decoration: none;
 }
 a:hover {
   color: #000;
 }
-a.button {
-  display: inline-block;
+.button {
+  display: block;
   background-color: #fff;
   padding: 0.2rem 1rem;
-  border: 1px solid #c4c4c4;
+  border: 1px solid #ccc;
   border-radius: 4px;
   white-space: nowrap;
   cursor: pointer;
 }
-a.button:hover,
-a.button:focus {
-  border-color: #adadad;
+.button:hover,
+.button:focus {
+  border-color: #a6a6a6;
   background-color: #e6e6e6;
+}
+.button.active,
+.button:active {
+  background-color: #e6e6e6;
+  border-color: #a6a6a6;
+  box-shadow: 0px 3px 5px rgba(0,0,0,0.125) inset;
+}
+.btn-group .button {
+  display: inline-block;
+  border-radius: 0;
+}
+.btn-group .button:first-child {
+  border-top-left-radius: 4px;
+  border-bottom-left-radius: 4px;
+}
+.btn-group .button:last-child {
+  border-top-right-radius: 4px;
+  border-bottom-right-radius: 4px;
+}
+.btn-group .button:nth-child(n+1) {
+  margin-left: -1px;
 }
 .right {
   float: right;
@@ -75,7 +96,7 @@ ul.list-inline > li {
   padding-right: 1em;
 }
 ul.list-inline.list-seperator > li + li {
-  border-left: 1px solid #c4c4c4;
+  border-left: 1px solid #ccc;
 }
 .dropdown {
   position: relative;
@@ -96,11 +117,11 @@ ul.list-inline.list-seperator > li + li {
   margin-bottom: 0.8em;
   background-color: #fff;
   background-clip: padding-box;
-  border: 1px solid #c4c4c4;
+  border: 1px solid #ccc;
   border-radius: 4px;
   padding-top: 4px;
   padding-bottom: 4px;
-  box-shadow: 0px -6px 12px #c4c4c4;
+  box-shadow: 0px -1px 6px rgba(0,0,0,0.24);
   z-index: 5;
 }
 .dropdown.open > ul > li {
@@ -138,7 +159,7 @@ ul.list-inline.list-seperator > li + li {
   margin-left: -11px;
   border-width: 11px;
   border-bottom-width: 0 !important;
-  border-color: #c4c4c4 transparent;
+  border-color: #ccc transparent;
 }
 .arrow-down::after {
   bottom: -10px;
@@ -155,7 +176,7 @@ ul.list-inline.list-seperator > li + li {
   margin-top: -11px;
   border-width: 11px;
   border-left-width: 0 !important;
-  border-color: transparent #c4c4c4;
+  border-color: transparent #ccc;
 }
 .arrow-right-reverse::after,
 #body .sidebar .category ol.entry > li.active::after {
@@ -173,7 +194,7 @@ ul.list-inline.list-seperator > li + li {
   margin-left: -11px;
   border-width: 11px;
   border-top-width: 0 !important;
-  border-color: #c4c4c4 transparent;
+  border-color: #ccc transparent;
 }
 .arrow-bottom-reverse::after,
 #top-bar ul.nav li.active::after {
@@ -185,10 +206,9 @@ ul.list-inline.list-seperator > li + li {
 input {
   display: block;
   padding: 0.2rem;
-  color: #555;
-  background-color: #fff;
-  border: 1px solid #c4c4c4;
-  border-radius: 4px;
+  background-color: #f4f4f4;
+  border: 1px solid #ccc;
+  border-radius: 2px;
   box-shadow: 0px 1px 1px rgba(0,0,0,0.075) inset;
   transition: border-color 0.15s ease-in-out 0s, box-shadow 0.15s ease-in-out 0s;
 }
@@ -207,7 +227,7 @@ input:focus {
   width: 100%;
 }
 .input-prefix i {
-  color: #666;
+  color: #404040;
   width: 1em;
   height: 1em;
   position: absolute;
@@ -221,7 +241,7 @@ html {
 }
 body {
   background-color: #efefef;
-  color: #666;
+  color: #404040;
   padding-top: 2.5rem;
   padding-bottom: 3rem;
 }
@@ -239,7 +259,7 @@ body,
   z-index: 5;
   justify-content: space-around;
   background-color: #fafafa;
-  box-shadow: 0 -2px 5px #c4c4c4;
+  box-shadow: 0 -1px 6px rgba(0,0,0,0.24);
 }
 #footer ul.playctrl {
   margin-left: 1em;
@@ -295,7 +315,7 @@ body,
 }
 #footer .track .track-default {
   width: 100%;
-  background-color: #c4c4c4;
+  background-color: #ccc;
 }
 #footer .track .track-buffered {
   width: 60%;
@@ -315,7 +335,7 @@ body,
   margin-top: -0.25rem;
   border-radius: 50%;
   background-color: #fff;
-  border: 1px solid #c4c4c4;
+  border: 1px solid #ccc;
   box-shadow: 0 0 8px #66afe9;
 }
 #footer ul.playset {
@@ -337,8 +357,8 @@ body,
   width: 2.5rem;
   height: 2.5rem;
   border-radius: 4px;
-  border: 1px solid #c4c4c4;
-  box-shadow: 0 0 12px #c4c4c4;
+  border: 1px solid #ccc;
+  box-shadow: 0 0 12px #ccc;
 }
 #top-bar {
   position: fixed;
@@ -347,7 +367,7 @@ body,
   background-color: #fafafa;
   height: 2.5rem;
   line-height: 1.2rem;
-  box-shadow: 0 2px 5px #c4c4c4;
+  box-shadow: 0 1px 6px rgba(0,0,0,0.24);
 }
 #top-bar ul.nav {
   list-style: none;
@@ -368,7 +388,7 @@ body,
   border-width: 0.528571428571429rem 0.428571428571429rem;
   margin-left: -0.428571428571429rem;
   border-color: #efefef transparent;
-  box-shadow: 0 0.371428571428571rem 5px #efefef;
+  box-shadow: 0 0.3rem 6px #efefef;
 }
 #top-bar ul.tool {
   font-size: 15px;
@@ -386,10 +406,12 @@ body,
   }
 }
 .main {
-  width: 100%;
+  width: 75%;
   height: 100%;
   min-height: 100%;
-  padding-left: 25%;
+  margin-left: 25%;
+  margin-left: 25%;
+  box-shadow: -1px 0 6px rgba(0,0,0,0.24);
 }
 .main section {
   height: 100%;
@@ -406,7 +428,7 @@ body,
   margin-left: 1rem;
   margin-right: 1rem;
   border-radius: 4px;
-  box-shadow: 2px 0 5px #c4c4c4, 0 2px 5px #c4c4c4;
+  box-shadow: 1px 0 6px rgba(0,0,0,0.24), 0 1px 6px rgba(0,0,0,0.24);
 }
 .main section .album-info ul.album-desc {
   display: inline-block;
@@ -417,20 +439,17 @@ body,
 .main section .album-info ul.album-desc > li {
   margin-bottom: 0.5rem;
 }
-.main section .album-info ul.album-desc > li span.item {
+.main section .album-info ul.album-desc > li::before {
+  content: attr(data-item) ':';
   font-weight: bold;
-}
-.main section .album-info ul.album-desc > li span.item::after {
-  content: ':';
   margin-left: 0.5rem;
   margin-right: 0.5rem;
 }
 .main section .album-song .ablum-song-head {
-  padding: 0.5rem;
+  margin-bottom: 0.5rem;
 }
-.main section .album-song .ablum-song-head h1.title {
-  display: inline-block;
-  vertical-align: middle;
+.main section .album-song .ablum-song-head h1 {
+  line-height: 2em;
 }
 .main section .album-song table.album-song-list {
   width: 100%;
@@ -465,7 +484,7 @@ body,
 }
 .main section .album-song table.album-song-list tbody tr * {
   cursor: pointer;
-  color: #666;
+  color: #404040;
 }
 .main section .album-song table.album-song-list tbody tr:hover *,
 .main section .album-song table.album-song-list tbody tr.active * {
@@ -513,9 +532,9 @@ body,
   float: left;
   width: 25%;
   height: 100%;
-  box-shadow: -2px 0 5px #c4c4c4 inset;
   padding: 0.5rem 1rem;
   font-size: 12px;
+  text-shadow: 1px 1px 2px #fff;
 }
 #body .sidebar .category {
   margin-bottom: 1em;
@@ -551,8 +570,8 @@ body,
   color: #000;
 }
 #body .sidebar .category ol.entry > li.active {
-  box-shadow: 0 1px 2px #c4c4c4 inset, 0 -1px 2px #c4c4c4 inset;
-  background-color: #e0e0e0;
+  box-shadow: 0 0 3px rgba(0,0,0,0.24) inset;
+  background-color: #e6e6e6;
 }
 #body .sidebar .category ol.entry > li.active a,
 #body .sidebar .category ol.entry > li.active a::before {

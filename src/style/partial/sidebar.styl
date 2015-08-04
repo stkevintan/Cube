@@ -2,9 +2,10 @@
   float: left
   width: 25%
   height:100%
-  box-shadow: -2px 0 5px color-border inset
+  //box-shadow: - offset-shadow-light 0 width-shadow-light color-shadow-light inset
   padding:.5rem 1rem
   font-size:12px
+  text-shadow 1px 1px 2px #fff
   .category
     margin-bottom: 1em
     h4.title
@@ -28,7 +29,7 @@
           content: counter(item)
           counter-increment:item
           margin-right: .5em
-          color: lightness(color-text-default,55%)
+          color: color-text-hint
         &:hover a::before
           color:color-text-active
         &.active
@@ -37,7 +38,7 @@
           a,a::before
             color:color-text-active
           &::after
-            border-color: transparent color-background-body;
+            border-color: transparent color-background-body
             box-shadow: 2px 0 0 color-background-body;
-          box-shadow:0 1px 2px color-border inset,0 -1px 2px color-border inset
-          background-color:lightness(color-background-body,88%)
+          box-shadow:0 0 (width-shadow-light/2) color-shadow-light inset
+          background-color:lightness(color-background-body,90%)

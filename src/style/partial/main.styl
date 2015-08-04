@@ -1,8 +1,10 @@
 .main
-  width:100%
+  width:75%
   height:100%
   min-height:100%
-  padding-left:25%
+  margin-left:25%
+  margin-left: 25%;
+  box-shadow: (- offset-shadow-light) 0 width-shadow-light color-shadow-light;
   section
     height:100%
     padding:.5rem 1rem
@@ -17,26 +19,23 @@
           background-color:color-background-panel
           semimargin:1rem
           border-radius: 4px;
-          box-shadow: 2px 0 5px color-border,0 2px 5px color-border;
+          box-shadow: offset-shadow-light 0 width-shadow-light color-shadow-light,
+                      0 offset-shadow-light width-shadow-light color-shadow-light;
         ul.album-desc
           display:inline-block
           vertical-align:top
           semimargin:1rem
           & > li
             margin-bottom:.5rem
-            span.item
+            &::before
+              content:attr(data-item) ':'
               font-weight:bold
-              &::after
-                content':'
-                semimargin: .5rem
+              semimargin: .5rem
     .album-song
       .ablum-song-head
-        //border-bottom:1px solid color-border
-        padding:.5rem
-        //  margin-bottom:.5rem
-        h1.title
-          display:inline-block
-          vertical-align:middle
+        margin-bottom:.5rem
+        h1
+          line-height:2em
       table.album-song-list
         width:100%
         font-size:17px
@@ -82,7 +81,7 @@
               &::before
                 content:counter(item)
                 counter-increment:item
-                color: lightness(color-text-default,55%)
+                color: color-text-hint
             &:hover td.index
               i.hover
                 display:inline

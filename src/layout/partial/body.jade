@@ -21,19 +21,18 @@
             .album-info
                 img.album-cover(src='assets/img/album.png',alt='album cover')
                 ul.album-desc
-                    li
-                        span.item 播放列表名
+                    li(data-item='歌单名')
                         +_anchor(0)(class='txt') 我喜欢的音乐
-                    li
-                        span.item 创建者
+                    li(data-item='创建者')
                         +_anchor(0)(class='txt') 工藤洗衣机0xffffff
-                    li
-                        span.item 曲目数
-                        +_anchor(0)(class='txt') 10 首
+                    li(data-item="描述")
+                        +_anchor(0)(class='txt') 我喜欢的音乐balabalabala
             .album-song
-                .ablum-song-head
-                    h1.title.txt 歌曲列表
-                    a.button: i.fa.fa-list
+                .row.ablum-song-head
+                    h1.left.title.txt 歌曲列表
+                    .right.btn-group
+                        a.button.active: i.fa.fa-list
+                        a.button: i.fa.fa-th
                 table.album-song-list
                     thead: tr
                         th.index

@@ -9,11 +9,21 @@ color-background-btn-inactive=#e6e6e6
 color-grey = #767676
 color-active = #66AFE9//
 //color-widget-background = #ddd
-color-border = #c4c4c4//
-color-border-dark = #adadad
-color-text-default = #666//
+color-border = #CCC//
+color-border-dark = lightness(color-border,65%)
+color-border-darker = lightness(color-border,55%)
 //color-text-inactive = lightness(color-text-default,40%)
 color-text-active = #000
+color-text-default = lightness(color-text-active,25%)//
+color-text-hint = lightness(color-text-default,55%)
+
+offset-shadow-light =1px
+width-shadow-light = 6px
+color-shadow-light = rgba(#000,0.24)
+
+offset-shadow-normal =8px
+width-shadow-normal = 17px
+color-shadow-normal = rgba(#000,0.39)
 
 // Fonts
 font-sans =  Helvetica, "思源黑体 CN", "文泉驿微米黑", Arial, "Microsoft Yahei", sans-serif
