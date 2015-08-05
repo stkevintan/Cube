@@ -40,7 +40,7 @@ module.exports = {
             url = 'http://music.163.com/weapi/login/cellphone/';
         } else {
             //邮箱登录
-            body.name = username;
+            body.username = username;
             url = 'http://music.163.com/weapi/login/';
         }
 
