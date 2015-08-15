@@ -41,26 +41,17 @@ a
   float:right
 .left
   float:left
+
 .clearfix
   &:after
     content: ''
     clear:both
     display:table
-// .container
-//   semipadding: base-gap horizon
-//   semimargin: auto horizon
-//   @media mq-large
-//     width:1170px
-//   @media mq-normal
-//     width: 970px
-//   @media mq-small
-//     width: 750px
-// .container-fluid
-//   width: 100%
-//   semipadding: base-gap
+
 .container-row
   width: 100%
   @extend .clearfix
+
 .container-flow
   width:100%
   display:flex
