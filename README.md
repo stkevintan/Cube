@@ -1,6 +1,6 @@
 #网易音乐盒 
-使用html5和node.js构建的网易云音乐的跨平台第三方客户端。 
-目前使用nw.js下个版本准备使用electron(atom-shell)  
+使用html5和node.js构建的网易云音乐的跨平台第三方客户端。   
+*目前使用nw.js下个版本准备使用electron(atom-shell)*
  
 ###Release    
 百度网盘: [linux64](http://pan.baidu.com/s/1mgrIGVQ)  
