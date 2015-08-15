@@ -539,10 +539,6 @@ body,
 #body .sidebar .category {
   margin-bottom: 1em;
 }
-#body .sidebar .category h4.title {
-  margin-bottom: 0.4rem;
-  color: color-text-inactive;
-}
 #body .sidebar .category ol.entry {
   margin-left: -1rem;
   margin-right: -1rem;
