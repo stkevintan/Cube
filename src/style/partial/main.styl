@@ -4,42 +4,47 @@
   min-height:100%
   margin-left:25%
   margin-left: 25%;
-  box-shadow: (- offset-shadow-light) 0 width-shadow-light color-shadow-light;
+  box-shadow: (- offset-shadow-light) 0 width-shadow-light color-shadow-light
   section
     height:100%
-    padding:.5rem 1rem
-    overflow:auto
+    padding:base-gap 2*base-gap
     .album-info
-        height:15rem
-        padding-top: @height * 0.2
-        img.album-cover
-          height:80%
-          //margin中的百分比是根据父元素的width来算的！！
-          //margin-top: 10%
-          background-color:color-background-panel
-          semimargin:1rem
-          border-radius: 4px;
-          box-shadow: offset-shadow-light 0 width-shadow-light color-shadow-light,
-                      0 offset-shadow-light width-shadow-light color-shadow-light;
-        ul.album-desc
-          display:inline-block
-          vertical-align:top
-          semimargin:1rem
-          & > li
-            margin-bottom:.5rem
-            &::before
-              content:attr(data-item) ':'
-              font-weight:bold
-              semimargin: .5rem
+      display:inline-block
+      semimargin:base-gap vertial
+      background-color:color-background-panel
+      img.album-cover
+        //margin中的百分比是根据父元素的width来算的！！
+        //margin-top: 10%
+        height:128px
+        width:128px
+        float:left
+        background-color:#f5f5f5
+      ul.album-desc
+        padding:base-gap
+        float:left
+        max-width:50%
+        & > li
+          margin-bottom:.5rem
+          a
+            display:table-cell
+          &::before
+            content:attr(data-item) ':'
+            display:table-cell
+            min-width:50px
+            font-weight: bold
+            semimargin: .5rem
     .album-song
       .ablum-song-head
-        margin-bottom:.5rem
+        background-color:#f5f5f5
         h1
-          line-height:2em
+          line-height:2.5rem
+        .btn-group a
+          line-height:2.5rem
+          semipadding: 0 vertial
+          border-width:0
       table.album-song-list
         width:100%
         font-size:17px
-        border:1px solid #ddd
         background-color:color-background-panel
         table-layout:fixed
         counter-reset: item
@@ -58,7 +63,7 @@
             padding: 0.5em 0.55556em
           th
             font-weight: bold
-            background-color: #F5F5F5
+            background-color: color-background-grey
             padding: 0.44444em 0.55556em 0.55556em
 
         tbody
@@ -66,10 +71,14 @@
             *
               cursor:pointer
               color:color-text-default
-            &:hover *,&.active *
-              color:color-text-active
             &:nth-of-type(2n)
-              background-color:#f9f9f9
+              background-color:#f5f5f5
+            &:hover *
+              color:color-text-active
+            &.active
+              background-color:color-active
+              *
+                color:white
             td
               @extend .txt
             td.time

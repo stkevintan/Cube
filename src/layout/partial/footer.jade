@@ -1,14 +1,19 @@
 #footer.container-flow
-    ul.playctrl.list-inline
-        li: +_anchor('0',title='上一首'): i.fa.fa-step-backward 
-        li: +_anchor('0',title='播放'): i.fa.fa-play 
-        li: +_anchor('0',title='下一首'): i.fa.fa-step-forward
+    +_anchor(0)(class='playinfo')
+        .img
+            img(src='assets/img/album.png')
+            i.fa.fa-angle-double-up
+            i.fa.fa-angle-double-down
+        h1.title.txt Music Box Dancer
     .track(data-curtime='00:00',data-duration='12:02')
         .track-default
         .track-buffered
         .track-played
-    h1.title.txt: +_anchor(0) La Valse D'amelie
+    
     ul.playset.list-inline
+        li: +_anchor('0',title='上一首'): i.fa.fa-step-backward 
+        li: +_anchor('0',title='播放'): i.fa.fa-play 
+        li: +_anchor('0',title='下一首'): i.fa.fa-step-forward
         li.loop.dropdown.open
             +_anchor(0): i.fa.fa-refresh
             ul.arrow.arrow-down
@@ -24,6 +29,9 @@
                 li: +_anchor('0')
                     i.fa.fa-random 
                     |随机播放	
-        li: +_anchor('0',title='音量'): i.fa.fa-volume-up 
+        li.volume.dropdown
+            +_anchor('0',title='音量'): i.fa.fa-volume-up 
+            ul.arrow.arrow-down
+                li.vol-track
+                    .vol-cover
         li: +_anchor('0',title='调音'): i.fa.fa-sliders
-    //img.album(src='assets/img/album.png')

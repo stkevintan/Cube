@@ -21,6 +21,7 @@ gulp.task('css', function () {
         //compress: true
     })).pipe(gulp.dest('./dist/assets/css/'));
 });
+
 gulp.task('js', function () {
     return gulp.src('./src/script/*.js')
         .pipe(concat('index.js'))
@@ -34,11 +35,16 @@ gulp.task('clean', function (cb) {
 
 gulp.task('node', ['clean'], function () {
     //glob : https://github.com/isaacs/node-glob#glob-primer
-    return gulp.src('./src/library/!(*Test*)')
+    return gulp.src('./src/module/!(*Test*)')
         .pipe(uglify())
         .pipe(gulp.dest('./dist/libs/'))
 });
-gulp.task('default', ['html', 'css']);
+
+gulp.task('default', ['html', 'css'],function(){
+  return gulp.src('./src/main.js')
+        .pipe(uglify())
+        .pipe(gulp.dest('./dist/'));
+});
 
 
 gulp.task('build', ['default'], function (cb) {

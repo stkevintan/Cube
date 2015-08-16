@@ -1,6 +1,3 @@
-body {
-  width: 100%;
-}
 * {
   margin: 0;
   padding: 0;
@@ -14,37 +11,30 @@ a {
 a:hover {
   color: #000;
 }
+.panel {
+  background-color: #fff;
+  -webkit-filter: drop-shadow(1px 1px 1px rgba(0,0,0,0.3));
+}
 .button {
   display: block;
-  background-color: #fff;
+  background-color: #f0f0f0;
   padding: 0.2rem 1rem;
   border: 1px solid #ccc;
-  border-radius: 4px;
   white-space: nowrap;
   cursor: pointer;
 }
 .button:hover,
 .button:focus {
-  border-color: #a6a6a6;
-  background-color: #e6e6e6;
+  background-color: #f5f5f5;
 }
 .button.active,
 .button:active {
-  background-color: #e6e6e6;
-  border-color: #a6a6a6;
-  box-shadow: 0px 3px 5px rgba(0,0,0,0.125) inset;
+  color: #fff;
+  border-color: #09c;
+  background-color: #09c;
 }
 .btn-group .button {
   display: inline-block;
-  border-radius: 0;
-}
-.btn-group .button:first-child {
-  border-top-left-radius: 4px;
-  border-bottom-left-radius: 4px;
-}
-.btn-group .button:last-child {
-  border-top-right-radius: 4px;
-  border-bottom-right-radius: 4px;
 }
 .btn-group .button:nth-child(n+1) {
   margin-left: -1px;
@@ -56,8 +46,7 @@ a:hover {
   float: left;
 }
 .clearfix:after,
-.container-row:after,
-.row:after {
+.container-row:after {
   content: '';
   clear: both;
   display: table;
@@ -71,8 +60,25 @@ a:hover {
   justify-content: space-between;
   align-items: center;
 }
-.row {
-  margin: 0em;
+.slim-scrollbar {
+  overflow-y: auto;
+}
+.slim-scrollbar::-webkit-scrollbar {
+  width: 8px;
+}
+.slim-scrollbar::-webkit-scrollbar-track {
+  margin-top: 1rem;
+  margin-bottom: 1rem;
+}
+.slim-scrollbar::-webkit-scrollbar-thumb {
+  border-radius: 10px;
+  background-color: #ccc;
+}
+.hide-scrollbar {
+  overflow-y: auto;
+}
+.hide-scrollbar::-webkit-scrollbar {
+  width: 0;
 }
 .txt,
 .main section .album-song table.album-song-list tbody tr td {
@@ -83,8 +89,8 @@ a:hover {
 h1.title {
   font-weight: normal;
   font-size: 1.2rem;
-  padding-left: 1em;
-  padding-right: 1em;
+  padding-left: 1rem;
+  padding-right: 1rem;
 }
 ul > li {
   list-style: outside none none;
@@ -92,8 +98,8 @@ ul > li {
 ul.list-inline > li {
   display: inline-block;
   vertical-align: middle;
-  padding-left: 1em;
-  padding-right: 1em;
+  padding-left: 1rem;
+  padding-right: 1rem;
 }
 ul.list-inline.list-seperator > li + li {
   border-left: 1px solid #ccc;
@@ -118,9 +124,6 @@ ul.list-inline.list-seperator > li + li {
   background-color: #fff;
   background-clip: padding-box;
   border: 1px solid #ccc;
-  border-radius: 4px;
-  padding-top: 4px;
-  padding-bottom: 4px;
   box-shadow: 0px -1px 6px rgba(0,0,0,0.24);
   z-index: 5;
 }
@@ -134,20 +137,20 @@ ul.list-inline.list-seperator > li + li {
   cursor: pointer;
 }
 .dropdown.open > ul > li a:hover {
-  background-color: #f5f5f5;
-  color: #262626;
+  background-color: #09c;
+  color: #fff;
 }
 .arrow,
 #top-bar ul.nav li.active,
-#body .sidebar .category ol.entry > li.active {
+#body .sidebar .collection ol.entries > li.active {
   position: relative;
 }
 .arrow::before,
 #top-bar ul.nav li.active::before,
-#body .sidebar .category ol.entry > li.active::before,
+#body .sidebar .collection ol.entries > li.active::before,
 .arrow::after,
 #top-bar ul.nav li.active::after,
-#body .sidebar .category ol.entry > li.active::after {
+#body .sidebar .collection ol.entries > li.active::after {
   content: '';
   position: absolute;
   border-style: solid;
@@ -168,9 +171,9 @@ ul.list-inline.list-seperator > li + li {
   border-color: #fff transparent;
 }
 .arrow-right-reverse::before,
-#body .sidebar .category ol.entry > li.active::before,
+#body .sidebar .collection ol.entries > li.active::before,
 .arrow-right-reverse::after,
-#body .sidebar .category ol.entry > li.active::after {
+#body .sidebar .collection ol.entries > li.active::after {
   right: 0;
   top: 50%;
   margin-top: -11px;
@@ -179,7 +182,7 @@ ul.list-inline.list-seperator > li + li {
   border-color: transparent #ccc;
 }
 .arrow-right-reverse::after,
-#body .sidebar .category ol.entry > li.active::after {
+#body .sidebar .collection ol.entries > li.active::after {
   right: 0;
   margin-top: -10px;
   border-width: 10px;
@@ -213,7 +216,7 @@ input {
   transition: border-color 0.15s ease-in-out 0s, box-shadow 0.15s ease-in-out 0s;
 }
 input:focus {
-  border-color: #66afe9;
+  border-color: #09c;
   outline: 0 none;
   box-shadow: 0px 1px 1px rgba(0,0,0,0.075) inset, 0px 0px 8px rgba(102,175,233,0.6);
 }
@@ -249,6 +252,7 @@ html,
 body,
 #body {
   height: 100%;
+  overflow: hidden;
 }
 #footer {
   position: absolute;
@@ -257,50 +261,87 @@ body,
   width: 100%;
   height: 3rem;
   z-index: 5;
-  justify-content: space-around;
   background-color: #fafafa;
   box-shadow: 0 -1px 6px rgba(0,0,0,0.24);
 }
-#footer ul.playctrl {
-  margin-left: 1em;
-  margin-right: 1em;
-  font-size: 1.5rem;
-  min-width: 90px;
+#footer .playinfo {
+  transition: all 0.2s ease-in-out;
+  height: 3rem;
+  line-height: 3rem;
+  display: block;
+  flex: 0 0 auto;
+  width: 20%;
 }
-#footer ul.playctrl > li {
-  padding-right: 0;
+#footer .playinfo .img {
+  display: inline-block;
+  position: relative;
 }
-#footer ul.playctrl > li:first-child {
-  padding-left: 0;
+#footer .playinfo .img i {
+  opacity: 0;
+  top: 0;
+  left: 0;
+  background-color: rgba(0,0,0,0.6);
+  position: absolute;
+  width: 100%;
+  height: 100%;
+  color: #fff;
+  font-size: 2rem;
+  text-align: center;
+  line-height: 3rem;
+}
+#footer .playinfo:hover {
+  background-color: #f0f0f0;
+}
+#footer .playinfo:hover .img i.fa-angle-double-up {
+  opacity: 1;
+}
+#footer .playinfo.active {
+  background-color: #09c;
+  color: #fff;
+}
+#footer .playinfo.active .img i.fa-angle-double-down {
+  opacity: 1;
+}
+#footer .playinfo.active:hover .img i.fa-angle-double-up {
+  opacity: 0;
+}
+#footer .playinfo img {
+  background-color: #f0f0f0;
+  height: 3rem;
+  width: 3rem;
+}
+#footer .playinfo h1.title {
+  display: inline-block;
+  text-align: center;
+  width: calc(100% - 3rem);
 }
 #footer .track {
   position: relative;
-  width: 40%;
-  min-width: 40%;
-  margin-left: 3em;
-  margin-right: 3em;
+  flex: 1 1 auto;
+  margin-left: 4em;
+  margin-right: 4em;
   height: 0.2rem;
 }
 #footer .track::before {
   content: attr(data-curtime);
-  width: 3em;
+  width: 4em;
   height: 1.6em;
   position: absolute;
   top: 50%;
   left: 0;
   margin-top: -0.8em;
-  margin-left: -1.5em;
+  margin-left: -2em;
   margin-left: -3em;
 }
 #footer .track::after {
   content: attr(data-duration);
-  width: 3em;
+  width: 4em;
   height: 1.6em;
   position: absolute;
   top: 50%;
   left: 0;
   margin-top: -0.8em;
-  margin-left: -1.5em;
+  margin-left: -2em;
   text-align: right;
   left: inherit;
   right: 0;
@@ -323,7 +364,7 @@ body,
 }
 #footer .track .track-played {
   width: 40%;
-  background-color: #66afe9;
+  background-color: #09c;
 }
 #footer .track .track-played::after {
   content: '';
@@ -336,34 +377,61 @@ body,
   border-radius: 50%;
   background-color: #fff;
   border: 1px solid #ccc;
-  box-shadow: 0 0 8px #66afe9;
+  box-shadow: 0 0 8px #09c;
 }
 #footer ul.playset {
+  flex: 0 0 auto;
   font-size: 1.5rem;
-  margin-left: 1em;
-  margin-right: 1em;
   min-width: 100px;
+  margin-left: 0.5em;
+  margin-right: 0.5em;
 }
 #footer ul.playset > li {
-  padding-right: 0;
-}
-#footer ul.playset > li:first-child {
-  padding-left: 0;
+  padding-left: 0.5em;
+  padding-right: 0.5em;
 }
 #footer ul.playset > li.loop ul i {
   margin-right: 0.5rem;
 }
-#footer img.album {
-  width: 2.5rem;
-  height: 2.5rem;
-  border-radius: 4px;
+#footer ul.playset > li.volume ul {
+  width: 3em;
+  margin-left: -1.5em;
+}
+#footer ul.playset > li.volume ul li.vol-track {
+  height: 10rem;
+  width: 0.2rem;
+  margin: auto;
+  background-color: #ccc;
+  margin-top: 0.7rem;
+  margin-bottom: 0.7rem;
+  position: relative;
+}
+#footer ul.playset > li.volume ul li.vol-track .vol-cover {
+  position: absolute;
+  bottom: 0;
+  left: 0;
+  width: 100%;
+  height: 40%;
+  background-color: #09c;
+}
+#footer ul.playset > li.volume ul li.vol-track .vol-cover::after {
+  content: '';
+  position: absolute;
+  width: 0.7rem;
+  height: 0.7rem;
+  left: 0;
+  top: 0;
+  margin-left: -0.25rem;
+  border-radius: 50%;
+  background-color: #fff;
   border: 1px solid #ccc;
-  box-shadow: 0 0 12px #ccc;
+  box-shadow: 0 0 8px #09c;
 }
 #top-bar {
   position: fixed;
   top: 0;
   width: 100%;
+  z-index: 1;
   background-color: #fafafa;
   height: 2.5rem;
   line-height: 1.2rem;
@@ -396,14 +464,122 @@ body,
 #top-bar ul.tool .input-prefix {
   height: 1.5rem;
   margin-top: -0.15rem;
-  margin-left: 1em;
-  margin-right: 1em;
+  margin-left: 1rem;
+  margin-right: 1rem;
   float: left;
 }
 @media screen and (max-width: 768px) {
   #top-bar ul.tool .input-prefix {
     display: none;
   }
+}
+#body .lrcview {
+  position: absolute;
+  left: 0;
+  top: 0;
+  z-index: 2;
+  width: 100%;
+  height: calc(100% - 3rem);
+  background-color: #fff;
+  transition: all 0.2s ease-in-out;
+  transform: scale(0, 0);
+  transform-origin: 0 100%;
+}
+#body .lrcview.active {
+  transform: scale(1, 1);
+}
+#body .lrcview .blur-bg {
+  position: absolute;
+  left: 0;
+  top: 0;
+  width: calc(100% + 20px);
+  height: calc(100% + 20px);
+  z-index: 1;
+  background: url("../img/back.jpg") no-repeat;
+  background-size: cover;
+  background-position: center;
+  -webkit-filter: blur(10px);
+  margin: -10px;
+}
+#body .lrcview .container-view {
+  position: absolute;
+  left: 0;
+  top: 0;
+  width: 100%;
+  height: 100%;
+  z-index: 2;
+  padding: 2rem;
+}
+#body .lrcview .container-view .view-album {
+  float: left;
+  width: 50%;
+  margin-top: 2rem;
+}
+#body .lrcview .container-view .view-album .img {
+  width: 250px;
+  margin: auto;
+  height: 250px;
+  padding: 10px;
+  background-color: rgba(0,0,0,0.3);
+}
+#body .lrcview .container-view .view-album .img img {
+  width: 100%;
+  height: 100%;
+  background-color: #f9f9f9;
+}
+#body .lrcview .container-view .view-album .tools {
+  display: flex;
+  width: 250px;
+  font-size: 1.3rem;
+  margin: auto;
+  padding-bottom: 10px;
+  height: calc(3rem + 10px);
+  line-height: 3rem;
+  padding-left: 10px;
+  padding-right: 10px;
+  background-color: rgba(0,0,0,0.3);
+}
+#body .lrcview .container-view .view-album .tools a {
+  display: block;
+  text-align: center;
+  width: 3rem;
+  color: #fff;
+}
+#body .lrcview .container-view .view-album .tools a:hover {
+  background-color: rgba(0,0,0,0.5);
+}
+#body .lrcview .container-view .view-lrc {
+  padding-left: 50%;
+  text-align: left;
+  color: #fff;
+  text-shadow: 1px 1px 2px rgba(0,0,0,0.72);
+}
+#body .lrcview .container-view .view-lrc ul {
+  font-size: 16px;
+  line-height: 1.6em;
+}
+#body .lrcview .container-view .view-lrc .lrc-info {
+  margin-bottom: 3rem;
+}
+#body .lrcview .container-view .view-lrc .lrc-info h1.title {
+  font-size: 30px;
+  line-height: 1.6em;
+}
+#body .lrcview .container-view .view-lrc .lrc-info ul.details > li::before {
+  content: attr(data-head) '：';
+  color: #ddd;
+}
+#body .lrcview .container-view .view-lrc .lrc-box {
+  padding-left: 1rem;
+  padding-right: 1rem;
+  overflow: hidden;
+}
+#body .lrcview .container-view .view-lrc .lrc-box ul.lyric > li {
+  margin-top: 0.5rem;
+  margin-bottom: 0.5rem;
+}
+#body .lrcview .container-view .view-lrc .lrc-box ul.lyric > li.current {
+  color: #64b5f6;
 }
 .main {
   width: 75%;
@@ -415,46 +591,54 @@ body,
 }
 .main section {
   height: 100%;
-  padding: 0.5rem 1rem;
-  overflow: auto;
+  padding: 1rem 2rem;
 }
 .main section .album-info {
-  height: 15rem;
-  padding-top: 3rem;
+  display: inline-block;
+  margin-top: 1rem;
+  margin-bottom: 1rem;
+  background-color: #fff;
 }
 .main section .album-info img.album-cover {
-  height: 80%;
-  background-color: #fff;
-  margin-left: 1rem;
-  margin-right: 1rem;
-  border-radius: 4px;
-  box-shadow: 1px 0 6px rgba(0,0,0,0.24), 0 1px 6px rgba(0,0,0,0.24);
+  height: 128px;
+  width: 128px;
+  float: left;
+  background-color: #f5f5f5;
 }
 .main section .album-info ul.album-desc {
-  display: inline-block;
-  vertical-align: top;
-  margin-left: 1rem;
-  margin-right: 1rem;
+  padding: 1rem;
+  float: left;
+  max-width: 50%;
 }
 .main section .album-info ul.album-desc > li {
   margin-bottom: 0.5rem;
 }
+.main section .album-info ul.album-desc > li a {
+  display: table-cell;
+}
 .main section .album-info ul.album-desc > li::before {
   content: attr(data-item) ':';
+  display: table-cell;
+  min-width: 50px;
   font-weight: bold;
   margin-left: 0.5rem;
   margin-right: 0.5rem;
 }
 .main section .album-song .ablum-song-head {
-  margin-bottom: 0.5rem;
+  background-color: #f5f5f5;
 }
 .main section .album-song .ablum-song-head h1 {
-  line-height: 2em;
+  line-height: 2.5rem;
+}
+.main section .album-song .ablum-song-head .btn-group a {
+  line-height: 2.5rem;
+  padding-top: 0;
+  padding-bottom: 0;
+  border-width: 0;
 }
 .main section .album-song table.album-song-list {
   width: 100%;
   font-size: 17px;
-  border: 1px solid #ddd;
   background-color: #fff;
   table-layout: fixed;
   counter-reset: item;
@@ -479,19 +663,24 @@ body,
 }
 .main section .album-song table.album-song-list tr th {
   font-weight: bold;
-  background-color: #f5f5f5;
+  background-color: #f0f0f0;
   padding: 0.44444em 0.55556em 0.55556em;
 }
 .main section .album-song table.album-song-list tbody tr * {
   cursor: pointer;
   color: #404040;
 }
-.main section .album-song table.album-song-list tbody tr:hover *,
-.main section .album-song table.album-song-list tbody tr.active * {
+.main section .album-song table.album-song-list tbody tr:nth-of-type(2n) {
+  background-color: #f5f5f5;
+}
+.main section .album-song table.album-song-list tbody tr:hover * {
   color: #000;
 }
-.main section .album-song table.album-song-list tbody tr:nth-of-type(2n) {
-  background-color: #f9f9f9;
+.main section .album-song table.album-song-list tbody tr.active {
+  background-color: #09c;
+}
+.main section .album-song table.album-song-list tbody tr.active * {
+  color: #fff;
 }
 .main section .album-song table.album-song-list tbody tr td.time {
   text-align: center;
@@ -532,48 +721,70 @@ body,
   float: left;
   width: 25%;
   height: 100%;
-  padding: 0.5rem 1rem;
+  padding-top: 1rem;
+  padding-bottom: 1rem;
   font-size: 12px;
   text-shadow: 1px 1px 2px #fff;
 }
-#body .sidebar .category {
+#body .sidebar .collection {
   margin-bottom: 1em;
 }
-#body .sidebar .category ol.entry {
-  margin-left: -1rem;
-  margin-right: -1rem;
-  counter-reset: item;
+#body .sidebar .collection .tools {
+  position: absolute;
+  z-index: 1;
+  right: 1rem;
+  top: 0;
+  line-height: 22px;
+  display: none;
+  font-size: 12px;
 }
-#body .sidebar .category ol.entry a {
-  display: block;
-  cursor: pointer;
+#body .sidebar .collection .tools a {
+  color: #8c8c8c;
+  padding-left: 0.3rem;
+  padding-right: 0.3rem;
 }
-#body .sidebar .category ol.entry > li {
-  margin-bottom: 0.4rem;
+#body .sidebar .collection .tools a:hover {
+  color: #000;
+}
+#body .sidebar .collection .head:hover .tools,
+#body .sidebar .collection .entries > li:hover .tools {
   display: block;
+}
+#body .sidebar .collection .head,
+#body .sidebar .collection ol.entries > li {
+  position: relative;
   padding-left: 1rem;
   padding-right: 1rem;
+}
+#body .sidebar .collection ol.entries {
+  counter-reset: item;
+}
+#body .sidebar .collection ol.entries > li {
+  display: block;
   border-top-width: 1px;
+}
+#body .sidebar .collection ol.entries > li>a {
+  display: block;
   cursor: pointer;
 }
-#body .sidebar .category ol.entry > li a::before {
+#body .sidebar .collection ol.entries > li>a::before {
   content: counter(item);
   counter-increment: item;
   margin-right: 0.5em;
   color: #8c8c8c;
 }
-#body .sidebar .category ol.entry > li:hover a::before {
+#body .sidebar .collection ol.entries > li:hover > a::before {
   color: #000;
 }
-#body .sidebar .category ol.entry > li.active {
+#body .sidebar .collection ol.entries > li.active {
   box-shadow: 0 0 3px rgba(0,0,0,0.24) inset;
   background-color: #e6e6e6;
 }
-#body .sidebar .category ol.entry > li.active a,
-#body .sidebar .category ol.entry > li.active a::before {
+#body .sidebar .collection ol.entries > li.active > a,
+#body .sidebar .collection ol.entries > li.active > a::before {
   color: #000;
 }
-#body .sidebar .category ol.entry > li.active::after {
+#body .sidebar .collection ol.entries > li.active::after {
   border-color: transparent #efefef;
   box-shadow: 2px 0 0 #efefef;
 }

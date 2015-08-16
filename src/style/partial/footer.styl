@@ -1,3 +1,4 @@
+width-track=0.2rem
 #footer
   position:absolute
   left:0
@@ -5,34 +6,67 @@
   width:100%
   height: 3rem
   z-index: 5
-  justify-content:space-around
   background-color: color-background-head
   box-shadow: 0 (- offset-shadow-light) width-shadow-light color-shadow-light
-  ul.playctrl
-    semimargin:1em
-    font-size:1.5rem
-    min-width:90px
-    & > li
-      padding-right:0
-    & > li:first-child
-      padding-left: 0
+  .playinfo
+    transition:all .2s ease-in-out
+    height:3rem
+    line-height:3rem
+    display:block
+    flex:0 0 auto
+    width:20%
+    //max-width:30%
+    .img
+      display:inline-block
+      position:relative
+      i
+        opacity:0
+        top:0
+        left:0
+        background-color:rgba(color-default,60%)
+        position:absolute
+        width:100%
+        height:100%
+        color:#fff
+        font-size: 2rem
+        text-align: center
+        line-height: 3rem
+    &:hover
+      background-color:color-background-grey
+      .img i.fa-angle-double-up
+        opacity:1
+    &.active
+      background-color:color-active
+      color:white
+      .img i.fa-angle-double-down
+        opacity:1
+    &.active:hover
+      .img i.fa-angle-double-up
+        opacity:0
+    img
+      background-color:color-background-grey
+      height:3rem
+      width:3rem
+    h1.title
+      display:inline-block
+      text-align:center
+      width: calc(100% - 3rem)
   .track
     position:relative
-    width:40%
-    min-width:40%
-    semimargin:($pw=3em)
-    height:($th=0.2rem)
+    flex:1 1 auto
+    semimargin:($pw=4em)
+    height: width-track
     &::before
       content:attr(data-curtime)
       absolute-center($pw,1.6em,50%,0)
-      margin-left: - $pw
+      margin-left: - ($pw - 1em)
     &::after
       content:attr(data-duration)
       absolute-center($pw,1.6em,50%,0)
       text-align:right
       left:inherit
       right:0
-      margin-right: - $pw
+      margin-right: - ($pw - 1em)
     *
       position:absolute
       height:100%
@@ -55,24 +89,46 @@
         height: @width
         right:0
         top:0
-        margin-top:- ((@height - $th)/2)
+        margin-top:- ((@height - width-track)/2)
         border-radius:50%
         background-color:white
         border: 1px solid color-border
         box-shadow: 0 0 8px color-active
   ul.playset
+    flex:0 0 auto
     font-size:1.5rem
-    semimargin:1em
     min-width: 100px
+    semimargin:.5em
     & > li
-      padding-right:0
-    & > li:first-child
-      padding-left: 0
+      semipadding:0.5em
     & > li.loop ul i
       margin-right:0.5rem
-  img.album
-    width:2.5rem
-    height: @width
-    border-radius:4px
-    border: 1px solid color-border
-    box-shadow: 0 0 12px color-border
+    & > li.volume ul
+      width:3em
+      margin-left: (- @width / 2)
+      li.vol-track
+        height: 10rem
+        width: width-track
+        margin: auto
+        background-color: color-border
+        semimargin: .7rem  vertial
+        position:relative
+        .vol-cover
+          position:absolute
+          bottom:0
+          left:0
+          width:100%
+          height:40%
+          background-color:color-active
+          &::after
+            content:''
+            position:absolute
+            width:.7rem
+            height: @width
+            left:0
+            top:0
+            margin-left:- ((@height - width-track)/2)
+            border-radius:50%
+            background-color:white
+            border: 1px solid color-border
+            box-shadow: 0 0 8px color-active

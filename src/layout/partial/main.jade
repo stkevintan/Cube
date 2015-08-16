@@ -1,0 +1,48 @@
+.main
+    section.view-playlist.slim-scrollbar
+        .album-info.panel
+            img.album-cover(src='assets/img/album.png',alt='album cover')
+            ul.album-desc
+                li(data-item='歌单名')
+                    +_anchor(0)(class='txt') 我喜欢的音乐
+                li(data-item='创建者')
+                    +_anchor(0)(class='txt') 工藤洗衣机0xffffff
+                li(data-item="描述")
+                    +_anchor(0)(class='txt') 我喜欢的音乐balabalabala
+        .album-song.panel
+            .container-row.ablum-song-head
+                h1.left.title.txt 歌曲列表
+                .right.btn-group
+                    a.button.active: i.fa.fa-list
+                    a.button: i.fa.fa-th
+            table.album-song-list
+                thead: tr
+                    th.index #
+                    th.title 标题
+                    th.time 时长
+                    th.artist 歌手
+                    th.album 专辑
+                tbody
+                    - var titles=["La Valse D'amelie","Eversleeping"," 秋姉妹のなく頃に in the autumn sky","她","月光边境","Music Box Dancer","Sky High","Walk Away","Summertrain","H-36 / ヒロシゲ36号~Neo Super-Express [卯酉东海道~Retrospective 53 minutes]"]
+                    - var times=['02:15','03:39','04:23','04:43','05:20','03:05','04:05','04:14','04:32','02:13']
+                    - var artists=['Yann Tiersen','Xandria','ばんばんしー','闫月','林海','理查德克莱德曼','Thomas Prime','Dia Frampton','Greyson Chance','Forest306']
+                    - var albums=["Le Fabuleux Destin d'Amélie Poulain",'Eversleeping','秋満开の风に舞う','月','当代音乐馆','Moonlight & Roses','Sky High','Red',"Hold On ‘Til The Night",'星屑の还る场所']
+                    each title,index in titles
+                        if(index==5)
+                            tr.active
+                                td.index
+                                    i.active.fa.fa-music 
+                                    i.hover.fa.fa-play
+                                td.title=title
+                                td.time= times[index]
+                                td.artist= artists[index]
+                                td.album= albums[index] 
+                        else
+                            tr
+                                td.index
+                                    i.active.fa.fa-music 
+                                    i.hover.fa.fa-play 
+                                td.title= title
+                                td.time= times[index]
+                                td.artist= artists[index]
+                                td.album= albums[index] 

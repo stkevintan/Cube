@@ -1,0 +1,23 @@
+.lrcview
+    .blur-bg
+    .container-view.slim-scrollbar
+        .view-album
+            .img
+                img(src='assets/img/album.png')
+            .tools
+                +_anchor(0): i.fa.fa-heart
+                +_anchor(0): i.fa.fa-plus
+                +_anchor(0): i.fa.fa-download 
+                +_anchor(0): i.fa.fa-trash 
+                +_anchor(0): i.fa.fa-share 
+        .view-lrc
+            .lrc-info
+                h1.title.txt Music Box Dancer
+                ul.list-inline.details
+                    li(data-head='歌手') Frank Mills
+                    li(data-head='专辑') Music Box Dancer
+            .lrc-box
+                ul.lyric
+                    li.current 这是一首纯音乐
+                    li 没有歌词
+        

@@ -1,0 +1,89 @@
+#body .lrcview
+  position:absolute
+  left:0
+  top:0
+  z-index:2 
+  width:100%
+  height:calc(100% - 3rem)
+  background-color:color-background-panel
+  transition:all .2s ease-in-out
+  transform:scale(0,0)
+  transform-origin:0 100%
+  &.active
+    transform:scale(1,1)
+  .blur-bg
+    $blur-size=10px
+    position:absolute
+    left:0
+    top:0
+    width:calc(100% + 20px)
+    height:@width
+    z-index:1
+    background:url('../img/back.jpg') no-repeat;
+    background-size:cover
+    background-position:center
+    -webkit-filter:blur($blur-size)
+    margin:- $blur-size
+  .container-view
+    position:absolute
+    left:0
+    top:0
+    width:100%
+    height:100%
+    z-index:2
+    padding:2rem
+    .view-album
+      float:left
+      width:50%
+      margin-top:2rem
+      .img
+        width:250px
+        margin:auto
+        height: @width
+        padding:10px
+        background-color:rgba(#000,30%)
+        img
+          width:100%
+          height:100%
+          background-color:#f9f9f9
+      .tools
+        display:flex
+        width:250px
+        font-size:1.3rem
+        margin:auto
+        padding-bottom:10px
+        height:calc(3rem + 10px)
+        line-height:3rem
+        semipadding:10px
+        background-color:rgba(#000,30%)
+        a
+          display:block
+          text-align:center
+          width:3rem
+          color:white
+          &:hover
+            background-color:rgba(#000,50%)
+
+    .view-lrc
+      padding-left:50%
+      text-align:left
+      color:white
+      text-shadow: 1px 1px 2px rgba(0, 0, 0, 0.72)
+      ul
+        font-size:16px
+        line-height:1.6em
+      .lrc-info
+        margin-bottom: 3rem
+        h1.title
+          font-size:30px
+          line-height:1.6em
+        ul.details > li::before
+          content:attr(data-head) '：'
+          color:#ddd
+      .lrc-box
+        semipadding:base-gap
+        overflow:hidden
+        ul.lyric > li
+          semimargin: half-gap vertial
+        ul.lyric > li.current
+          color:#64B5F6

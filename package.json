@@ -1,35 +1,7 @@
 {
-  "name": "nwMusicBox",
-  "main": "dist/index.html",
+  "name": "Cube",
+  "main": "dist/main.js",
   "version": "1.3.3",
-  "window": {
-    "title": "NetEaseMusic",
-    "toolbar": true,
-    "frame": true,
-    "width": 1200,
-    "height": 600,
-    "icon": "dist/assets/img/icon.png"
-  },
-  "platformOverrides": {
-    "windows": {
-      "window": {
-        "title": "网易音乐盒 for Windows",
-        "toolbar": false
-      }
-    },
-    "linux": {
-      "window": {
-        "title": "网易音乐盒 for Linux",
-        "toolbar": false
-      }
-    },
-    "osx": {
-      "window": {
-        "title": "网易音乐盒 for OsX",
-        "toolbar": false
-      }
-    }
-  },
   "dependencies": {
     "async": "^1.2.0",
     "big-integer": "^1.5.5",

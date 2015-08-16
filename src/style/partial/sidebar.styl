@@ -2,35 +2,49 @@
   float: left
   width: 25%
   height:100%
-  //box-shadow: - offset-shadow-light 0 width-shadow-light color-shadow-light inset
-  padding:.5rem 1rem
+  semipadding:base-gap vertial
   font-size:12px
   text-shadow 1px 1px 2px #fff
-  .category
+  .collection
     margin-bottom: 1em
-    ol.entry
-      semimargin:-1rem
-      counter-reset: item
+    .tools
+      position:absolute
+      z-index: 1
+      right:base-gap
+      top:0
+      line-height:22px
+      display:none
+      font-size: 12px
       a
-        display:block
-        cursor:pointer
+        color:color-text-hint
+        semipadding:0.3rem
+        &:hover
+          color:color-text-active
+    .head:hover .tools
+    .entries > li:hover .tools
+      display:block
+    .head,ol.entries > li
+      position:relative
+      semipadding:base-gap
+    ol.entries
+      counter-reset: item
       & > li
-        margin-bottom: 0.4rem
         display:block
-        semipadding:1rem
         border-top-width:1px
-        cursor:pointer
-        & a::before
+        &>a
+          display:block
+          cursor:pointer
+        &>a::before
           content: counter(item)
           counter-increment:item
           margin-right: .5em
           color: color-text-hint
-        &:hover a::before
+        &:hover > a::before
           color:color-text-active
         &.active
           @extend .arrow
           @extend .arrow-right-reverse
-          a,a::before
+          & > a,& > a::before
             color:color-text-active
           &::after
             border-color: transparent color-background-body

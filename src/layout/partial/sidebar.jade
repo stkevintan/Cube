@@ -1,0 +1,27 @@
+.sidebar.hide-scrollbar
+    - var first=1
+    each head in ['云音乐','用户','本地']
+        .collection
+            .head
+                h4.txt=head
+                .tools.list-inline
+                    +_anchor(0): i.fa.fa-plus
+                    +_anchor(0): i.fa.fa-refresh
+            ol.entries
+                - var titles=['我喜欢的音乐','日风','战歌','喜欢','那些舍不得删的英文歌'];
+                each title in titles
+                    if(first==1)
+                        - first=0
+                        li.active
+                            +_anchor(0)(class='txt')=title
+                            .tools
+                                +_anchor(0): i.fa.fa-plus
+                                +_anchor(0): i.fa.fa-pencil
+                                +_anchor(0): i.fa.fa-trash
+                     else
+                        li
+                            +_anchor(0)(class='txt')=title
+                            .tools.list-inline
+                                +_anchor(0): i.fa.fa-plus
+                                +_anchor(0): i.fa.fa-pencil
+                                +_anchor(0): i.fa.fa-trash
