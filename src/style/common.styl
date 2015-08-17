@@ -1,8 +1,11 @@
-* {
+*
   margin: 0
   padding: 0
   box-sizing: border-box
-}
+.noAnimate *
+  transition-duration:0s !important
+.hidden
+  display:none
 
 a
   color: color-text-default
@@ -13,7 +16,9 @@ a
 .panel
   background-color:color-background-panel
   //box-shadow:1px 1px 3px rgba(color-default,30%)
-  -webkit-filter:drop-shadow(1px 1px 1px rgba(color-default,30%))
+  border-top:1px solid color-border
+  border-left:1px solid color-border
+  -webkit-filter:drop-shadow(2px 2px 2px rgba(color-default,30%))
 .button
   display:block
   background-color: color-background-grey

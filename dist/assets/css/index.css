@@ -3,6 +3,12 @@
   padding: 0;
   box-sizing: border-box;
 }
+.noAnimate * {
+  transition-duration: 0s !important;
+}
+.hidden {
+  display: none;
+}
 a {
   color: #404040;
   outline: none;
@@ -13,7 +19,9 @@ a:hover {
 }
 .panel {
   background-color: #fff;
-  -webkit-filter: drop-shadow(1px 1px 1px rgba(0,0,0,0.3));
+  border-top: 1px solid #ccc;
+  border-left: 1px solid #ccc;
+  -webkit-filter: drop-shadow(2px 2px 2px rgba(0,0,0,0.3));
 }
 .button {
   display: block;
@@ -245,8 +253,6 @@ html {
 body {
   background-color: #efefef;
   color: #404040;
-  padding-top: 2.5rem;
-  padding-bottom: 3rem;
 }
 html,
 body,
@@ -254,23 +260,37 @@ body,
   height: 100%;
   overflow: hidden;
 }
-#footer {
-  position: absolute;
+#titlebar {
+  position: fixed;
+  top: 0;
   left: 0;
-  bottom: 0;
   width: 100%;
+  z-index: 5;
+}
+#frame {
+  position: relative;
+  height: 100%;
+  padding: calc(2rem + 24px) 3px 3rem 3px;
+  background-color: #efefef;
+}
+#footer {
+  position: fixed;
+  bottom: 0;
+  width: calc(100% - 6px);
   height: 3rem;
   z-index: 5;
-  background-color: #fafafa;
+  background-color: #fff;
   box-shadow: 0 -1px 6px rgba(0,0,0,0.24);
 }
 #footer .playinfo {
-  transition: all 0.2s ease-in-out;
   height: 3rem;
   line-height: 3rem;
   display: block;
   flex: 0 0 auto;
   width: 20%;
+}
+#footer .playinfo * {
+  transition: all 0.2s ease-in-out;
 }
 #footer .playinfo .img {
   display: inline-block;
@@ -282,28 +302,15 @@ body,
   left: 0;
   background-color: rgba(0,0,0,0.6);
   position: absolute;
-  width: 100%;
-  height: 100%;
+  width: 3rem;
+  height: 3rem;
   color: #fff;
   font-size: 2rem;
   text-align: center;
   line-height: 3rem;
 }
-#footer .playinfo:hover {
-  background-color: #f0f0f0;
-}
 #footer .playinfo:hover .img i.fa-angle-double-up {
   opacity: 1;
-}
-#footer .playinfo.active {
-  background-color: #09c;
-  color: #fff;
-}
-#footer .playinfo.active .img i.fa-angle-double-down {
-  opacity: 1;
-}
-#footer .playinfo.active:hover .img i.fa-angle-double-up {
-  opacity: 0;
 }
 #footer .playinfo img {
   background-color: #f0f0f0;
@@ -315,14 +322,13 @@ body,
   text-align: center;
   width: calc(100% - 3rem);
 }
-#footer .track {
-  position: relative;
+#footer .track-wrap {
   flex: 1 1 auto;
+  position: relative;
   margin-left: 4em;
   margin-right: 4em;
-  height: 0.2rem;
 }
-#footer .track::before {
+#footer .track-wrap::before {
   content: attr(data-curtime);
   width: 4em;
   height: 1.6em;
@@ -333,7 +339,7 @@ body,
   margin-left: -2em;
   margin-left: -3em;
 }
-#footer .track::after {
+#footer .track-wrap::after {
   content: attr(data-duration);
   width: 4em;
   height: 1.6em;
@@ -347,20 +353,22 @@ body,
   right: 0;
   margin-right: -3em;
 }
+#footer .track {
+  height: 0.2rem;
+  width: 100%;
+  background-color: #ccc;
+}
 #footer .track * {
   position: absolute;
   height: 100%;
   left: 0;
   top: 0;
   cursor: pointer;
-}
-#footer .track .track-default {
-  width: 100%;
-  background-color: #ccc;
+  transition: all 0.2s ease-in-out;
 }
 #footer .track .track-buffered {
   width: 60%;
-  background-color: #8c8c8c;
+  background-color: #a6a6a6;
 }
 #footer .track .track-played {
   width: 40%;
@@ -369,15 +377,19 @@ body,
 #footer .track .track-played::after {
   content: '';
   position: absolute;
-  width: 0.7rem;
-  height: 0.7rem;
+  width: 0.8rem;
+  height: 0.8rem;
   right: 0;
   top: 0;
-  margin-top: -0.25rem;
+  margin-top: -0.3rem;
+  margin-right: -0.4rem;
   border-radius: 50%;
-  background-color: #fff;
-  border: 1px solid #ccc;
-  box-shadow: 0 0 8px #09c;
+  background-color: #64b5f6;
+  box-shadow: 0 0 2px #09c;
+  transition: all 0.2s ease-in-out;
+}
+#footer .track .track-played:hover::after {
+  transform: scale(1.2, 1.2);
 }
 #footer ul.playset {
   flex: 0 0 auto;
@@ -387,8 +399,9 @@ body,
   margin-right: 0.5em;
 }
 #footer ul.playset > li {
-  padding-left: 0.5em;
-  padding-right: 0.5em;
+  width: 2.5rem;
+  text-align: center;
+  padding: 0;
 }
 #footer ul.playset > li.loop ul i {
   margin-right: 0.5rem;
@@ -407,6 +420,7 @@ body,
   position: relative;
 }
 #footer ul.playset > li.volume ul li.vol-track .vol-cover {
+  transition: all 0.2s ease-in-out;
   position: absolute;
   bottom: 0;
   left: 0;
@@ -417,22 +431,44 @@ body,
 #footer ul.playset > li.volume ul li.vol-track .vol-cover::after {
   content: '';
   position: absolute;
-  width: 0.7rem;
-  height: 0.7rem;
+  width: 1rem;
+  height: 1rem;
   left: 0;
   top: 0;
-  margin-left: -0.25rem;
+  pointer: cursor;
+  margin-left: -0.4rem;
+  margin-top: -0.5rem;
   border-radius: 50%;
-  background-color: #fff;
-  border: 1px solid #ccc;
-  box-shadow: 0 0 8px #09c;
+  background-color: #64b5f6;
+  box-shadow: 0 0 2px #09c;
+  transition: all 0.2s ease-in-out;
+}
+#footer ul.playset > li.volume ul li.vol-track .vol-cover:hover::after {
+  transform: scale(1.2, 1.2);
+}
+#footer.active {
+  background-color: transparent;
+  color: #ddd;
+  box-shadow: none;
+}
+#footer.active a {
+  color: #ddd;
+}
+#footer.active .playinfo .img i.fa-angle-double-down {
+  opacity: 1;
+}
+#footer.active .playinfo:hover {
+  background-color: transparent;
+}
+#footer.active .playinfo:hover .img i.fa-angle-double-up {
+  opacity: 0;
 }
 #top-bar {
   position: fixed;
-  top: 0;
-  width: 100%;
-  z-index: 1;
-  background-color: #fafafa;
+  top: 24px;
+  width: calc(100% - 6px);
+  z-index: 4;
+  background-color: #fff;
   height: 2.5rem;
   line-height: 1.2rem;
   box-shadow: 0 1px 6px rgba(0,0,0,0.24);
@@ -476,10 +512,10 @@ body,
 #body .lrcview {
   position: absolute;
   left: 0;
-  top: 0;
-  z-index: 2;
+  top: 24px;
+  z-index: 4;
   width: 100%;
-  height: calc(100% - 3rem);
+  height: calc(100% - 24px);
   background-color: #fff;
   transition: all 0.2s ease-in-out;
   transform: scale(0, 0);
@@ -509,6 +545,7 @@ body,
   height: 100%;
   z-index: 2;
   padding: 2rem;
+  background-color: rgba(0,0,0,0.25);
 }
 #body .lrcview .container-view .view-album {
   float: left;

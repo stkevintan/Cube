@@ -4,7 +4,7 @@
         .collection
             .head
                 h4.txt=head
-                .tools.list-inline
+                .tools
                     +_anchor(0): i.fa.fa-plus
                     +_anchor(0): i.fa.fa-refresh
             ol.entries
@@ -21,7 +21,7 @@
                      else
                         li
                             +_anchor(0)(class='txt')=title
-                            .tools.list-inline
+                            .tools
                                 +_anchor(0): i.fa.fa-plus
                                 +_anchor(0): i.fa.fa-pencil
                                 +_anchor(0): i.fa.fa-trash

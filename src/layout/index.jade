@@ -7,9 +7,11 @@ html(lang="zh-CN")
         //load style
         +_style('font-awesome.min','index')
     body
-        include ./partial/head.jade
-        include ./partial/body.jade
-        include ./partial/footer.jade
+        #titlebar
+        #frame
+            include ./partial/head.jade
+            include ./partial/body.jade
+            include ./partial/footer.jade
         //load script
-        //- each name in ['sortable','index']
-        //    +_script(name)
+        - each name in ['sortable','index']
+            +_script(name)

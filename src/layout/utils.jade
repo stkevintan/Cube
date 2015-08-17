@@ -11,10 +11,18 @@ mixin _script(...names)
         script(src='assets/js/' + name + '.js')
 mixin _icon(name)
     span.glyphicon(id!=attributes.id,class!=attributes.class + ' glyphicon-' + name)
-mixin _anchor(code)
-    a(id!=attributes.id,class!=attributes.class, href="javascript:" + code)
-        if block
-            block
+mixin _anchor(code,...args)
+    if code == 0
+        a(id!=attributes.id,class!=attributes.class, href="javascript:0")
+            if block
+                block
+    else
+        - var argstr=args.join(',')
+        if argstr.length
+            - argstr = ','+ argstr
+        a(id!=attributes.id,class!=attributes.class, href="javascript:emitter.emit('" + code + "'" + argstr + ")")
+            if block
+                block
 mixin _list(...items)
     ul(id!=attributes.id,class!=attributes.class)
         each item in items

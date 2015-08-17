@@ -1,37 +1,36 @@
 #footer.container-flow
-    +_anchor(0)(class='playinfo')
+    +_anchor('lrcview-toggle')(class='playinfo')
         .img
             img(src='assets/img/album.png')
             i.fa.fa-angle-double-up
             i.fa.fa-angle-double-down
         h1.title.txt Music Box Dancer
-    .track(data-curtime='00:00',data-duration='12:02')
-        .track-default
-        .track-buffered
-        .track-played
+    .track-wrap(data-curtime='00:00',data-duration='12:02')
+        .track
+            .track-buffered
+            .track-played
     
     ul.playset.list-inline
-        li: +_anchor('0',title='上一首'): i.fa.fa-step-backward 
-        li: +_anchor('0',title='播放'): i.fa.fa-play 
-        li: +_anchor('0',title='下一首'): i.fa.fa-step-forward
-        li.loop.dropdown.open
-            +_anchor(0): i.fa.fa-refresh
+        li.previous: +_anchor('previous'): i.fa.fa-step-backward 
+        li.play: +_anchor('play'): i.fa.fa-play 
+        li.pause(style="display:none"): +_anchor('pause'): i.fa.fa-pause 
+        li.next: +_anchor('next'): i.fa.fa-step-forward
+        li.loop.dropdown
+            - var icons = ['refresh','repeat','long-arrow-right','random'];
+            - var names = ['列表循环','单曲循环','顺序播放','随机播放'];
+            each icon,index in icons
+                if index
+                    +_anchor(0)(class='hidden'): i.fa&attributes({class:'fa-'+icon})
+                else
+                    +_anchor(0): i.fa&attributes({class:'fa-'+icon})
             ul.arrow.arrow-down
-                li.active: +_anchor('0')
-                    i.fa.fa-refresh
-                    |列表循环
-                li: +_anchor('0')
-                    i.fa.fa-repeat
-                    |单曲循环
-                li: +_anchor('0')
-                    i.fa.fa-long-arrow-right
-                    |顺序播放
-                li: +_anchor('0')
-                    i.fa.fa-random 
-                    |随机播放	
+                each icon,index in icons    
+                    li: +_anchor('loop-update',index)
+                        i.fa&attributes({class:'fa-'+icon})
+                        span=names[index]
         li.volume.dropdown
-            +_anchor('0',title='音量'): i.fa.fa-volume-up 
+            +_anchor('0'): i.fa.fa-volume-up 
             ul.arrow.arrow-down
                 li.vol-track
                     .vol-cover
-        li: +_anchor('0',title='调音'): i.fa.fa-sliders
+        li: +_anchor('0'): i.fa.fa-sliders

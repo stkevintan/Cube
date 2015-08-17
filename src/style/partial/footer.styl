@@ -1,15 +1,15 @@
 width-track=0.2rem
 #footer
-  position:absolute
-  left:0
+  position:fixed
   bottom:0
-  width:100%
+  width:calc(100% - 6px)
   height: 3rem
   z-index: 5
   background-color: color-background-head
   box-shadow: 0 (- offset-shadow-light) width-shadow-light color-shadow-light
   .playinfo
-    transition:all .2s ease-in-out
+    *
+      transition:all .2s ease-in-out
     height:3rem
     line-height:3rem
     display:block
@@ -25,24 +25,15 @@ width-track=0.2rem
         left:0
         background-color:rgba(color-default,60%)
         position:absolute
-        width:100%
-        height:100%
+        width:3rem
+        height:3rem
         color:#fff
         font-size: 2rem
         text-align: center
         line-height: 3rem
     &:hover
-      background-color:color-background-grey
       .img i.fa-angle-double-up
         opacity:1
-    &.active
-      background-color:color-active
-      color:white
-      .img i.fa-angle-double-down
-        opacity:1
-    &.active:hover
-      .img i.fa-angle-double-up
-        opacity:0
     img
       background-color:color-background-grey
       height:3rem
@@ -51,11 +42,10 @@ width-track=0.2rem
       display:inline-block
       text-align:center
       width: calc(100% - 3rem)
-  .track
-    position:relative
+  .track-wrap
     flex:1 1 auto
+    position:relative
     semimargin:($pw=4em)
-    height: width-track
     &::before
       content:attr(data-curtime)
       absolute-center($pw,1.6em,50%,0)
@@ -67,40 +57,47 @@ width-track=0.2rem
       left:inherit
       right:0
       margin-right: - ($pw - 1em)
+  .track
+    height: width-track
+    width:100%
+    background-color:color-border
     *
       position:absolute
       height:100%
       left:0
       top:0
       cursor:pointer
-    .track-default
-      width:100%
-      background-color:color-border
+      transition:all .2s ease-in-out
     .track-buffered
       width:60%
-      background-color:color-border-darker
+      background-color:lightness(color-border,65%)
     .track-played
       width:40%
       background-color:	color-active
       &::after
         content:''
         position:absolute
-        width:.7rem
+        width:.8rem
         height: @width
         right:0
         top:0
         margin-top:- ((@height - width-track)/2)
+        margin-right: - (@width / 2)
         border-radius:50%
-        background-color:white
-        border: 1px solid color-border
-        box-shadow: 0 0 8px color-active
+        background-color:#64B5F6
+        box-shadow: 0 0 2px color-active
+        transition:all .2s ease-in-out
+      &:hover::after
+        transform:scale(1.2,1.2);
   ul.playset
     flex:0 0 auto
     font-size:1.5rem
     min-width: 100px
     semimargin:.5em
     & > li
-      semipadding:0.5em
+      width:2.5rem
+      text-align:center
+      padding:0
     & > li.loop ul i
       margin-right:0.5rem
     & > li.volume ul
@@ -114,6 +111,7 @@ width-track=0.2rem
         semimargin: .7rem  vertial
         position:relative
         .vol-cover
+          transition:all .2s ease-in-out
           position:absolute
           bottom:0
           left:0
@@ -123,12 +121,29 @@ width-track=0.2rem
           &::after
             content:''
             position:absolute
-            width:.7rem
+            width:1rem
             height: @width
             left:0
             top:0
-            margin-left:- ((@height - width-track)/2)
+            pointer:cursor
+            margin-left:- ((@width - width-track)/2)
+            margin-top: - (@height / 2)
             border-radius:50%
-            background-color:white
-            border: 1px solid color-border
-            box-shadow: 0 0 8px color-active
+            background-color:#64B5F6
+            box-shadow: 0 0 2px color-active
+            transition:all .2s ease-in-out
+          &:hover::after
+            transform:scale(1.2,1.2);
+  &.active
+    background-color:transparent
+    color:#ddd
+    box-shadow: none
+    & a
+      color:#ddd
+    .playinfo
+      .img i.fa-angle-double-down
+        opacity:1
+    .playinfo:hover
+      .img i.fa-angle-double-up
+        opacity:0
+      background-color:transparent

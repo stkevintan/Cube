@@ -23,15 +23,13 @@ app.on('ready', function() {
   // Create the browser window.
   mainWindow = new BrowserWindow({
     width: 1200,
-    height: 600
+    height: 600,
+    frame: false,
+    transparent: true
   });
 
   // and load the index.html of the app.
   mainWindow.loadUrl('file://' + __dirname + '/index.html');
-  ipc.on('openDevTools', function() {
-    // Open the devtools.
-    mainWindow.openDevTools();
-  })
 
   // Emitted when the window is closed.
   mainWindow.on('closed', function() {
