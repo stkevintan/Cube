@@ -3,7 +3,7 @@
 
 
 ###Screenshots
-<img src="http://7vzrcz.com1.z0.glb.clouddn.com/s66.png"/>
-<img src="http://7vzrcz.com1.z0.glb.clouddn.com/s67.png"/>
+<img src="https://raw.githubusercontent.com/stkevintan/nw_musicbox/electron/src/snapshots/s68.png"/>
+<img src="https://raw.githubusercontent.com/stkevintan/nw_musicbox/electron/src/snapshots/s69.png"/>
 
 
