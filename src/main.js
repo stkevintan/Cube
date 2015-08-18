@@ -1,6 +1,7 @@
 var app = require('app'); // Module to control application life.
 var BrowserWindow = require('browser-window'); // Module to create native browser window.
 var ipc = require('ipc');
+var Menu = require('menu');
 // Report crashes to our server.
 require('crash-reporter').start();
 
@@ -24,8 +25,7 @@ app.on('ready', function() {
   mainWindow = new BrowserWindow({
     width: 1200,
     height: 600,
-    frame: false,
-    transparent: true
+    'auto-hide-menu-bar': true
   });
 
   // and load the index.html of the app.

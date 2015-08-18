@@ -143,6 +143,7 @@ ul.list-inline.list-seperator > li + li {
   padding: 0.2em 1em;
   white-space: nowrap;
   cursor: pointer;
+  color: #404040;
 }
 .dropdown.open > ul > li a:hover {
   background-color: #09c;
@@ -253,30 +254,21 @@ html {
 body {
   background-color: #efefef;
   color: #404040;
+  padding-top: 2rem;
+  padding-bottom: 3rem;
 }
 html,
 body,
 #body {
   height: 100%;
   overflow: hidden;
-}
-#titlebar {
-  position: fixed;
-  top: 0;
-  left: 0;
-  width: 100%;
-  z-index: 5;
-}
-#frame {
-  position: relative;
-  height: 100%;
-  padding: calc(2rem + 24px) 3px 3rem 3px;
   background-color: #efefef;
 }
 #footer {
   position: fixed;
+  left: 0;
   bottom: 0;
-  width: calc(100% - 6px);
+  width: 100%;
   height: 3rem;
   z-index: 5;
   background-color: #fff;
@@ -290,7 +282,7 @@ body,
   width: 20%;
 }
 #footer .playinfo * {
-  transition: all 0.2s ease-in-out;
+  transition: all 0.1s ease-in;
 }
 #footer .playinfo .img {
   display: inline-block;
@@ -308,6 +300,10 @@ body,
   font-size: 2rem;
   text-align: center;
   line-height: 3rem;
+}
+#footer .playinfo:hover {
+  background-color: #09c;
+  color: #fff;
 }
 #footer .playinfo:hover .img i.fa-angle-double-up {
   opacity: 1;
@@ -451,7 +447,8 @@ body,
   color: #ddd;
   box-shadow: none;
 }
-#footer.active a {
+#footer.active .playinfo,
+#footer.active ul.playset > li > a {
   color: #ddd;
 }
 #footer.active .playinfo .img i.fa-angle-double-down {
@@ -465,8 +462,9 @@ body,
 }
 #top-bar {
   position: fixed;
-  top: 24px;
-  width: calc(100% - 6px);
+  top: 0;
+  left: 0;
+  width: 100%;
   z-index: 4;
   background-color: #fff;
   height: 2.5rem;
@@ -512,10 +510,10 @@ body,
 #body .lrcview {
   position: absolute;
   left: 0;
-  top: 24px;
+  top: 0;
   z-index: 4;
   width: 100%;
-  height: calc(100% - 24px);
+  height: 100%;
   background-color: #fff;
   transition: all 0.2s ease-in-out;
   transform: scale(0, 0);

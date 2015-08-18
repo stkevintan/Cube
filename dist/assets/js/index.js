@@ -5,9 +5,8 @@ var emitter = new EventEmitter();
 var nowOpenedDropdown = null;
 window.onload = function() {
   console.log('render process initialization');
-  titlebar.appendTo('#titlebar');
+  //titlebar.appendTo('#titlebar');
   //事件委托
-
   document.addEventListener('click', function(e) {
     var stack = e.path,
       target;
@@ -26,8 +25,8 @@ window.onload = function() {
       target.classList.add('open');
       nowOpenedDropdown = target;
     }
-
   });
+
 }
 
 var showNotice = function(msg) {
