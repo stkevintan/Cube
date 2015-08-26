@@ -1,41 +1,93 @@
 var app = require('app'); // Module to control application life.
 var BrowserWindow = require('browser-window'); // Module to create native browser window.
 var ipc = require('ipc');
-var Menu = require('menu');
-// Report crashes to our server.
+var Storage = require('./libs/Storage');
+var st = new Storage();
+//set config to global
+global.config = st.get('config') || {};
+var mapping = require('./libs/Mapping');
+var __ = require('./libs/Utils');
+var async = require('async');
 require('crash-reporter').start();
 
-// Keep a global reference of the window object, if you don't, the window will
-// be closed automatically when the JavaScript object is GCed.
-var mainWindow = null;
+var win = null;
+var loadSrc = (function() {
+  var loading = false;
+  var loadQue = new __.queue();
+
+  function onEntryLoaded(err, entryList) {
+    if (err) {
+      win.webContents && win.webContents.send('entry-error', err);
+      return;
+    }
+    if (entryList && __.isArray(entryList) && entryList.length) {
+      this.entryList = entryList;
+    }
+    console.log('entryList',entryList);
+    win.webContents && win.webContents.send('entry-loaded', this);
+  }
+
+  function onSourceLoaded() {
+    console.log('source loaded');
+  }
+
+  function load(opts, cb) {
+    var loadKeys = [];
+    if (!opts)
+      loadKeys = Object.keys(mapping);
+    else
+      loadKeys = Object.keys(opts).filter(function(key) {
+        return (key in mapping) && opts[key];
+      });
+    console.log(opts,mapping,loadKeys);
+    //let UI enter loading state
+    win.webContents && win.webContents.send('loading-source', loadKeys);
+    //load sources async
+    async.each(loadKeys, function(key, cb) {
+      //need bind ?
+      console.log(key,__.inspect(mapping[key].loader));
+      mapping[key].loader(onEntryLoaded.bind(mapping[key]));
+      cb(null);
+    }, function() {
+      onSourceLoaded();
+      cb(null);
+    });
+  }
+
+  return function(opts) {
+    loadQue.push(opts);
+    if (loading) return;
+    loading = true;
+    async.whilst(function() {
+      return !loadQue.empty();
+    }, function(cb) {
+      load(loadQue.pop(), cb);
+    }, function(err) {
+      loading = false;
+    });
+  };
+})();
 
 // Quit when all windows are closed.
 app.on('window-all-closed', function() {
-  // On OS X it is common for applications and their menu bar
-  // to stay active until the user quits explicitly with Cmd + Q
   if (process.platform != 'darwin') {
     app.quit();
   }
 });
 
-// This method will be called when Electron has finished
-// initialization and is ready to create browser windows.
 app.on('ready', function() {
   // Create the browser window.
-  mainWindow = new BrowserWindow({
-    width: 1200,
-    height: 600,
-    'auto-hide-menu-bar': true
-  });
-
+  win = new BrowserWindow({width: 1200, height: 600});
+  loadSrc();
   // and load the index.html of the app.
-  mainWindow.loadUrl('file://' + __dirname + '/index.html');
-
+  win.loadUrl('file://' + __dirname + '/index.html');
+  win.setMenu(null);
+  win.openDevTools();
   // Emitted when the window is closed.
-  mainWindow.on('closed', function() {
+  win.on('closed', function() {
     // Dereference the window object, usually you would store windows
     // in an array if your app supports multi windows, this is the time
     // when you should delete the corresponding element.
-    mainWindow = null;
+    win = null;
   });
 });

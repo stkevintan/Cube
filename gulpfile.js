@@ -35,8 +35,8 @@ gulp.task('clean', function(cb) {
 
 gulp.task('node', ['clean'], function() {
   //glob : https://github.com/isaacs/node-glob#glob-primer
-  return gulp.src('./src/module/!(*Test*)')
-    .pipe(uglify())
+  return gulp.src('./src/libs/!(*Test*)')
+   // .pipe(uglify())
     .pipe(gulp.dest('./dist/libs/'))
 });
 
