@@ -4,17 +4,13 @@ var EventEmitter = require('events').EventEmitter;
 var emitter = new EventEmitter();
 var ipc = require('ipc');
 var nowOpenedDropdown = null;
-ipc.on('loading-source',function(){
-  console.log('loading-source',arguments);
-});
-ipc.on('entry-loaded',function(){
-  console.log('entry-loaded',arguments);
-});
-ipc.on('entry-error',function(){
-  console.log('entry-error',arguments);
-});
 window.onload = function() {
   console.log('render process initialization');
+  console.log('start load sources');
+  ipc.send('load-source');
+  ipc.on('source-loaded',function(source){
+    console.log('render-process',source);
+  })
   //titlebar.appendTo('#titlebar');
   //事件委托
   document.addEventListener('click', function(e) {

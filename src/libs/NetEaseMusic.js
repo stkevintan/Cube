@@ -1,3 +1,6 @@
+/**
+* NetEaseMusic API based on https://github.com/darknessomi/musicbox/blob/master/NEMbox/api.py
+*/
 var request = require('superagent');
 var async = require('async');
 var crypto = require('./Crypto');
@@ -36,15 +39,11 @@ function transfer(results) {
     var r = results[i];
     idArray.push(r.id);
     idMap[r.id] = i;
-    var o = {
-      src: ''
-    };
+    var o = {src: ''};
     o.id = r.id;
     o.name = r.name;
     o.album = r.album.name;
-    o.artist = r.artists.map(function(v) {
-      return v.name;
-    }).join();
+    o.artist = r.artists.map(function(v) {return v.name;}).join();
     songList.push(new Model.song(o));
   }
   process.nextTick(function() {
@@ -54,7 +53,7 @@ function transfer(results) {
       var idTmp = idArray.slice(k * 100, Math.min((k + 1) * 100, idArray.length));
       nem.songsDetail(idTmp, function(err, res) {
         if (err) {
-          console.warn('Failed to Fetch Song Details', err.stack, err);
+          console.warn('Failed to Fetch Song Details', err.stack);
           return;
         }
         for (var i = 0; i < res.length; i++) {

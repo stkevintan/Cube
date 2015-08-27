@@ -42,6 +42,6 @@ gulp.task('node', ['clean'], function() {
 
 gulp.task('default', ['html', 'css', 'js', 'node'], function() {
   return gulp.src('./src/main.js')
-    .pipe(uglify())
+    //.pipe(uglify())
     .pipe(gulp.dest('./dist/'));
 });

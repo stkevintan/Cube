@@ -14,7 +14,7 @@ global.config.musicDirs = global.config.musicDirs || (function() {
     } catch (e) {
       continue;
     }
-    if (stats && stats.isDirectory()) return choices[i];
+    if (stats && stats.isDirectory()) return [choices[i]];
   }
   //create a music dir
   fs.mkdir(choices[0], function(err) {
@@ -52,7 +52,7 @@ module.exports = {
       fs.traverseTree(dir, onFile, onDirectory, function(err) {
         if (err) {
           //test the arguments
-          console.log(arguments);
+          console.log('test fs.traverseTree arguments',arguments);
           callback(err);
           return;
         }

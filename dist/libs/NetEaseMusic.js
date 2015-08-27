@@ -1,3 +1,6 @@
+/**
+* NetEaseMusic API based on https://github.com/darknessomi/musicbox/blob/master/NEMbox/api.py
+*/
 var request = require('superagent');
 var async = require('async');
 var crypto = require('./Crypto');
