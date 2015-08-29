@@ -3,7 +3,7 @@
 *目前使用nw.js下个版本准备使用electron(atom-shell)*
  
 ###Release    
-~百度网盘: [linux64](http://pan.baidu.com/s/1mgrIGVQ)  ~ *破损，不支持邮箱登陆*  
+百度网盘: [linux64](http://pan.baidu.com/s/1mgrIGVQ)  *破损，不支持邮箱登陆*  
 
 ###Feature  
 1. 设定本地音乐文件夹，递归搜索本地音乐。  
