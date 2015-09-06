@@ -1,5 +1,4 @@
 var Model = require('./Model');
-var __ = require('./Utils');
 var localMusic = require('./LocalMusic');
 var netEaseMusic = require('./NetEaseMusic');
 var userMusic = require('./UserMusic');
@@ -20,4 +19,4 @@ module.exports = {
         name: '云音乐',
         loader: netEaseMusic.get
     })
-}
+};

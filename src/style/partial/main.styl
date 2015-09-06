@@ -1,108 +1,52 @@
 .main
-  width:75%
-  height:100%
-  min-height:100%
-  margin-left:25%
-  margin-left: 25%;
-  box-shadow: (- offset-shadow-light) 0 width-shadow-light color-shadow-light
-  section
+    width:75%
     height:100%
-    padding:base-gap 2*base-gap
-    .album-info
-      display:inline-block
-      semimargin:base-gap vertial
-      background-color:color-background-panel
-      img.album-cover
-        //margin中的百分比是根据父元素的width来算的！！
-        //margin-top: 10%
-        height:128px
-        width:128px
-        float:left
-        background-color:#f5f5f5
-      ul.album-desc
-        padding:base-gap
-        float:left
-        max-width:50%
-        & > li
-          margin-bottom:.5rem
-          a
-            display:table-cell
-          &::before
-            content:attr(data-item) ':'
-            display:table-cell
-            min-width:50px
-            font-weight: bold
-            semimargin: .5rem
-    .album-song
-      .ablum-song-head
-        background-color:#f5f5f5
-        h1
-          line-height:2.5rem
-        .btn-group a
-          line-height:2.5rem
-          semipadding: 0 vertial
-          border-width:0
-      table.album-song-list
-        width:100%
-        font-size:17px
-        background-color:color-background-panel
-        table-layout:fixed
-        counter-reset: item
-        th.index
-          width:2em
-        th.time
-          width:4em
-        th.artist
-          width:14%
-        th.album
-          width:20%
-        tr
-          td,th
-            line-height: 1em
-            font-size: 0.77778em
-            padding: 0.5em 0.55556em
-          th
-            font-weight: bold
-            background-color: color-background-grey
-            padding: 0.44444em 0.55556em 0.55556em
+    min-height:100%
+    margin-left:25%
+    box-shadow: (- offset-shadow-light) 0 width-shadow-light color-shadow-light
+    section
+        height:100%
+        padding:2*base-gap
 
-        tbody
-          tr
-            *
-              cursor:pointer
-              color:color-text-default
-            &:nth-of-type(2n)
-              background-color:#f5f5f5
-            &:hover *
-              color:color-text-active
-            &.active
-              background-color:color-active
-              *
-                color:white
-            td
-              @extend .txt
-            td.time
-              text-align:center
-            td.index
-              text-align:right
-              i
-                display:none
-              &::before
-                content:counter(item)
-                counter-increment:item
-                color: color-text-hint
-            &:hover td.index
-              i.hover
+    .playlist-intro
+        display:inline-block
+        height:128px
+        ul.playlist-desc
+            padding:base-gap
+    .btn-group.playlist-display
+        border:none
+        .button
+            line-height:2.5rem
+            semipadding:0 vertial
+    table.playlist-content
+        table-layout:fixed
+        th.index
+            width:2em
+        th.time
+            width:4em
+        th.artist
+            width:14%
+        th.album
+            width:20%
+
+        td.time
+            text-align:center
+        td.index
+            text-align:right
+        td.index  i
+            display:none
+        tr:hover td.index
+            i.hint
                 display:inline
-              i.active
+            i.active
                 display:none
-              &::before
+            &::before
                 content:''
-            &.active:hover td.index
-            &.active td.index
-              i.active
+        tr.active:hover td.index
+        tr.active td.index
+            i.active
                 display:inline
-              i.hover
+            i.hint
                 display:none
-              &::before
+            &::before
                 content:''

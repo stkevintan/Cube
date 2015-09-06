@@ -2,9 +2,9 @@ var fs = require('fs-plus');
 var path = require('path');
 var Model = require('./Model');
 var async = require('async');
-var __ = require('./Utils');
-const EXTS = ['.mp3', '.ogg', '.wav'];
-global.config.musicDirs = global.config.musicDirs || (function() {
+var EXTS = ['.mp3', '.ogg', '.wav'];
+var config=global.config;
+config.musicDirs = config.musicDirs || (function() {
     var choices = ['音乐', 'Music', 'music'].map(function(e) {
         return fs.normalize('~/' + e);
     });
@@ -24,7 +24,7 @@ global.config.musicDirs = global.config.musicDirs || (function() {
     return [choices[0]];
 })();
 
-global.config.searchLimit = global.config.searchLimit || 20;
+config.searchLimit = config.searchLimit || 20;
 
 module.exports = {
     add: function(newPath, cb) {
@@ -78,11 +78,11 @@ module.exports = {
                 }));
             }
 
-            function onDirectory(src) {
+            function onDirectory() {
                 return true;
             }
         }, function(err) {
             cb(err, entryList);
         });
     }
-}
+};

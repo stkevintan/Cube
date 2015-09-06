@@ -14,7 +14,8 @@ var header = {
     'Host': 'music.163.com',
     'Referer': 'http://music.163.com/',
     'User-Agent': 'Mozilla/5.0 (X11; Linux x86_64; rv:39.0) Gecko/20100101 Firefox/39.0'
-}
+};
+var config = global.config;
 config.searchLimit = config.searchLimit || 20;
 var httpRequest = function(method, url, data, callback) {
     var ret;
@@ -23,7 +24,7 @@ var httpRequest = function(method, url, data, callback) {
     var cookie = config.cookie;
     if (cookie) ret.set('Cookie', cookie);
     ret.set(header).timeout(10000).end(callback);
-}
+};
 
 function getUserID() {
     if (!config.cookie) return null;
@@ -45,7 +46,7 @@ function transfer(results) {
             name: r.name,
             album: r.album.name,
             artist: r.artists.map(function(v) {
-                return v.name
+                return v.name;
             }).join()
         });
         songList.push(song);
@@ -163,10 +164,10 @@ var nem = {
         }
         var url = 'http://music.163.com/api/user/playlist/';
         var params = {
-            "offset": argv[1] || 0,
-            "limit": argv[2] || 100,
-            "uid": uid
-        }
+            'offset': argv[1] || 0,
+            'limit': argv[2] || 100,
+            'uid': uid
+        };
         httpRequest('get', url, params, function(err, res) {
             if (err) {
                 callback(err);
@@ -205,7 +206,7 @@ var nem = {
             'offset': argv[2] || 0,
             'total': argv[3] || 'true',
             'limit': argv[4] || config.searchLimit
-        }
+        };
         httpRequest('post', url, params, function(err, res) {
             if (err) {
                 callback(err);
@@ -234,7 +235,7 @@ var nem = {
         });
     },
     lyric: function(id, callback) {
-        var url = "http://music.163.com/api/song/lyric";
+        var url = 'http://music.163.com/api/song/lyric';
         var params = {
             os: 'android',
             id: id,
@@ -275,5 +276,5 @@ var nem = {
             }));
         });
     }
-}
+};
 module.exports = nem;

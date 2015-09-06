@@ -1,21 +1,21 @@
 .main
     section.view-playlist.slim-scrollbar
-        .album-info.panel
-            img.album-cover(src='assets/img/album.png',alt='album cover')
-            ul.album-desc
+        .playlist-intro.panel.media
+            img.playlist-cover(src='assets/img/album.png',alt='album cover')
+            ul.media-body.list-prefix.playlist-desc
                 li(data-item='歌单名')
                     +_anchor(0)(class='txt') 我喜欢的音乐
                 li(data-item='创建者')
                     +_anchor(0)(class='txt') 工藤洗衣机0xffffff
                 li(data-item="描述")
                     +_anchor(0)(class='txt') 我喜欢的音乐balabalabala
-        .album-song.panel
-            .container-row.ablum-song-head
+        .playlist.panel
+            .container-row.heading
                 h1.left.title.txt 歌曲列表
-                .right.btn-group
+                .right.btn-group.playlist-display
                     a.button.active: i.fa.fa-list
                     a.button: i.fa.fa-th
-            table.album-song-list
+            table.stripe.index.playlist-content
                 thead: tr
                     th.index #
                     th.title 标题
@@ -32,7 +32,7 @@
                             tr.active
                                 td.index
                                     i.active.fa.fa-music 
-                                    i.hover.fa.fa-play
+                                    i.hint.fa.fa-play
                                 td.title=title
                                 td.time= times[index]
                                 td.artist= artists[index]
@@ -41,7 +41,7 @@
                             tr
                                 td.index
                                     i.active.fa.fa-music 
-                                    i.hover.fa.fa-play 
+                                    i.hint.fa.fa-play 
                                 td.title= title
                                 td.time= times[index]
                                 td.artist= artists[index]

@@ -19,18 +19,18 @@ Storage.prototype = {
             var stateString = fs.readFileSync(statePath, 'utf8');
         } catch (err) {
             if (!err.code == 'ENOENT')
-                console.warn("Error reading file: ", statePath, err.stack);
+                console.warn('Error reading file: ', statePath, err.stack);
             return;
         }
         try {
             var ret = JSON.parse(stateString);
         } catch (err) {
-            console.warn("Error parsing file: ", statePath, err.stack);
+            console.warn('Error parsing file: ', statePath, err.stack);
             return;
         }
         return ret;
     }
-}
+};
 
 function pathForKey(key) {
     return path.join(_path, key);

@@ -1,209 +1,280 @@
+//reset
 *
-  margin: 0
-  padding: 0
-  box-sizing: border-box
-.noAnimate *
-  transition-duration:0s !important
-.hidden
-  display:none
+    margin: 0
+    padding: 0
+    box-sizing: border-box
 
 a
-  color: color-text-default
-  outline: none
-  text-decoration: none
-  &:hover
-    color: color-text-active
-.panel
-  background-color:color-background-panel
-  //box-shadow:1px 1px 3px rgba(color-default,30%)
-  border-top:1px solid color-border
-  border-left:1px solid color-border
-  -webkit-filter:drop-shadow(2px 2px 2px rgba(color-default,30%))
-.button
-  display:block
-  background-color: color-background-grey
-  padding: 0.2rem 1rem
-  border: 1px solid color-border
-  //border-radius: 4px
-  white-space:nowrap
-  cursor:pointer
-  &:hover,&:focus
-    background-color: #F5F5F5
-  &.active,&:active
-    color:white
-    border-color: color-active
-    background-color: color-active
-
-.btn-group
-  .button
     display:inline-block
-    //border-radius:0
-    // .button:first-child
-    //   border-top-left-radius:4px
-    //   border-bottom-left-radius:4px
-    // .button:last-child
-    //   border-top-right-radius:4px
-    //   border-bottom-right-radius:4px
-  .button:nth-child(n+1)
-    margin-left:-1px
-.right
-  float:right
-.left
-  float:left
-
-.clearfix
-  &:after
-    content: ''
-    clear:both
-    display:table
-
-.container-row
-  width: 100%
-  @extend .clearfix
-
-.container-flow
-  width:100%
-  display:flex
-  justify-content:space-between
-  align-items:center
-
-.slim-scrollbar
-  overflow-y:auto
-  //overwrite scrollbar
-  &::-webkit-scrollbar
-    width:8px
-  &::-webkit-scrollbar-track
-    semimargin:1rem vertial
-  &::-webkit-scrollbar-thumb
-    border-radius:10px
-    background-color:color-border
-.hide-scrollbar
-  overflow-y:auto
-  &::-webkit-scrollbar
-    width:0
-.txt
-  overflow:hidden
-  text-overflow:ellipsis
-  white-space:nowrap
-
-h1.title
-  font-weight: normal
-  font-size: 1.2rem
-  semipadding: base-gap
+    color:inherit
+    outline: none
+    text-decoration: none
 
 ul > li
-  list-style:outside none none
-ul.list-inline
-  & > li
+    list-style:outside none none
+
+img
+    height:100%
+//utility
+.right
+    float:right
+
+.left
+    float:left
+
+.clearfix
+    &:after
+        content: ''
+        clear:both
+        display:table
+
+.noAnimate *
+    transition-duration:0s !important
+
+.hidden
+    display:none
+
+.txt
+    overflow:hidden
+    text-overflow:ellipsis
+    white-space:nowrap
+
+.slim-scrollbar
+    overflow-y:auto
+    //overwrite scrollbar
+    &::-webkit-scrollbar
+        width:8px
+    &::-webkit-scrollbar-track
+        semimargin:.5rem vertial
+    &::-webkit-scrollbar-thumb
+        border-radius:10px
+        background-color:color-border
+
+.hide-scrollbar
+    overflow-y:auto
+    &::-webkit-scrollbar
+        width:0
+
+
+//component
+.panel
+    margin-bottom:2*base-gap
+    background-color:color-background-panel
+    //box-shadow:1px 1px 3px rgba(color-default,30%)
+    border-top:1px solid color-border
+    border-left:1px solid color-border
+    -webkit-filter:drop-shadow(2px 2px 2px rgba(color-default,30%))
+.panel .heading
+    background-color:#f5f5f5
+    line-height:2.5rem
+
+.media
+    img
+        background-color:#f5f5f5
+        vertical-align:top
+    .media-body
+        display:inline-block
+        vertical-align:top
+
+.button
+    display:block
+    background-color: color-background-grey
+    line-height:1em
+    padding: half-gap base-gap
+    border: 1px solid color-border
+    //border-radius: 4px
+    white-space:nowrap //I prefer to avoid breaking line
+    cursor:pointer
+    &:hover,&:focus
+        background-color: color-background-grey
+    &.active,&:active
+        color: white
+        border-color: color-active
+        background-color: color-active
+
+.btn-group .button
+    display:inline-block
+    &:nth-child(n+2)
+        margin-left:-1px
+
+.container-row
+    width: 100%
+    @extend .clearfix
+
+.container-flow
+    width:100%
+    display:flex
+    justify-content:space-between
+    align-items:center
+
+h1.title
+    font-weight: normal
+    font-size: 1.2rem
+    semipadding: base-gap
+
+ul.list-inline > li
     display:inline-block
     vertical-align:middle
     semipadding: base-gap
-  &.list-seperator > li + li
-    border-left: 1px solid color-border
-.dropdown
-  // display:inline-block
-  // vertical-align:middle
-  position:relative
-  overflow:visible
-  & > ul
-    display:none
 
-.dropdown.open > ul
-  display:block
-  position:absolute
-  font-size:14px
-  width:8em
-  left:50%
-  bottom:100%
-  text-align:center
-  margin-left: (- @width / 2)
-  margin-bottom: .8em
-  background-color: color-background-panel
-  background-clip: padding-box
-  border: 1px solid color-border
-  box-shadow: 0px (- offset-shadow-light) width-shadow-light color-shadow-light
-  z-index:5
-  & > li
-    list-style:outside none none
-    a
-      display:block
-      padding:  0.2em 1em
-      white-space:nowrap
-      cursor:pointer
-      color: color-text-default
-      &:hover
-        background-color: color-active
-        color:white
+ul.list-seperator > li
+    position:relative
+    &:nth-of-type(n+2)::before
+        position:absolute
+        left:0
+        content:'|'
+        color:color-border
+
+ul.list-prefix  a
+    display:table-cell
+ul.list-prefix > li
+    margin-bottom:.5rem
+    &::before
+        content:attr(data-item) ':'
+        display:table-cell
+        min-width:5rem
+        font-weight: bold
+
+table
+    width:100%
+    font-size:17px
+    color: color-text-default
+    tr
+      td,th
+        line-height: 1em
+        font-size: 0.77778em
+        padding: 0.5em 0.55556em
+        @extend .txt
+      th
+        font-weight: bold
+        background-color: color-background-grey
+        padding: 0.44444em 0.55556em 0.55556em
+    tbody tr
+        cursor:pointer
+        &:hover *
+            color:color-text-active
+        &.active
+            background-color:color-active !important
+        &.active *
+            color:white
+table.stripe tbody tr:nth-of-type(2n)
+    background-color:#f5f5f5
+table.index
+    counter-reset: item
+    td.index::before
+        content:counter(item)
+        counter-increment:item
+        color: color-text-hint
+
+ul.list-menu
+    text-align:center
+    font-size:14px
+    & > li a
+        display:block
+        padding: 0.2em 1em
+        white-space: nowrap
+        cursor:pointer
+        &:active
+            background-color:color-active
+            color:white
+
+
+.dropdown
+    position:relative
+    overflow:visible
+    & > ul
+        display:none
+
+.dropdown.open > .content
+    display:block
+    position:absolute
+    left:50%
+    bottom:100%
+    width:8em
+    margin-left: (- @width / 2)
+    background-color: color-background-panel
+    color: color-text-default
+    border: 1px solid color-border
+    box-shadow: 0px (- offset-shadow-light) width-shadow-light color-shadow-light
+    z-index:5
 
 $arrow-size = 11px
+
 .arrow
-  position:relative
-  &::before,&::after
-    content:''
-    position:absolute
-    border-style:solid
-.arrow-down::before
-.arrow-down::after
-  bottom: - $arrow-size
-  left:50%
-  margin-left: @bottom
-  border-width: - @bottom
-  border-bottom-width: 0 !important
-  border-color: color-border transparent
-.arrow-down::after
-  bottom: -($arrow-size - 1)
-  margin-left: @bottom
-  border-width: - @bottom
-  border-color: white transparent
+    position:relative
+    &::before,&::after
+        content:''
+        position:absolute
+        border-style:solid
+
+.arrow-down
+    @extend .arrow
+    &::before
+    &::after
+        bottom: - $arrow-size
+        left:50%
+        margin-left: @bottom
+        border-width: - @bottom
+        border-bottom-width: 0 !important
+        border-color: color-border transparent
+    &::after
+        bottom: -($arrow-size - 1)
+        margin-left: @bottom
+        border-width: - @bottom
+        border-color: white transparent
 
 .arrow-right-reverse
-  &::before,&::after
-    right: 0
-    top:50%
-    margin-top: - $arrow-size
-    border-width: - @margin-top
-    border-left-width:0 !important
-    border-color:transparent color-border
-  &::after
-    right: 0
-    margin-top: -($arrow-size - 1)
-    border-width: - @margin-top
-    border-color:transparent color-background-panel
+    @extend .arrow
+    &::before
+    &::after
+        right: 0
+        top:50%
+        margin-top: - $arrow-size
+        border-width: - @margin-top
+        border-left-width:0 !important
+        border-color:transparent color-border
+    &::after
+        right: 0
+        margin-top: -($arrow-size - 1)
+        border-width: - @margin-top
+        border-color:transparent color-background-panel
 
 .arrow-bottom-reverse
-  &::before,&::after
-    bottom:0
-    left:50%
-    margin-left: - $arrow-size
-    border-width: - @margin-left
-    border-top-width: 0 !important
-    border-color: color-border transparent
-  &::after
-    bottom:0
-    margin-left: -($arrow-size - 1)
-    border-width: - @margin-left
-    border-color: color-background-panel transparent
+    @extend .arrow
+    &::before
+    &::after
+        bottom:0
+        left:50%
+        margin-left: - $arrow-size
+        border-width: - @margin-left
+        border-top-width: 0 !important
+        border-color: color-border transparent
+    &::after
+        bottom:0
+        margin-left: -($arrow-size - 1)
+        border-width: - @margin-left
+        border-color: color-background-panel transparent
 
 input
-  display:block
-  padding:.2rem
-  background-color: #f4f4f4
-  border: 1px solid color-border
-  border-radius: 2px
-  box-shadow: 0px 1px 1px rgba(0, 0, 0, 0.075) inset
-  transition: border-color 0.15s ease-in-out 0s, box-shadow 0.15s ease-in-out 0s
-  &:focus
-    border-color: color-active
-    outline:0 none
-    box-shadow: 0px 1px 1px rgba(0, 0, 0, 0.075) inset, 0px 0px 8px rgba(102, 175, 233, 0.6)
+    display:block
+    padding:.2rem
+    background-color: #f4f4f4
+    border: 1px solid color-border
+    //border-radius: 2px
+    box-shadow: 0px 1px 1px rgba(0, 0, 0, 0.075) inset
+    transition: border-color 0.15s ease-in-out 0s, box-shadow 0.15s ease-in-out 0s
+    &:focus
+        border-color: color-active
+        outline:0 none
+        box-shadow: 0px 1px 1px rgba(0, 0, 0, 0.075) inset, 0px 0px 8px rgba(102, 175, 233, 0.6)
 
 .input-prefix
-  position:relative
-  font-size:.8em
-  input
-    padding-left:1.5em
-    height:100%
-    width:100%
-  i
-    color: color-text-default
-    absolute-center(left:1em,height:1em,width:1em)
+    position:relative
+    font-size:.8em
+    input
+        padding-left:1.5em
+        height:100%
+        width:100%
+    i
+        color: color-text-default
+        absolute-center(left:1em,height:1em,width:1em)

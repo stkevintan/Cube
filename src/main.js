@@ -37,6 +37,7 @@ var loadSrc = function(sender) {
                 }
             });
         }, function(err) {
+            cb(err);
             console.warn('Failed to Load Source', err.stack);
         });
     }
@@ -48,7 +49,10 @@ var loadSrc = function(sender) {
         async.whilst(
             function() {return !loadQue.empty();},
             function(cb) {load(loadQue.pop(), cb);},
-            function(err) {loading = false;}
+            function(err) {
+                console.log(err);
+                loading = false;
+            }
         );
     };
 };
@@ -68,7 +72,7 @@ app.on('ready', function() {
     });
     // and load the index.html of the app.
     win.loadUrl('file://' + __dirname + '/index.html');
-    win.setMenu(null);
+    //win.setMenu(null);
     win.openDevTools();
     // Emitted when the window is closed.
     win.on('closed', function() {

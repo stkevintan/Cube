@@ -39,12 +39,12 @@ function rsaEncrypt(text, exponent, modulus) {
 }
 
 function createSecretKey(size) {
-    var keys = "abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789";
-    var key = "";
+    var keys = 'abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789';
+    var key = '';
     for (var i = 0; i < size; i++) {
         var pos = Math.random() * keys.length;
         pos = Math.floor(pos);
-        key = key + keys.charAt(pos)
+        key = key + keys.charAt(pos);
     }
     return key;
 }
@@ -61,8 +61,7 @@ var Crypto = {
         return {
             params: aesEncrypt(aesEncrypt(text, nonce), secKey),
             encSecKey: rsaEncrypt(secKey, pubKey, modulus)
-        }
+        };
     }
 };
 module.exports = Crypto;
-

@@ -4,15 +4,15 @@ exports.source = function(raw) {
     this.entryList = raw.entryList || [];
     this.loader = raw.loader || function(callback) {
         callback(null, null);
-    }
-}
+    };
+};
 
 exports.entry = function(raw) {
     this.name = raw.name;
     this.creator = raw.creator || 'Unknown';
     this.pic = raw.pic;
     this.songList = raw.songList || [];
-}
+};
 
 function song(raw) {
     this.name = raw.name || 'Unknown';
@@ -37,5 +37,5 @@ song.prototype.check = function() {
     } else {
         return this.id ? 3 : 0;
     }
-}
+};
 exports.song = song;

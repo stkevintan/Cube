@@ -1,40 +1,23 @@
 #top-bar
-  position:fixed
-  top:0
-  left:0
-  width:100%
-  z-index:4
-  background-color: color-background-head
-  height: 2.5rem
-  line-height: 1.2rem
-  box-shadow: 0 ($shadow-offset = offset-shadow-light) ($shadow-width = width-shadow-light) color-shadow-light
-  $space=(@height - @line-height)/2
-  ul.nav
-    list-style:none
-    li.active
-      position:relative
-      a
-        color:color-text-active
-      @extend .arrow
-      @extend .arrow-bottom-reverse
-      $width=0.5rem
-      $height=0.6rem
-      $offset = 1/font-size //1px
-      &::before,&::after
-        bottom: - $space
-        border-width: $height $width
-        margin-left: - $width
-      &::after
-        border-width: $height - $offset $width - $offset
-        margin-left:  - $width + $offset
-        border-color:color-background-body transparent
-        box-shadow: 0 ($height/2 + ($shadow-offset - 1)*$offset) $shadow-width  color-background-body;
-  ul.tool
-    font-size: 15px
+    position:fixed
+    top:0
+    left:0
+    width:100%
+    z-index:4
+    background-color: color-background-head
+    height: 2.5rem
+    line-height: 2.5rem
+    box-shadow: 0 ($shadow-offset = offset-shadow-light) ($shadow-width = width-shadow-light) color-shadow-light
+    ul.nav > li
+        color:color-text-hint
+    ul.nav > li.active
+        color: color-text-default
+    ul.tool
+        font-size: 15px
     .input-prefix
-      @media mq-small
-        display:none
-      height: 1.5rem
-      margin-top: -((@height - @line-height)/2)
-      semimargin: base-gap
-      float:left
+        height: 1.5rem
+        margin-top: -((@height - @line-height)/2)
+        semimargin: base-gap
+        float:left
+        @media mq-small
+            display:none

@@ -1,53 +1,55 @@
-#body .sidebar
-  float: left
-  width: 25%
-  height:100%
-  semipadding:base-gap vertial
-  font-size:12px
-  text-shadow 1px 1px 2px #fff
-  .collection
-    margin-bottom: 1em
+.sidebar
+    float: left
+    width: 25%
+    height:100%
+    semipadding:base-gap vertial
+    font-size:12px
+    text-shadow 1px 1px 2px #fff
+    .source
+        margin-bottom: 1em
     .tools
-      position:absolute
-      z-index: 1
-      right:base-gap
-      top:0
-      line-height:22px
-      display:none
-      font-size: 12px
-      a
-        color:color-text-hint
-        semipadding:0.3rem
-        &:hover
-          color:color-text-active
-    .head:hover .tools
-    .entries > li:hover .tools
-      display:block
-    .head,ol.entries > li
-      position:relative
-      semipadding:base-gap
+        position:absolute
+        z-index: 1
+        right:base-gap
+        top:0
+        line-height:22px
+        display:none
+        a
+            color:color-text-hint
+            semipadding:0.3rem
+        a:hover
+            color:color-text-active
+
+    .head
+    ol.entries > li
+        position:relative
+        semipadding:base-gap
+        &:hover .tools
+            display:block
+
     ol.entries
-      counter-reset: item
-      & > li
+        counter-reset: item
+
+    ol.entries > li
         display:block
         border-top-width:1px
-        &>a
-          display:block
-          cursor:pointer
-        &>a::before
-          content: counter(item)
-          counter-increment:item
-          margin-right: .5em
-          color: color-text-hint
+        & > a
+            display:block
+            cursor:pointer
+        & > a::before
+            content: counter(item)
+            counter-increment:item
+            margin-right: .5em
+            color: color-text-hint
+        &:hover
+        &:active
         &:hover > a::before
-          color:color-text-active
-        &.active
-          @extend .arrow
-          @extend .arrow-right-reverse
-          & > a,& > a::before
+        &.active > a::before
             color:color-text-active
-          &::after
+
+    ol.entries > li.active
+        @extend .arrow-right-reverse
+        &::after
             border-color: transparent color-background-body
-            box-shadow: 2px 0 0 color-background-body;
-          box-shadow:0 0 (width-shadow-light/2) color-shadow-light inset
-          background-color:lightness(color-background-body,90%)
+        box-shadow:0 0 (width-shadow-light/2) color-shadow-light inset
+        background-color:lightness(color-background-body,90%)

@@ -3,49 +3,17 @@
   padding: 0;
   box-sizing: border-box;
 }
-.noAnimate * {
-  transition-duration: 0s !important;
-}
-.hidden {
-  display: none;
-}
 a {
-  color: #404040;
+  display: inline-block;
+  color: inherit;
   outline: none;
   text-decoration: none;
 }
-a:hover {
-  color: #000;
+ul > li {
+  list-style: outside none none;
 }
-.panel {
-  background-color: #fff;
-  border-top: 1px solid #ccc;
-  border-left: 1px solid #ccc;
-  -webkit-filter: drop-shadow(2px 2px 2px rgba(0,0,0,0.3));
-}
-.button {
-  display: block;
-  background-color: #f0f0f0;
-  padding: 0.2rem 1rem;
-  border: 1px solid #ccc;
-  white-space: nowrap;
-  cursor: pointer;
-}
-.button:hover,
-.button:focus {
-  background-color: #f5f5f5;
-}
-.button.active,
-.button:active {
-  color: #fff;
-  border-color: #09c;
-  background-color: #09c;
-}
-.btn-group .button {
-  display: inline-block;
-}
-.btn-group .button:nth-child(n+1) {
-  margin-left: -1px;
+img {
+  height: 100%;
 }
 .right {
   float: right;
@@ -59,14 +27,18 @@ a:hover {
   clear: both;
   display: table;
 }
-.container-row {
-  width: 100%;
+.noAnimate * {
+  transition-duration: 0s !important;
 }
-.container-flow {
-  width: 100%;
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
+.hidden {
+  display: none;
+}
+.txt,
+table tr td,
+table tr th {
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
 }
 .slim-scrollbar {
   overflow-y: auto;
@@ -75,8 +47,8 @@ a:hover {
   width: 8px;
 }
 .slim-scrollbar::-webkit-scrollbar-track {
-  margin-top: 1rem;
-  margin-bottom: 1rem;
+  margin-top: 0.5rem;
+  margin-bottom: 0.5rem;
 }
 .slim-scrollbar::-webkit-scrollbar-thumb {
   border-radius: 10px;
@@ -88,11 +60,58 @@ a:hover {
 .hide-scrollbar::-webkit-scrollbar {
   width: 0;
 }
-.txt,
-.main section .album-song table.album-song-list tbody tr td {
-  overflow: hidden;
-  text-overflow: ellipsis;
+.panel {
+  margin-bottom: 2rem;
+  background-color: #fff;
+  border-top: 1px solid #ccc;
+  border-left: 1px solid #ccc;
+  -webkit-filter: drop-shadow(2px 2px 2px rgba(0,0,0,0.3));
+}
+.panel .heading {
+  background-color: #f5f5f5;
+  line-height: 2.5rem;
+}
+.media img {
+  background-color: #f5f5f5;
+  vertical-align: top;
+}
+.media .media-body {
+  display: inline-block;
+  vertical-align: top;
+}
+.button {
+  display: block;
+  background-color: #f0f0f0;
+  line-height: 1em;
+  padding: 0.5rem 1rem;
+  border: 1px solid #ccc;
   white-space: nowrap;
+  cursor: pointer;
+}
+.button:hover,
+.button:focus {
+  background-color: #f0f0f0;
+}
+.button.active,
+.button:active {
+  color: #fff;
+  border-color: #09c;
+  background-color: #09c;
+}
+.btn-group .button {
+  display: inline-block;
+}
+.btn-group .button:nth-child(n+2) {
+  margin-left: -1px;
+}
+.container-row {
+  width: 100%;
+}
+.container-flow {
+  width: 100%;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
 }
 h1.title {
   font-weight: normal;
@@ -100,17 +119,85 @@ h1.title {
   padding-left: 1rem;
   padding-right: 1rem;
 }
-ul > li {
-  list-style: outside none none;
-}
 ul.list-inline > li {
   display: inline-block;
   vertical-align: middle;
   padding-left: 1rem;
   padding-right: 1rem;
 }
-ul.list-inline.list-seperator > li + li {
-  border-left: 1px solid #ccc;
+ul.list-seperator > li {
+  position: relative;
+}
+ul.list-seperator > li:nth-of-type(n+2)::before {
+  position: absolute;
+  left: 0;
+  content: '|';
+  color: #ccc;
+}
+ul.list-prefix a {
+  display: table-cell;
+}
+ul.list-prefix > li {
+  margin-bottom: 0.5rem;
+}
+ul.list-prefix > li::before {
+  content: attr(data-item) ':';
+  display: table-cell;
+  min-width: 5rem;
+  font-weight: bold;
+}
+table {
+  width: 100%;
+  font-size: 17px;
+  color: #404040;
+}
+table tr td,
+table tr th {
+  line-height: 1em;
+  font-size: 0.77778em;
+  padding: 0.5em 0.55556em;
+}
+table tr th {
+  font-weight: bold;
+  background-color: #f0f0f0;
+  padding: 0.44444em 0.55556em 0.55556em;
+}
+table tbody tr {
+  cursor: pointer;
+}
+table tbody tr:hover * {
+  color: #000;
+}
+table tbody tr.active {
+  background-color: #09c !important;
+}
+table tbody tr.active * {
+  color: #fff;
+}
+table.stripe tbody tr:nth-of-type(2n) {
+  background-color: #f5f5f5;
+}
+table.index {
+  counter-reset: item;
+}
+table.index td.index::before {
+  content: counter(item);
+  counter-increment: item;
+  color: #8c8c8c;
+}
+ul.list-menu {
+  text-align: center;
+  font-size: 14px;
+}
+ul.list-menu > li a {
+  display: block;
+  padding: 0.2em 1em;
+  white-space: nowrap;
+  cursor: pointer;
+}
+ul.list-menu > li a:active {
+  background-color: #09c;
+  color: #fff;
 }
 .dropdown {
   position: relative;
@@ -119,47 +206,36 @@ ul.list-inline.list-seperator > li + li {
 .dropdown > ul {
   display: none;
 }
-.dropdown.open > ul {
+.dropdown.open > .content {
   display: block;
   position: absolute;
-  font-size: 14px;
-  width: 8em;
   left: 50%;
   bottom: 100%;
-  text-align: center;
+  width: 8em;
   margin-left: -4em;
-  margin-bottom: 0.8em;
   background-color: #fff;
-  background-clip: padding-box;
+  color: #404040;
   border: 1px solid #ccc;
   box-shadow: 0px -1px 6px rgba(0,0,0,0.24);
   z-index: 5;
 }
-.dropdown.open > ul > li {
-  list-style: outside none none;
-}
-.dropdown.open > ul > li a {
-  display: block;
-  padding: 0.2em 1em;
-  white-space: nowrap;
-  cursor: pointer;
-  color: #404040;
-}
-.dropdown.open > ul > li a:hover {
-  background-color: #09c;
-  color: #fff;
-}
 .arrow,
-#top-bar ul.nav li.active,
-#body .sidebar .collection ol.entries > li.active {
+.arrow-down,
+.arrow-right-reverse,
+.arrow-bottom-reverse,
+.sidebar ol.entries > li.active {
   position: relative;
 }
 .arrow::before,
-#top-bar ul.nav li.active::before,
-#body .sidebar .collection ol.entries > li.active::before,
+.arrow-down::before,
+.arrow-right-reverse::before,
+.arrow-bottom-reverse::before,
+.sidebar ol.entries > li.active::before,
 .arrow::after,
-#top-bar ul.nav li.active::after,
-#body .sidebar .collection ol.entries > li.active::after {
+.arrow-down::after,
+.arrow-right-reverse::after,
+.arrow-bottom-reverse::after,
+.sidebar ol.entries > li.active::after {
   content: '';
   position: absolute;
   border-style: solid;
@@ -180,9 +256,9 @@ ul.list-inline.list-seperator > li + li {
   border-color: #fff transparent;
 }
 .arrow-right-reverse::before,
-#body .sidebar .collection ol.entries > li.active::before,
+.sidebar ol.entries > li.active::before,
 .arrow-right-reverse::after,
-#body .sidebar .collection ol.entries > li.active::after {
+.sidebar ol.entries > li.active::after {
   right: 0;
   top: 50%;
   margin-top: -11px;
@@ -191,16 +267,14 @@ ul.list-inline.list-seperator > li + li {
   border-color: transparent #ccc;
 }
 .arrow-right-reverse::after,
-#body .sidebar .collection ol.entries > li.active::after {
+.sidebar ol.entries > li.active::after {
   right: 0;
   margin-top: -10px;
   border-width: 10px;
   border-color: transparent #fff;
 }
 .arrow-bottom-reverse::before,
-#top-bar ul.nav li.active::before,
-.arrow-bottom-reverse::after,
-#top-bar ul.nav li.active::after {
+.arrow-bottom-reverse::after {
   bottom: 0;
   left: 50%;
   margin-left: -11px;
@@ -208,8 +282,7 @@ ul.list-inline.list-seperator > li + li {
   border-top-width: 0 !important;
   border-color: #ccc transparent;
 }
-.arrow-bottom-reverse::after,
-#top-bar ul.nav li.active::after {
+.arrow-bottom-reverse::after {
   bottom: 0;
   margin-left: -10px;
   border-width: 10px;
@@ -220,7 +293,6 @@ input {
   padding: 0.2rem;
   background-color: #f4f4f4;
   border: 1px solid #ccc;
-  border-radius: 2px;
   box-shadow: 0px 1px 1px rgba(0,0,0,0.075) inset;
   transition: border-color 0.15s ease-in-out 0s, box-shadow 0.15s ease-in-out 0s;
 }
@@ -254,7 +326,7 @@ html {
 body {
   background-color: #efefef;
   color: #404040;
-  padding-top: 2rem;
+  padding-top: 2.5rem;
   padding-bottom: 3rem;
 }
 html,
@@ -294,16 +366,13 @@ body,
   left: 0;
   background-color: rgba(0,0,0,0.6);
   position: absolute;
-  width: 3rem;
-  height: 3rem;
   color: #fff;
   font-size: 2rem;
   text-align: center;
   line-height: 3rem;
 }
 #footer .playinfo:hover {
-  background-color: #09c;
-  color: #fff;
+  background-color: #f0f0f0;
 }
 #footer .playinfo:hover .img i.fa-angle-double-up {
   opacity: 1;
@@ -324,30 +393,22 @@ body,
   margin-left: 4em;
   margin-right: 4em;
 }
+#footer .track-wrap::before,
+#footer .track-wrap::after {
+  position: absolute;
+  height: 1.6em;
+  top: 50%;
+  width: 4em;
+  margin-top: -0.8em;
+  text-align: center;
+}
 #footer .track-wrap::before {
   content: attr(data-curtime);
-  width: 4em;
-  height: 1.6em;
-  position: absolute;
-  top: 50%;
-  left: 0;
-  margin-top: -0.8em;
-  margin-left: -2em;
-  margin-left: -3em;
+  left: -4em;
 }
 #footer .track-wrap::after {
   content: attr(data-duration);
-  width: 4em;
-  height: 1.6em;
-  position: absolute;
-  top: 50%;
-  left: 0;
-  margin-top: -0.8em;
-  margin-left: -2em;
-  text-align: right;
-  left: inherit;
-  right: 0;
-  margin-right: -3em;
+  right: -4em;
 }
 #footer .track {
   height: 0.2rem;
@@ -447,15 +508,15 @@ body,
   color: #ddd;
   box-shadow: none;
 }
-#footer.active .playinfo,
+#footer.active * {
+  transition: all 0.2s ease-out 0.2s;
+}
+#footer.active a.playinfo,
 #footer.active ul.playset > li > a {
   color: #ddd;
 }
 #footer.active .playinfo .img i.fa-angle-double-down {
   opacity: 1;
-}
-#footer.active .playinfo:hover {
-  background-color: transparent;
 }
 #footer.active .playinfo:hover .img i.fa-angle-double-up {
   opacity: 0;
@@ -468,59 +529,43 @@ body,
   z-index: 4;
   background-color: #fff;
   height: 2.5rem;
-  line-height: 1.2rem;
+  line-height: 2.5rem;
   box-shadow: 0 1px 6px rgba(0,0,0,0.24);
 }
-#top-bar ul.nav {
-  list-style: none;
+#top-bar ul.nav > li {
+  color: #8c8c8c;
 }
-#top-bar ul.nav li.active {
-  position: relative;
-}
-#top-bar ul.nav li.active a {
-  color: #000;
-}
-#top-bar ul.nav li.active::before,
-#top-bar ul.nav li.active::after {
-  bottom: -0.65rem;
-  border-width: 0.6rem 0.5rem;
-  margin-left: -0.5rem;
-}
-#top-bar ul.nav li.active::after {
-  border-width: 0.528571428571429rem 0.428571428571429rem;
-  margin-left: -0.428571428571429rem;
-  border-color: #efefef transparent;
-  box-shadow: 0 0.3rem 6px #efefef;
+#top-bar ul.nav > li.active {
+  color: #404040;
 }
 #top-bar ul.tool {
   font-size: 15px;
 }
-#top-bar ul.tool .input-prefix {
+#top-bar .input-prefix {
   height: 1.5rem;
-  margin-top: -0.15rem;
+  margin-top: 0.5rem;
   margin-left: 1rem;
   margin-right: 1rem;
   float: left;
 }
 @media screen and (max-width: 768px) {
-  #top-bar ul.tool .input-prefix {
+  #top-bar .input-prefix {
     display: none;
   }
 }
 #body .lrcview {
   position: absolute;
   left: 0;
-  top: 0;
+  top: 100%;
   z-index: 4;
   width: 100%;
   height: 100%;
   background-color: #fff;
-  transition: all 0.2s ease-in-out;
-  transform: scale(0, 0);
-  transform-origin: 0 100%;
+  transition: all 0.2s ease-in;
+  transform: none;
 }
 #body .lrcview.active {
-  transform: scale(1, 1);
+  transform: translateY(-100%);
 }
 #body .lrcview .blur-bg {
   position: absolute;
@@ -621,138 +666,73 @@ body,
   height: 100%;
   min-height: 100%;
   margin-left: 25%;
-  margin-left: 25%;
   box-shadow: -1px 0 6px rgba(0,0,0,0.24);
 }
 .main section {
   height: 100%;
-  padding: 1rem 2rem;
+  padding: 2rem;
 }
-.main section .album-info {
+.main .playlist-intro {
   display: inline-block;
-  margin-top: 1rem;
-  margin-bottom: 1rem;
-  background-color: #fff;
-}
-.main section .album-info img.album-cover {
   height: 128px;
-  width: 128px;
-  float: left;
-  background-color: #f5f5f5;
 }
-.main section .album-info ul.album-desc {
+.main .playlist-intro ul.playlist-desc {
   padding: 1rem;
-  float: left;
-  max-width: 50%;
 }
-.main section .album-info ul.album-desc > li {
-  margin-bottom: 0.5rem;
+.main .btn-group.playlist-display {
+  border: none;
 }
-.main section .album-info ul.album-desc > li a {
-  display: table-cell;
-}
-.main section .album-info ul.album-desc > li::before {
-  content: attr(data-item) ':';
-  display: table-cell;
-  min-width: 50px;
-  font-weight: bold;
-  margin-left: 0.5rem;
-  margin-right: 0.5rem;
-}
-.main section .album-song .ablum-song-head {
-  background-color: #f5f5f5;
-}
-.main section .album-song .ablum-song-head h1 {
-  line-height: 2.5rem;
-}
-.main section .album-song .ablum-song-head .btn-group a {
+.main .btn-group.playlist-display .button {
   line-height: 2.5rem;
   padding-top: 0;
   padding-bottom: 0;
-  border-width: 0;
 }
-.main section .album-song table.album-song-list {
-  width: 100%;
-  font-size: 17px;
-  background-color: #fff;
+.main table.playlist-content {
   table-layout: fixed;
-  counter-reset: item;
 }
-.main section .album-song table.album-song-list th.index {
+.main table.playlist-content th.index {
   width: 2em;
 }
-.main section .album-song table.album-song-list th.time {
+.main table.playlist-content th.time {
   width: 4em;
 }
-.main section .album-song table.album-song-list th.artist {
+.main table.playlist-content th.artist {
   width: 14%;
 }
-.main section .album-song table.album-song-list th.album {
+.main table.playlist-content th.album {
   width: 20%;
 }
-.main section .album-song table.album-song-list tr td,
-.main section .album-song table.album-song-list tr th {
-  line-height: 1em;
-  font-size: 0.77778em;
-  padding: 0.5em 0.55556em;
-}
-.main section .album-song table.album-song-list tr th {
-  font-weight: bold;
-  background-color: #f0f0f0;
-  padding: 0.44444em 0.55556em 0.55556em;
-}
-.main section .album-song table.album-song-list tbody tr * {
-  cursor: pointer;
-  color: #404040;
-}
-.main section .album-song table.album-song-list tbody tr:nth-of-type(2n) {
-  background-color: #f5f5f5;
-}
-.main section .album-song table.album-song-list tbody tr:hover * {
-  color: #000;
-}
-.main section .album-song table.album-song-list tbody tr.active {
-  background-color: #09c;
-}
-.main section .album-song table.album-song-list tbody tr.active * {
-  color: #fff;
-}
-.main section .album-song table.album-song-list tbody tr td.time {
+.main table.playlist-content td.time {
   text-align: center;
 }
-.main section .album-song table.album-song-list tbody tr td.index {
+.main table.playlist-content td.index {
   text-align: right;
 }
-.main section .album-song table.album-song-list tbody tr td.index i {
+.main table.playlist-content td.index i {
   display: none;
 }
-.main section .album-song table.album-song-list tbody tr td.index::before {
-  content: counter(item);
-  counter-increment: item;
-  color: #8c8c8c;
-}
-.main section .album-song table.album-song-list tbody tr:hover td.index i.hover {
+.main table.playlist-content tr:hover td.index i.hint {
   display: inline;
 }
-.main section .album-song table.album-song-list tbody tr:hover td.index i.active {
+.main table.playlist-content tr:hover td.index i.active {
   display: none;
 }
-.main section .album-song table.album-song-list tbody tr:hover td.index::before {
+.main table.playlist-content tr:hover td.index::before {
   content: '';
 }
-.main section .album-song table.album-song-list tbody tr.active:hover td.index i.active,
-.main section .album-song table.album-song-list tbody tr.active td.index i.active {
+.main table.playlist-content tr.active:hover td.index i.active,
+.main table.playlist-content tr.active td.index i.active {
   display: inline;
 }
-.main section .album-song table.album-song-list tbody tr.active:hover td.index i.hover,
-.main section .album-song table.album-song-list tbody tr.active td.index i.hover {
+.main table.playlist-content tr.active:hover td.index i.hint,
+.main table.playlist-content tr.active td.index i.hint {
   display: none;
 }
-.main section .album-song table.album-song-list tbody tr.active:hover td.index::before,
-.main section .album-song table.album-song-list tbody tr.active td.index::before {
+.main table.playlist-content tr.active:hover td.index::before,
+.main table.playlist-content tr.active td.index::before {
   content: '';
 }
-#body .sidebar {
+.sidebar {
   float: left;
   width: 25%;
   height: 100%;
@@ -761,65 +741,62 @@ body,
   font-size: 12px;
   text-shadow: 1px 1px 2px #fff;
 }
-#body .sidebar .collection {
+.sidebar .source {
   margin-bottom: 1em;
 }
-#body .sidebar .collection .tools {
+.sidebar .tools {
   position: absolute;
   z-index: 1;
   right: 1rem;
   top: 0;
   line-height: 22px;
   display: none;
-  font-size: 12px;
 }
-#body .sidebar .collection .tools a {
+.sidebar .tools a {
   color: #8c8c8c;
   padding-left: 0.3rem;
   padding-right: 0.3rem;
 }
-#body .sidebar .collection .tools a:hover {
+.sidebar .tools a:hover {
   color: #000;
 }
-#body .sidebar .collection .head:hover .tools,
-#body .sidebar .collection .entries > li:hover .tools {
-  display: block;
-}
-#body .sidebar .collection .head,
-#body .sidebar .collection ol.entries > li {
+.sidebar .head,
+.sidebar ol.entries > li {
   position: relative;
   padding-left: 1rem;
   padding-right: 1rem;
 }
-#body .sidebar .collection ol.entries {
+.sidebar .head:hover .tools,
+.sidebar ol.entries > li:hover .tools {
+  display: block;
+}
+.sidebar ol.entries {
   counter-reset: item;
 }
-#body .sidebar .collection ol.entries > li {
+.sidebar ol.entries > li {
   display: block;
   border-top-width: 1px;
 }
-#body .sidebar .collection ol.entries > li>a {
+.sidebar ol.entries > li > a {
   display: block;
   cursor: pointer;
 }
-#body .sidebar .collection ol.entries > li>a::before {
+.sidebar ol.entries > li > a::before {
   content: counter(item);
   counter-increment: item;
   margin-right: 0.5em;
   color: #8c8c8c;
 }
-#body .sidebar .collection ol.entries > li:hover > a::before {
+.sidebar ol.entries > li:hover,
+.sidebar ol.entries > li:active,
+.sidebar ol.entries > li:hover > a::before,
+.sidebar ol.entries > li.active > a::before {
   color: #000;
 }
-#body .sidebar .collection ol.entries > li.active {
+.sidebar ol.entries > li.active {
   box-shadow: 0 0 3px rgba(0,0,0,0.24) inset;
   background-color: #e6e6e6;
 }
-#body .sidebar .collection ol.entries > li.active > a,
-#body .sidebar .collection ol.entries > li.active > a::before {
-  color: #000;
-}
-#body .sidebar .collection ol.entries > li.active::after {
+.sidebar ol.entries > li.active::after {
   border-color: transparent #efefef;
-  box-shadow: 2px 0 0 #efefef;
 }

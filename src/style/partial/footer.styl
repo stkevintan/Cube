@@ -16,7 +16,6 @@ width-track=0.2rem
     display:block
     flex:0 0 auto
     width:20%
-    //max-width:30%
     .img
       display:inline-block
       position:relative
@@ -26,8 +25,6 @@ width-track=0.2rem
         left:0
         background-color:rgba(color-default,60%)
         position:absolute
-        width:3rem
-        height:3rem
         color:#fff
         font-size: 2rem
         text-align: center
@@ -35,8 +32,7 @@ width-track=0.2rem
     &:hover
       .img i.fa-angle-double-up
         opacity:1
-      background-color:color-active
-      color:white
+      background-color:color-background-grey
     img
       background-color:color-background-grey
       height:3rem
@@ -48,18 +44,20 @@ width-track=0.2rem
   .track-wrap
     flex:1 1 auto
     position:relative
-    semimargin:($pw=4em)
+    semimargin:($pw = 4em)
+    &::before,&::after
+      position:absolute
+      height:1.6em
+      top:50%
+      width:$pw
+      margin-top: - (1.6em/2)
+      text-align: center
     &::before
       content:attr(data-curtime)
-      absolute-center($pw,1.6em,50%,0)
-      margin-left: - ($pw - 1em)
+      left: - $pw
     &::after
       content:attr(data-duration)
-      absolute-center($pw,1.6em,50%,0)
-      text-align:right
-      left:inherit
-      right:0
-      margin-right: - ($pw - 1em)
+      right: - $pw
   .track
     height: width-track
     width:100%
@@ -137,16 +135,16 @@ width-track=0.2rem
             transition:all .2s ease-in-out
           &:hover::after
             transform:scale(1.2,1.2);
-  &.active
-    background-color:transparent
+
+#footer.active
+  *
+    transition:all 0.2s ease-out 0.2s
+  background-color:transparent
+  color:#ddd
+  box-shadow: none
+  & a.playinfo,& ul.playset > li > a
     color:#ddd
-    box-shadow: none
-    & .playinfo,& ul.playset > li > a
-      color:#ddd
-    .playinfo
-      .img i.fa-angle-double-down
-        opacity:1
-    .playinfo:hover
-      .img i.fa-angle-double-up
-        opacity:0
-      background-color:transparent
+  .playinfo .img i.fa-angle-double-down
+    opacity:1
+  .playinfo:hover .img i.fa-angle-double-up
+    opacity:0

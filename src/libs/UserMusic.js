@@ -21,5 +21,5 @@ um.get = function(cb) {
         })];
         cb(null, entryList);
     });
-}
+};
 module.exports = um;

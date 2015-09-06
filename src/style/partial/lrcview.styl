@@ -1,16 +1,15 @@
 #body .lrcview
   position:absolute
   left:0
-  top:0
+  top:100%
   z-index:4
   width:100%
   height:100%
   background-color:color-background-panel
-  transition:all .2s ease-in-out
-  transform:scale(0,0)
-  transform-origin:0 100%
+  transition:all .2s ease-in
+  transform:none
   &.active
-    transform:scale(1,1)
+    transform:translateY(-100%)
   .blur-bg
     $blur-size=10px
     position:absolute
