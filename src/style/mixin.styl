@@ -36,3 +36,35 @@ semipadding(val,dir='horizon')
   else
     padding-left: val
     padding-right: val
+    
+arrow-right-reverse($bgcolor,$arrow-size = 11px,$offset = 0)
+    @extend .arrow
+    &::before
+    &::after
+        right: 0
+        top:50%
+        margin-top: - $arrow-size
+        border-width: - @margin-top
+        border-left-width:0 !important
+        border-color:transparent color-border
+    &::after
+        right: - 2* ($offset + 1px)
+        margin-top: - ($arrow-size + $offset + 1px)
+        border-width: - @margin-top
+        border-color:transparent $bgcolor
+
+arrow-bottom-reverse($bgcolor,$arrow-size = 11px,$offset = 0)
+    @extend .arrow
+    &::before
+    &::after
+        bottom:0
+        left:50%
+        margin-left: - $arrow-size
+        border-width: - @margin-left
+        border-top-width: 0 !important
+        border-color: color-border transparent
+    &::after
+        bottom: - 2 * ($offset + 1px)
+        margin-left: - ($arrow-size + $offset + 1px)
+        border-width: - @margin-left
+        border-color: $bgcolor transparent

@@ -48,8 +48,6 @@
             color:color-text-active
 
     ol.entries > li.active
-        @extend .arrow-right-reverse
-        &::after
-            border-color: transparent color-background-body
+        arrow-right-reverse: color-background-body
         box-shadow:0 0 (width-shadow-light/2) color-shadow-light inset
         background-color:lightness(color-background-body,90%)

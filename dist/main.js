@@ -66,7 +66,7 @@ app.on('window-all-closed', function() {
 
 app.on('ready', function() {
     // Create the browser window.
-    win = new BrowserWindow({width: 1200,height: 600});
+    win = new BrowserWindow({width: 1200,height: 600,'auto-hide-menu-bar':true});
     ipc.on('load-source', function(event, args) {
         (loadSrc(event.sender))(args);
     });

@@ -15,6 +15,7 @@ ul > li
 
 img
     height:100%
+
 //utility
 .right
     float:right
@@ -61,16 +62,16 @@ img
     margin-bottom:2*base-gap
     background-color:color-background-panel
     //box-shadow:1px 1px 3px rgba(color-default,30%)
-    border-top:1px solid color-border
-    border-left:1px solid color-border
+    // border-top:1px solid color-border
+    // border-left:1px solid color-border
     -webkit-filter:drop-shadow(2px 2px 2px rgba(color-default,30%))
 .panel .heading
-    background-color:#f5f5f5
+    background-color:color-background-grey
     line-height:2.5rem
 
 .media
     img
-        background-color:#f5f5f5
+        background-color:color-background-grey
         vertical-align:top
     .media-body
         display:inline-block
@@ -79,8 +80,8 @@ img
 .button
     display:block
     background-color: color-background-grey
-    line-height:1em
-    padding: half-gap base-gap
+    line-height:2em
+    semipadding: base-gap
     border: 1px solid color-border
     //border-radius: 4px
     white-space:nowrap //I prefer to avoid breaking line
@@ -92,10 +93,15 @@ img
         border-color: color-active
         background-color: color-active
 
-.btn-group .button
-    display:inline-block
-    &:nth-child(n+2)
-        margin-left:-1px
+.btn-group
+    @extend .clearfix
+    border:1px solid color-border
+    .button
+        line-height:inherit
+        float:left
+        border-width:0
+    .button:nth-of-type(n+2)
+        border-left-width:1px
 
 .container-row
     width: 100%
@@ -114,14 +120,14 @@ h1.title
 
 ul.list-inline > li
     display:inline-block
-    vertical-align:middle
+    //vertical-align:middle
     semipadding: base-gap
 
 ul.list-seperator > li
     position:relative
     &:nth-of-type(n+2)::before
         position:absolute
-        left:0
+        left:-1.5px
         content:'|'
         color:color-border
 
@@ -134,6 +140,21 @@ ul.list-prefix > li
         display:table-cell
         min-width:5rem
         font-weight: bold
+
+ul.list-menu
+    text-align:center
+    font-size:14px
+    & > li a
+        display:block
+        padding: 0.2em 1em
+        white-space: nowrap
+        cursor:pointer
+        &:hover
+        &:active
+            background-color:color-active
+            color:white
+    & > li i
+        margin-right:.5rem
 
 table
     width:100%
@@ -166,23 +187,51 @@ table.index
         counter-increment:item
         color: color-text-hint
 
-ul.list-menu
-    text-align:center
-    font-size:14px
-    & > li a
-        display:block
-        padding: 0.2em 1em
-        white-space: nowrap
+.track
+    position:relative
+    height: .2rem
+    width:100%
+    background-color:color-border
+    & > *
+        position:absolute
+        height:100%
+        left:0
         cursor:pointer
-        &:active
-            background-color:color-active
-            color:white
+        transition:all .2s ease-in-out
+    .track-cover
+        background-color:color-active
+    .track-cover::after
+        content:''
+        position:absolute
+        width:.8rem
+        height: @width
+        right:0
+        top:0
+        margin-top:- ((@height -  .2rem)/2)
+        margin-right: - (@width / 2)
+        border-radius:50%
+        background-color:#64B5F6
+        box-shadow: 0 0 2px color-active
+        transition:all .2s ease-in-out
+    .track-cover:hover::after
+        transform:scale(1.2,1.2)
+
+.track.vertial
+    height:100%
+    width:.2rem
+    & > *
+        bottom:0
+        width:100%
+    .track-cover::after
+        margin-top: -.4rem
+        margin-right:- ((.8rem - .2rem)/2)
+
 
 
 .dropdown
     position:relative
     overflow:visible
-    & > ul
+    & > .content
         display:none
 
 .dropdown.open > .content
@@ -192,6 +241,7 @@ ul.list-menu
     bottom:100%
     width:8em
     margin-left: (- @width / 2)
+    margin-bottom: 0.8rem
     background-color: color-background-panel
     color: color-text-default
     border: 1px solid color-border
@@ -223,37 +273,6 @@ $arrow-size = 11px
         border-width: - @bottom
         border-color: white transparent
 
-.arrow-right-reverse
-    @extend .arrow
-    &::before
-    &::after
-        right: 0
-        top:50%
-        margin-top: - $arrow-size
-        border-width: - @margin-top
-        border-left-width:0 !important
-        border-color:transparent color-border
-    &::after
-        right: 0
-        margin-top: -($arrow-size - 1)
-        border-width: - @margin-top
-        border-color:transparent color-background-panel
-
-.arrow-bottom-reverse
-    @extend .arrow
-    &::before
-    &::after
-        bottom:0
-        left:50%
-        margin-left: - $arrow-size
-        border-width: - @margin-left
-        border-top-width: 0 !important
-        border-color: color-border transparent
-    &::after
-        bottom:0
-        margin-left: -($arrow-size - 1)
-        border-width: - @margin-left
-        border-color: color-background-panel transparent
 
 input
     display:block

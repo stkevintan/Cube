@@ -1,14 +1,13 @@
 #footer.container-flow
-    +_anchor('lrcview-toggle')(class='playinfo')
-        .img
-            img(src='assets/img/album.png')
-            i.fa.fa-angle-double-up
-            i.fa.fa-angle-double-down
-        h1.title.txt Music Box Dancer
-    .track-wrap(data-curtime='00:00',data-duration='12:02')
+    +_anchor('lrcview-toggle')(class='media playinfo')
+        i.fa.fa-angle-double-up
+        i.fa.fa-angle-double-down
+        img(src='assets/img/album.png')
+        h1.media-body.title.txt Music Box Dancer
+    .playtrack(data-curtime='00:00',data-duration='12:02')
         .track
             .track-buffered
-            .track-played
+            .track-cover.track-played
     
     ul.playset.list-inline
         li.previous: +_anchor('previous'): i.fa.fa-step-backward 
@@ -23,14 +22,15 @@
                     +_anchor(0)(class='hidden'): i.fa&attributes({class:'fa-'+icon})
                 else
                     +_anchor(0): i.fa&attributes({class:'fa-'+icon})
-            ul.arrow.arrow-down
+            ul.content.list-menu.arrow.arrow-down
                 each icon,index in icons    
                     li: +_anchor('loop-update',index)
                         i.fa&attributes({class:'fa-'+icon})
                         span=names[index]
         li.volume.dropdown
             +_anchor('0'): i.fa.fa-volume-up 
-            ul.arrow.arrow-down
-                li.vol-track
-                    .vol-cover
+            .content.arrow.arrow-down
+                .voltrack
+                    .track.vertial
+                        .track-cover
         li: +_anchor('0'): i.fa.fa-sliders

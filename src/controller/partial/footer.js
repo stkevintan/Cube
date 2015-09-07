@@ -1,36 +1,35 @@
 var footer = (function() {
-  var self = document.querySelector('#footer');
-  var $ = self.querySelector.bind(self);
-  var $$ = self.querySelectorAll.bind(self);
-  var ret = {};
-  var duration = null;
-  var dom = {
-    playinfo: $('.playinfo'),
-    trackWrap: $('.track-wrap'),
-    track: $('.track'),
-    trackPlayed: $('.track-played'),
-    trackBuffered: $('.track-buffered'),
-    previous: $('li.previous'),
-    play: $('li.play'),
-    pause: $('li.pause'),
-    next: $('li.next'),
-    loop: $('li.loop'),
-    loopIcons: $$('li.loop > a'),
-    volTrack: $('.vol-track'),
-    volCover: $('.vol-cover')
-  }
-  emitter.on('play-change', function() {
-
-  })
-  emitter.on('lrcview-toggle', function(state) {
-    if (__.isUndefined(state))
-      state = !self.classList.contains('active');
-    if (state) {
-      self.classList.add('active');
-    } else {
-      self.classList.remove('active');
-    }
-  });
+    var self = document.querySelector('#footer');
+    var $ = self.querySelector.bind(self);
+    var $$ = self.querySelectorAll.bind(self);
+    var ret = {};
+    var duration = null;
+    var dom = {
+        playinfo: $('.playinfo'),
+        trackWrap: $('.playtrack'),
+        track: $('.track'),
+        trackPlayed: $('.track-played'),
+        trackBuffered: $('.track-buffered'),
+        previous: $('li.previous'),
+        play: $('li.play'),
+        pause: $('li.pause'),
+        next: $('li.next'),
+        loop: $('li.loop'),
+        loopIcons: $$('li.loop > a'),
+        volTrack: $('.voltrack .track'),
+        volCover: $('.voltrack .track-cover')
+    };
+    emitter.on('play-change', function() {
+    });
+    emitter.on('lrcview-toggle', function(state) {
+        if (__.isUndefined(state))
+            state = !self.classList.contains('active');
+        if (state) {
+            self.classList.add('active');
+        } else {
+            self.classList.remove('active');
+        }
+    });
 
   emitter.on('play', function() {
     //To Do [call player]

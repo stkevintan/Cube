@@ -1,150 +1,91 @@
-width-track=0.2rem
+$height-footer=3rem
 #footer
-  position:fixed
-  left:0
-  bottom:0
-  width:100%
-  height: 3rem
-  z-index: 5
-  background-color: color-background-head
-  box-shadow: 0 (- offset-shadow-light) width-shadow-light color-shadow-light
-  .playinfo
-    *
-      transition:all .1s ease-in
-    height:3rem
-    line-height:3rem
-    display:block
-    flex:0 0 auto
-    width:20%
-    .img
-      display:inline-block
-      position:relative
-      i
-        opacity:0
-        top:0
-        left:0
-        background-color:rgba(color-default,60%)
-        position:absolute
-        color:#fff
-        font-size: 2rem
-        text-align: center
-        line-height: 3rem
-    &:hover
-      .img i.fa-angle-double-up
-        opacity:1
-      background-color:color-background-grey
-    img
-      background-color:color-background-grey
-      height:3rem
-      width:3rem
-    h1.title
-      display:inline-block
-      text-align:center
-      width: calc(100% - 3rem)
-  .track-wrap
-    flex:1 1 auto
-    position:relative
-    semimargin:($pw = 4em)
-    &::before,&::after
-      position:absolute
-      height:1.6em
-      top:50%
-      width:$pw
-      margin-top: - (1.6em/2)
-      text-align: center
-    &::before
-      content:attr(data-curtime)
-      left: - $pw
-    &::after
-      content:attr(data-duration)
-      right: - $pw
-  .track
-    height: width-track
+    position:fixed
+    left:0
+    bottom:0
     width:100%
-    background-color:color-border
-    *
-      position:absolute
-      height:100%
-      left:0
-      top:0
-      cursor:pointer
-      transition:all .2s ease-in-out
-    .track-buffered
-      width:60%
-      background-color:lightness(color-border,65%)
-    .track-played
-      width:40%
-      background-color:	color-active
-      &::after
-        content:''
-        position:absolute
-        width:.8rem
-        height: @width
-        right:0
-        top:0
-        margin-top:- ((@height - width-track)/2)
-        margin-right: - (@width / 2)
-        border-radius:50%
-        background-color:#64B5F6
-        box-shadow: 0 0 2px color-active
-        transition:all .2s ease-in-out
-      &:hover::after
-        transform:scale(1.2,1.2);
-  ul.playset
-    flex:0 0 auto
-    font-size:1.5rem
-    min-width: 100px
-    semimargin:.5em
-    & > li
-      width:2.5rem
-      text-align:center
-      padding:0
-    & > li.loop ul i
-      margin-right:0.5rem
-    & > li.volume ul
-      width:3em
-      margin-left: (- @width / 2)
-      li.vol-track
-        height: 10rem
-        width: width-track
-        margin: auto
-        background-color: color-border
-        semimargin: .7rem  vertial
+    height: $height-footer
+    z-index: 5
+    background-color: color-background-head
+    box-shadow: 0 (- offset-shadow-light) width-shadow-light color-shadow-light
+    .playinfo
         position:relative
-        .vol-cover
-          transition:all .2s ease-in-out
-          position:absolute
-          bottom:0
-          left:0
-          width:100%
-          height:40%
-          background-color:color-active
-          &::after
-            content:''
-            position:absolute
-            width:1rem
-            height: @width
-            left:0
+        height:$height-footer
+        line-height:$height-footer
+        display:block
+        flex:0 0 auto
+        i
+            opacity:0
             top:0
-            pointer:cursor
-            margin-left:- ((@width - width-track)/2)
-            margin-top: - (@height / 2)
-            border-radius:50%
-            background-color:#64B5F6
-            box-shadow: 0 0 2px color-active
-            transition:all .2s ease-in-out
-          &:hover::after
-            transform:scale(1.2,1.2);
+            left:0
+            height:$height-footer
+            width: @height
+            background-color:rgba(color-default,60%)
+            position:absolute
+            color:#fff
+            font-size: 2rem
+            text-align: center
+            line-height: $height-footer
+        h1.title
+            text-align:center
+            width: calc(100% - $height-footer)
+    .playinfo:hover
+        background-color:color-background-grey
+        i.fa-angle-double-up
+            opacity:1
+    .playinfo
+    .playinfo i
+        transition:all .1s ease-in
 
+    .playtrack
+        flex:1 1 auto
+        semimargin:($pw = 4em)
+        position:relative
+        &::before
+        &::after
+            position:absolute
+            height:1.6em
+            top:50%
+            width:$pw
+            margin-top: - (@height / 2)
+            text-align: center
+        &::before
+            content:attr(data-curtime)
+            left: - $pw
+        &::after
+            content:attr(data-duration)
+            right: - $pw
+        .track-buffered
+            width:60%
+            background-color:lightness(color-border,65%)
+        .track-played
+            width:40%
+
+    ul.playset
+        flex:0 0 auto
+        font-size:1.5rem
+        & > li
+            width:2.5rem
+            padding:0
+            text-align:center
+        li.loop .content
+            width:8rem
+            margin-left:- (@width / 2)
+        li.volume .content
+            width:3rem
+            margin-left: (- @width / 2)
+            .voltrack
+                width:.2rem
+                margin:base-gap auto
+                height:8rem
 #footer.active
-  *
-    transition:all 0.2s ease-out 0.2s
-  background-color:transparent
-  color:#ddd
-  box-shadow: none
-  & a.playinfo,& ul.playset > li > a
-    color:#ddd
-  .playinfo .img i.fa-angle-double-down
-    opacity:1
-  .playinfo:hover .img i.fa-angle-double-up
-    opacity:0
+    //background-color:transparent
+    //color:#ddd
+    //box-shadow: none
+    .playinfo
+        background-color:color-active
+        color:white
+    .playinfo i.fa-angle-double-down
+        opacity:1
+    .playinfo:hover i.fa-angle-double-up
+        opacity:0

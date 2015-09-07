@@ -1,6 +1,11 @@
 nav#top-bar.container-flow
     h1.title: a(href="#")=_title
-    ul.nav.list-seperator.list-inline
+    //- .btn-group
+    //-     a.button 发现音乐
+    //-     a.button.active 我的音乐
+    //-     a.button 私人FM
+    //-     a.button 设置
+    ul.nav.list-inline
         - var names=['发现音乐','我的音乐','私人FM','设置']
         - var actions=['0','0','0','0']
         each name,index in names
