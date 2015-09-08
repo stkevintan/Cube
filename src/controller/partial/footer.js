@@ -6,8 +6,8 @@ var footer = (function() {
     var duration = null;
     var dom = {
         playinfo: $('.playinfo'),
-        trackWrap: $('.playtrack'),
-        track: $('.track'),
+        playTrackWrap: $('.playtrack'),
+        playTrack: $('.playtrack .track'),
         trackPlayed: $('.track-played'),
         trackBuffered: $('.track-buffered'),
         previous: $('li.previous'),
@@ -56,10 +56,10 @@ var footer = (function() {
     //To Do
   });
   var playSlider = new slider({
-    track: dom.track,
+    track: dom.playTrack,
     cover: dom.trackPlayed,
     onUpdate: function(scale) {
-      dom.trackWrap.dataset.curtime = timeStr(duration * scale);
+      dom.playTrackWrap.dataset.curtime = timeStr(duration * scale);
     },
     onChange: function(scale) {
       //To Do
@@ -79,7 +79,7 @@ var footer = (function() {
   }
   ret.setDuration = function(time) {
     duration = time;
-    dom.trackWrap.dataset.duration = timeStr(time);
+    dom.playTrackWrap.dataset.duration = timeStr(time);
   }
 
   ret.setVolume = function(scale) {

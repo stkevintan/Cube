@@ -11,5 +11,6 @@ html(lang="zh-CN")
         include ./partial/body.jade
         include ./partial/footer.jade
         //load script
+        script(src='http://cdn.bootcss.com/react/0.14.0-beta3/react.js')
         - each name in ['sortable','index']
             +_script(name)

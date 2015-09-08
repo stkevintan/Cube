@@ -3,17 +3,14 @@ var __ = require('./libs/Utils');
 var EventEmitter = require('events').EventEmitter;
 var emitter = new EventEmitter();
 var ipc = require('ipc');
-var nowOpenedDropdown = null;
+window.nowOpenedDropdown = null;
+var srcMap={};
 window.onload = function() {
-  console.log('render process initialization');
-  console.log('start load sources');
-  ipc.send('load-source');
-  ipc.on('source-loaded',function(source){
-    console.log('render-process',source);
-  })
-  //titlebar.appendTo('#titlebar');
-  //事件委托
-  document.addEventListener('click', function(e) {
+    console.log('render process initialization');
+    ipc.send('load-source');
+
+    //事件委托
+    document.addEventListener('click', function(e) {
     var stack = e.path, target;
     for (var i = 0; i < stack.length - 1; i++) { // no need to check document
       if (stack[i].classList && stack[i].classList.contains('dropdown')) {
@@ -30,7 +27,7 @@ window.onload = function() {
       target.classList.add('open');
       nowOpenedDropdown = target;
     }
-  });
+    });
 }
 
 var showNotice = function(msg) {
@@ -113,8 +110,8 @@ var footer = (function() {
     var duration = null;
     var dom = {
         playinfo: $('.playinfo'),
-        trackWrap: $('.playtrack'),
-        track: $('.track'),
+        playTrackWrap: $('.playtrack'),
+        playTrack: $('.playtrack .track'),
         trackPlayed: $('.track-played'),
         trackBuffered: $('.track-buffered'),
         previous: $('li.previous'),
@@ -163,10 +160,10 @@ var footer = (function() {
     //To Do
   });
   var playSlider = new slider({
-    track: dom.track,
+    track: dom.playTrack,
     cover: dom.trackPlayed,
     onUpdate: function(scale) {
-      dom.trackWrap.dataset.curtime = timeStr(duration * scale);
+      dom.playTrackWrap.dataset.curtime = timeStr(duration * scale);
     },
     onChange: function(scale) {
       //To Do
@@ -186,7 +183,7 @@ var footer = (function() {
   }
   ret.setDuration = function(time) {
     duration = time;
-    dom.trackWrap.dataset.duration = timeStr(time);
+    dom.playTrackWrap.dataset.duration = timeStr(time);
   }
 
   ret.setVolume = function(scale) {
@@ -220,4 +217,63 @@ var lrcview = (function() {
       self.classList.remove('active');
     }
   })
+})();
+
+var sidebar=(function(){
+    var self = document.querySelector('#body .sidebar');
+    var EntryTool = React.createClass({displayName: "EntryTool",
+        render:function(){
+            var inner;
+            if(this.props.type==='entry')inner=['plus','pencil','trash'];
+            else inner=['plus','refresh'];
+            return React.createElement("div", {className: "tools"}, 
+            inner.map(function(name,index){
+                return React.createElement("a", {key: index, href: "javascript:0"}, React.createElement("i", {className: 'fa fa-'+name}))
+            })
+            )
+        }
+    });
+    var Entry = React.createClass({displayName: "Entry",
+        render:function(){
+            return React.createElement("li", {id: this.props.key}, 
+                    React.createElement("a", {href: "javascript:0", className: "txt"}, this.props.data.name), 
+                    React.createElement(EntryTool, {type: "entry"})
+            )
+        }
+    })
+    var Source = React.createClass({displayName: "Source",
+        render:function(){
+            return React.createElement("div", {className: "source"}, 
+                React.createElement("div", {className: "head"}, 
+                    React.createElement("h4", {className: "txt"}, this.props.data.name), 
+                    React.createElement(EntryTool, {type: "head"})
+                ), 
+                React.createElement("ol", {className: "entries"}, 
+                    this.props.data.entryList.map(function(entry,index){
+                        var key=this.props.id+'_'+index;
+                        return React.createElement(Entry, {key: key, id: key, data: entry})
+                    }.bind(this))
+                )
+            )
+        }
+    });
+    var Sidebar = React.createClass({displayName: "Sidebar",
+        getInitialState:function(){
+            return {};
+        },
+        componentDidMount:function(){
+            ipc.on('source-loaded',function(key,source){
+                this.state[key] = source;
+                this.setState(this.state);
+            }.bind(this));
+        },
+        render:function(){
+            var inner=[];
+            for(var key in this.state){
+                inner.push(React.createElement(Source, {key: key, id: key, data: this.state[key]}));
+            }
+            return React.createElement("div", null, inner)
+        }
+    });
+    React.render(React.createElement(Sidebar, null),self);
 })();

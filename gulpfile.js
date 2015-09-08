@@ -6,6 +6,7 @@ var jade = require('gulp-jade');
 var stylus = require('gulp-stylus');
 var concat = require('gulp-concat');
 var uglify = require('gulp-uglify');
+var jsx = require('gulp-jsxtransform')
 var del = require('del');
 gulp.task('html', function() {
   return gulp.src('./src/layout/index.jade').pipe(jade({
@@ -25,6 +26,7 @@ gulp.task('js', function() {
       './src/controller/partial/*.js'
     ])
     .pipe(concat('index.js'))
+    .pipe(jsx())
     //  .pipe(uglify())
     .pipe(gulp.dest('./dist/assets/js/'))
 });

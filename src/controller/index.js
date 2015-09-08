@@ -3,17 +3,14 @@ var __ = require('./libs/Utils');
 var EventEmitter = require('events').EventEmitter;
 var emitter = new EventEmitter();
 var ipc = require('ipc');
-var nowOpenedDropdown = null;
+window.nowOpenedDropdown = null;
+var srcMap={};
 window.onload = function() {
-  console.log('render process initialization');
-  console.log('start load sources');
-  ipc.send('load-source');
-  ipc.on('source-loaded',function(source){
-    console.log('render-process',source);
-  })
-  //titlebar.appendTo('#titlebar');
-  //事件委托
-  document.addEventListener('click', function(e) {
+    console.log('render process initialization');
+    ipc.send('load-source');
+
+    //事件委托
+    document.addEventListener('click', function(e) {
     var stack = e.path, target;
     for (var i = 0; i < stack.length - 1; i++) { // no need to check document
       if (stack[i].classList && stack[i].classList.contains('dropdown')) {
@@ -30,5 +27,5 @@ window.onload = function() {
       target.classList.add('open');
       nowOpenedDropdown = target;
     }
-  });
+    });
 }

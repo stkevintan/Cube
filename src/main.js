@@ -32,8 +32,8 @@ var loadSrc = function(sender) {
                 } else {
                     MP[key].entryList = entryList;
                     callback(null);
-                    console.log('source', __.inspect(MP[key], {depth: null}));
-                    sender.send('source-loaded', MP[key]);
+                    //console.log('source', __.inspect(MP[key], {depth: null}));
+                    sender.send('source-loaded', key, MP[key]);
                 }
             });
         }, function(err) {

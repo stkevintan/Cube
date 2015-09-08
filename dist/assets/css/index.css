@@ -43,9 +43,10 @@ table tr th {
 }
 .slim-scrollbar {
   overflow-y: auto;
+  margin-right: 3px;
 }
 .slim-scrollbar::-webkit-scrollbar {
-  width: 8px;
+  width: 6px;
 }
 .slim-scrollbar::-webkit-scrollbar-track {
   margin-top: 0.5rem;
@@ -53,6 +54,10 @@ table tr th {
 }
 .slim-scrollbar::-webkit-scrollbar-thumb {
   border-radius: 10px;
+  background-color: rgba(204,204,204,0.6);
+  transition: all 0.1s ease-in;
+}
+.slim-scrollbar::-webkit-scrollbar-thumb:hover {
   background-color: #ccc;
 }
 .hide-scrollbar {

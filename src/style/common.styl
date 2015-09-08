@@ -42,14 +42,18 @@ img
 
 .slim-scrollbar
     overflow-y:auto
+    margin-right: 3px
     //overwrite scrollbar
     &::-webkit-scrollbar
-        width:8px
+        width:6px
     &::-webkit-scrollbar-track
         semimargin:.5rem vertial
     &::-webkit-scrollbar-thumb
         border-radius:10px
-        background-color:color-border
+        background-color:rgba(color-border,.6)
+        transition:all .1s ease-in
+        &:hover
+            background-color:color-border
 
 .hide-scrollbar
     overflow-y:auto
