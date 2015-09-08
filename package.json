@@ -5,6 +5,7 @@
   "dependencies": {
     "async": "^1.2.0",
     "big-integer": "^1.5.5",
+    "fluxxor": "^1.7.1",
     "fs-plus": "^2.8.1",
     "react": "^0.13.3",
     "superagent": "^1.2.0",

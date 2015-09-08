@@ -1,102 +1,58 @@
-var footer = (function() {
-    var self = document.querySelector('#footer');
-    var $ = self.querySelector.bind(self);
-    var $$ = self.querySelectorAll.bind(self);
-    var ret = {};
-    var duration = null;
-    var dom = {
-        playinfo: $('.playinfo'),
-        playTrackWrap: $('.playtrack'),
-        playTrack: $('.playtrack .track'),
-        trackPlayed: $('.track-played'),
-        trackBuffered: $('.track-buffered'),
-        previous: $('li.previous'),
-        play: $('li.play'),
-        pause: $('li.pause'),
-        next: $('li.next'),
-        loop: $('li.loop'),
-        loopIcons: $$('li.loop > a'),
-        volTrack: $('.voltrack .track'),
-        volCover: $('.voltrack .track-cover')
-    };
-    emitter.on('play-change', function() {
-    });
-    emitter.on('lrcview-toggle', function(state) {
-        if (__.isUndefined(state))
-            state = !self.classList.contains('active');
-        if (state) {
-            self.classList.add('active');
-        } else {
-            self.classList.remove('active');
-        }
-    });
-
-  emitter.on('play', function() {
-    //To Do [call player]
-    dom.play.style.display = 'none';
-    dom.pause.style.display = 'inline-block';
-  });
-
-  emitter.on('pause', function() {
-    //To Do [call player]
-    dom.pause.style.display = 'none';
-    dom.play.style.display = 'inline-block';
-  });
-
-  emitter.on('loop-update', function(index) {
-    dom.loop.classList.remove('open');
-    nowOpenedDropdown = null;
-    //NodeList 没有forEach方法
-    for (var i = 0; i < dom.loopIcons.length; i++) {
-      var icon = dom.loopIcons[i];
-      if (i == index) icon.classList.remove('hidden');
-      else icon.classList.add('hidden');
-    }
-    console.log('switch to loop mode:', index);
-    //To Do
-  });
-  var playSlider = new slider({
-    track: dom.playTrack,
-    cover: dom.trackPlayed,
-    onUpdate: function(scale) {
-      dom.playTrackWrap.dataset.curtime = timeStr(duration * scale);
+var React = require('react');
+var Slider = require('../widget/slider');
+var InlineList = require('../widget/inlineList');
+var Dropdown = require('../widget/dropdown');
+var MenuList =require('../widget/menuList');
+var Icon = require('../widget/icon');
+var loopDict = [
+    {iconName:'refresh',name:'列表循环'},
+    {iconName:'repeat',name:'单曲循环'},
+    {iconName:'long-arrow-right',name:'顺序播放'},
+    {iconName:'random',name:'随机播放'}
+];
+module.exports = React.createClass({
+    onPlayTrackChange:function(){
+        console.log('play track change');
     },
-    onChange: function(scale) {
-      //To Do
-      emitter.emit('time-update', ~~(duration * scale));
+    getInitialState:function(){
+        return {playState:'PAUSED'};
+    },
+    getDefaultProps:function(){
+        return {loopMode:0}
+    },
+    render:function(){
+        var playIcon = this.state.playState=='PAUSED'?'play':'pause';
+        var loopPanel = <MenuList items={
+            loopDict.map(function(item){
+                return [<Icon iconName = {item.iconName} />,<span>{item.name}</span>]
+            })
+        } />
+        var volPanel = <div className='voltrack'>
+            <Slider dir='vertial' />
+        </div>
+        var playset = [
+            <Icon iconName='step-backward' />,
+            <Icon iconName = {playIcon} />,
+            <Icon iconName = 'step-forward' />,
+            <Dropdown content={loopPanel}>
+                <Icon iconName={loopDict[this.props.loopMode].iconName} />
+            </Dropdown>,
+            <Dropdown content={volPanel}>
+                <Icon iconName='volume-up' />
+            </Dropdown>,
+            <Icon iconName='sliders' />
+        ];
+        return <div>
+            <a href="javascript:0" className="media playinfo">
+                <Icon iconName='angle-double-up' />
+                <Icon iconName='angle-double-up' />
+                <img src="assets/img/album.png" />
+                <h1 className="media-body title txt">Music Box Dancer</h1>
+            </a>
+            <div data-curtime="00:00" data-duration="00:10" className="playtrack">
+                <Slider onChnage={this.onPlayTrackChange} />
+            </div>
+            <InlineList className='playset' items = {playset}/>
+        </div>
     }
-  });
-  var volSlider = new slider({
-    track: dom.volTrack,
-    cover: dom.volCover,
-    dir: 'vertial',
-    onUpdate: function(scale) {
-      emitter.emit('volume-update', scale);
-    }
-  })
-  ret.setCurTime = function(scale, update) {
-    return playSlider.setThumb(null, scale, update);
-  }
-  ret.setDuration = function(time) {
-    duration = time;
-    dom.playTrackWrap.dataset.duration = timeStr(time);
-  }
-
-  ret.setVolume = function(scale) {
-    return volSlider.setThumb(null, scale, false);
-  }
-
-  function timeStr(time) {
-    if (isNaN(time)) return '??:??';
-    var m = Math.floor(time / 60);
-    var s = Math.floor(time) % 60;
-    if (m < 10) m = '0' + m;
-    if (s < 10) s = '0' + s;
-    return m + ':' + s;
-  }
-
-  ret.setDuration(10);
-  ret.setCurTime(0);
-  ret.setVolume(0);
-  return ret;
-})();
+});

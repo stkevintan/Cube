@@ -1,14 +1,17 @@
-var titlebar = require('titlebar')();
+//var titlebar = require('titlebar')();
 var __ = require('./libs/Utils');
-var EventEmitter = require('events').EventEmitter;
-var emitter = new EventEmitter();
 var ipc = require('ipc');
+var React = require('react');
+//component
+var Sidebar = require('./assets/js/partial/sidebar');
+var Footer  = require('./assets/js/partial/footer');
 window.nowOpenedDropdown = null;
-var srcMap={};
 window.onload = function() {
     console.log('render process initialization');
     ipc.send('load-source');
-
+    //load component
+    React.render(Sidebar,document.querySelector('#body .sidebar'));
+    React.render(Footer,document.querySelector('#footer'));
     //事件委托
     document.addEventListener('click', function(e) {
     var stack = e.path, target;

@@ -19,13 +19,18 @@ gulp.task('css', function() {
     //compress: true
   })).pipe(gulp.dest('./dist/assets/css/'));
 });
-
+gulp.task('jsPartial',function(){
+    return gulp.src('./src/controller/partial/*.js')
+    .pipe(jsx())
+    .pipe(gulp.dest('./dist/assets/js/partial/'));
+});
+gulp.task('jsWidget',function(){
+    return gulp.src('./src/controller/widget/*.js')
+    .pipe(jsx())
+    .pipe(gulp.dest('./dist/assets/js/widget/'))
+})
 gulp.task('js', function() {
-  return gulp.src(['./src/controller/index.js',
-      './src/controller/utils.js',
-      './src/controller/partial/*.js'
-    ])
-    .pipe(concat('index.js'))
+  return gulp.src('./src/controller/index.js')
     .pipe(jsx())
     //  .pipe(uglify())
     .pipe(gulp.dest('./dist/assets/js/'))
@@ -42,7 +47,7 @@ gulp.task('node', ['clean'], function() {
     .pipe(gulp.dest('./dist/libs/'))
 });
 
-gulp.task('default', ['html', 'css', 'js', 'node'], function() {
+gulp.task('default', ['html', 'css', 'js','jsPartial','jsWidget', 'node'], function() {
   return gulp.src('./src/main.js')
     //.pipe(uglify())
     .pipe(gulp.dest('./dist/'));

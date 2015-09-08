@@ -1,36 +1,36 @@
 #footer.container-flow
-    +_anchor('lrcview-toggle')(class='media playinfo')
-        i.fa.fa-angle-double-up
-        i.fa.fa-angle-double-down
-        img(src='assets/img/album.png')
-        h1.media-body.title.txt Music Box Dancer
-    .playtrack(data-curtime='00:00',data-duration='12:02')
-        .track
-            .track-buffered
-            .track-cover.track-played
-    
-    ul.playset.list-inline
-        li.previous: +_anchor('previous'): i.fa.fa-step-backward 
-        li.play: +_anchor('play'): i.fa.fa-play 
-        li.pause(style="display:none"): +_anchor('pause'): i.fa.fa-pause 
-        li.next: +_anchor('next'): i.fa.fa-step-forward
-        li.loop.dropdown
-            - var icons = ['refresh','repeat','long-arrow-right','random'];
-            - var names = ['列表循环','单曲循环','顺序播放','随机播放'];
-            each icon,index in icons
-                if index
-                    +_anchor(0)(class='hidden'): i.fa&attributes({class:'fa-'+icon})
-                else
-                    +_anchor(0): i.fa&attributes({class:'fa-'+icon})
-            ul.content.list-menu.arrow.arrow-down
-                each icon,index in icons    
-                    li: +_anchor('loop-update',index)
-                        i.fa&attributes({class:'fa-'+icon})
-                        span=names[index]
-        li.volume.dropdown
-            +_anchor('0'): i.fa.fa-volume-up 
-            .content.arrow.arrow-down
-                .voltrack
-                    .track.vertial
-                        .track-cover
-        li: +_anchor('0'): i.fa.fa-sliders
+    //- +_anchor('lrcview-toggle')(class='media playinfo')
+    //-     i.fa.fa-angle-double-up
+    //-     i.fa.fa-angle-double-down
+    //-     img(src='assets/img/album.png')
+    //-     h1.media-body.title.txt Music Box Dancer
+    //- .playtrack(data-curtime='00:00',data-duration='12:02')
+    //-     .track
+    //-         .track-buffered
+    //-         .track-cover.track-played
+    //- 
+    //- ul.playset.list-inline
+    //-     li.previous: +_anchor('previous'): i.fa.fa-step-backward 
+    //-     li.play: +_anchor('play'): i.fa.fa-play 
+    //-     li.pause(style="display:none"): +_anchor('pause'): i.fa.fa-pause 
+    //-     li.next: +_anchor('next'): i.fa.fa-step-forward
+    //-     li.loop.dropdown
+    //-         - var icons = ['refresh','repeat','long-arrow-right','random'];
+    //-         - var names = ['列表循环','单曲循环','顺序播放','随机播放'];
+    //-         each icon,index in icons
+    //-             if index
+    //-                 +_anchor(0)(class='hidden'): i.fa&attributes({class:'fa-'+icon})
+    //-             else
+    //-                 +_anchor(0): i.fa&attributes({class:'fa-'+icon})
+    //-         ul.content.list-menu.arrow.arrow-down
+    //-             each icon,index in icons    
+    //-                 li: +_anchor('loop-update',index)
+    //-                     i.fa&attributes({class:'fa-'+icon})
+    //-                     span=names[index]
+    //-     li.volume.dropdown
+    //-         +_anchor('0'): i.fa.fa-volume-up 
+    //-         .content.arrow.arrow-down
+    //-             .voltrack
+    //-                 .track.vertial
+    //-                     .track-cover
+    //-     li: +_anchor('0'): i.fa.fa-sliders
