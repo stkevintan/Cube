@@ -11,6 +11,7 @@ a {
 }
 ul > li {
   list-style: outside none none;
+  cursor: pointer;
 }
 img {
   height: 100%;
@@ -159,14 +160,14 @@ ul.list-menu {
   text-align: center;
   font-size: 14px;
 }
-ul.list-menu > li a {
+ul.list-menu > li {
   display: block;
   padding: 0.2em 1em;
   white-space: nowrap;
   cursor: pointer;
 }
-ul.list-menu > li a:hover,
-ul.list-menu > li a:active {
+ul.list-menu > li:hover,
+ul.list-menu > li:active {
   background-color: #09c;
   color: #fff;
 }
@@ -269,8 +270,8 @@ table.index td.index::before {
   position: absolute;
   left: 50%;
   bottom: 100%;
-  width: 8em;
-  margin-left: -4em;
+  width: 8rem;
+  margin-left: -4rem;
   margin-bottom: 0.8rem;
   background-color: #fff;
   color: #333;

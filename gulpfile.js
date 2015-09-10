@@ -6,7 +6,8 @@ var jade = require('gulp-jade');
 var stylus = require('gulp-stylus');
 var concat = require('gulp-concat');
 var uglify = require('gulp-uglify');
-var jsx = require('gulp-jsxtransform')
+var babel = require('gulp-babel');
+var jsx = require('gulp-jsxtransform');
 var del = require('del');
 gulp.task('html', function() {
   return gulp.src('./src/layout/index.jade').pipe(jade({
@@ -19,22 +20,22 @@ gulp.task('css', function() {
     //compress: true
   })).pipe(gulp.dest('./dist/assets/css/'));
 });
-gulp.task('jsPartial',function(){
-    return gulp.src('./src/controller/partial/*.js')
-    .pipe(jsx())
-    .pipe(gulp.dest('./dist/assets/js/partial/'));
-});
-gulp.task('jsWidget',function(){
-    return gulp.src('./src/controller/widget/*.js')
-    .pipe(jsx())
-    .pipe(gulp.dest('./dist/assets/js/widget/'))
-})
-gulp.task('js', function() {
-  return gulp.src('./src/controller/index.js')
-    .pipe(jsx())
-    //  .pipe(uglify())
-    .pipe(gulp.dest('./dist/assets/js/'))
-});
+// gulp.task('jsPartial',function(){
+//     return gulp.src('./src/controller/partial/*.js')
+//     .pipe(jsx())
+//     .pipe(gulp.dest('./dist/assets/js/partial/'));
+// });
+// gulp.task('jsWidget',function(){
+//     return gulp.src('./src/controller/widget/*.js')
+//     .pipe(jsx())
+//     .pipe(gulp.dest('./dist/assets/js/widget/'))
+// })
+// gulp.task('js', function() {
+//   return gulp.src('./src/controller/index.js')
+//     .pipe(jsx())
+//     //  .pipe(uglify())
+//     .pipe(gulp.dest('./dist/assets/js/'))
+// });
 
 gulp.task('clean', function(cb) {
   del(['./dist/libs/*'], cb);
@@ -46,8 +47,12 @@ gulp.task('node', ['clean'], function() {
    // .pipe(uglify())
     .pipe(gulp.dest('./dist/libs/'))
 });
-
-gulp.task('default', ['html', 'css', 'js','jsPartial','jsWidget', 'node'], function() {
+gulp.task('es6',function(){
+    return gulp.src('./src/script/**/*.js')
+        .pipe(babel())
+        .pipe(gulp.dest('./dist/script/'));
+})
+gulp.task('default', ['html', 'css', 'es6', 'node'], function() {
   return gulp.src('./src/main.js')
     //.pipe(uglify())
     .pipe(gulp.dest('./dist/'));

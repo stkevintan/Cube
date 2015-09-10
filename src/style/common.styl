@@ -12,6 +12,7 @@ a
 
 ul > li
     list-style:outside none none
+    cursor:pointer
 
 img
     height:100%
@@ -148,7 +149,7 @@ ul.list-prefix > li
 ul.list-menu
     text-align:center
     font-size:14px
-    & > li a
+    & > li
         display:block
         padding: 0.2em 1em
         white-space: nowrap
@@ -157,8 +158,8 @@ ul.list-menu
         &:active
             background-color:color-active
             color:white
-    & > li i
-        margin-right:.5rem
+        i
+            margin-right:.5rem
 
 table
     width:100%
@@ -243,7 +244,7 @@ table.index
     position:absolute
     left:50%
     bottom:100%
-    width:8em
+    width:8rem
     margin-left: (- @width / 2)
     margin-bottom: 0.8rem
     background-color: color-background-panel

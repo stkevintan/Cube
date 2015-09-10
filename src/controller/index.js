@@ -1,17 +1,18 @@
 //var titlebar = require('titlebar')();
 var __ = require('./libs/Utils');
 var ipc = require('ipc');
-var React = require('react');
 //component
 var Sidebar = require('./assets/js/partial/sidebar');
-var Footer  = require('./assets/js/partial/footer');
+//var Footer  = require('./assets/js/partial/footer');
 window.nowOpenedDropdown = null;
 window.onload = function() {
     console.log('render process initialization');
     ipc.send('load-source');
+    console.log(document.querySelector('#body .sidebar'));
     //load component
+    console.log(Sidebar);
     React.render(Sidebar,document.querySelector('#body .sidebar'));
-    React.render(Footer,document.querySelector('#footer'));
+    //React.render(Footer,document.querySelector('#footer'));
     //事件委托
     document.addEventListener('click', function(e) {
     var stack = e.path, target;

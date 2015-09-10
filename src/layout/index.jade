@@ -9,7 +9,7 @@ html(lang="zh-CN")
     body
         include ./partial/head.jade
         include ./partial/body.jade
-        include ./partial/footer.jade
+        #footer
         //load script
-        - each name in ['sortable','index']
-            +_script(name)
+        //script(src='http://cdn.bootcss.com/react/0.14.0-beta3/react.js')
+        script(src='script/index.js')
