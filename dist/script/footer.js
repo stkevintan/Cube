@@ -55,14 +55,13 @@ var Footer = _react2['default'].createClass({
             'div',
             { className: 'container-flow' },
             _react2['default'].createElement(
-                'a',
-                { href: 'javascript:0', className: 'media playinfo' },
+                _component.Media,
+                { className: 'clickable playinfo', imgUrl: 'assets/img/album.png' },
                 _react2['default'].createElement(_component.Icon, { iconName: 'angle-double-up' }),
                 _react2['default'].createElement(_component.Icon, { iconName: 'angle-double-up' }),
-                _react2['default'].createElement('img', { src: 'assets/img/album.png' }),
                 _react2['default'].createElement(
                     'h1',
-                    { className: 'media-body title txt' },
+                    { className: 'title txt' },
                     'Music Box Dancer'
                 )
             ),

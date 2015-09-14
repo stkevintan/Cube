@@ -5,45 +5,34 @@ var prevent = function(e) {
     e.stopPropagation();
   }
 }
-document.querySelector('#body .main').onClick=()=>console.log('click main');
+let nowOpenedDropdown=null;
+//事件委托
+ document.addEventListener('click', function(e) {
+ var stack = e.path, target;
+ for (var i = 0; i < stack.length - 1; i++) { // no need to check document
+   if (stack[i].classList && stack[i].classList.contains('dropdown')) {
+     target = stack[i];
+     break;
+   }
+ }
+ if (target == nowOpenedDropdown) return;
+ if (nowOpenedDropdown) {
+   nowOpenedDropdown.classList.remove('open');
+   nowOpenedDropdown = null;
+ }
+ if (target) {
+   target.classList.add('open');
+   nowOpenedDropdown = target;
+ }
+ });
 export var Dropdown = React.createClass({
     getInitialState:() => ({opened:false}),
     getDefaultProps:() => ({instant:false}),
     componentDidMount:function(){
-        this.hide();
-        this.getDOMNode().addEventListener('click',this.onClickDropdown);
-        this.refs.content.getDOMNode().addEventListener('click',this.onClickContent);
-    },
-    hide:function(){
-        this.state.opened=false;
-        this.setState(this.state);
-        document.removeEventListener('click',this.hide);
-    },
-    show:function(){
-        this.state.opened=true;
-        this.setState(this.state);
-        document.addEventListener('click',this.hide);
-    },
-    onClickDropdown:function(e){
-        prevent(e);
-        console.log('click dropdown',e.path);
-        document.dispatchEvent(new MouseEvent('click', {
-            'view': window,
-            'bubbles': true,
-            'cancelable': true
-        }));
-        this.show();
-    },
-    onClickContent:function(e){
-        prevent(e);
-        console.log('click content');
-        if(this.props.instant){
-            this.hide();
-        }
     },
     render:function(){
        let [content,...children] = this.props.children;
-       return <div className={`dropdown ${this.state.opened?'open':''}`}>
+       return <div className='dropdown'>
             <div ref='content' className='content arrow arrow-down'>
                 {content}
             </div>
@@ -57,7 +46,7 @@ export var Icon = React.createClass({
         iconName:React.PropTypes.string.isRequired
     },
     render:function(){
-        return <i className={`fa fa-${this.props.iconName}`}></i>
+        return <i className={`${this.props.className} fa fa-${this.props.iconName}`}></i>
     }
 });
 export var Slider = React.createClass({
@@ -121,5 +110,20 @@ export var Slider = React.createClass({
             {this.props.children}
             <div refs='trackCover' className = 'track-cover' style={scale}></div>
         </div>
+    }
+});
+export var Media = React.createClass({
+    render:function(){
+        return <div className={this.props.className+' media'}>
+            <img src={this.props.imgUrl} />
+            <div className='media-body'>{this.props.children}</div>
+        </div>
+    }
+});
+export var Button = React.createClass({
+    render:function(){
+        return <a className={this.props.className+' button '+(this.props.active?'active':null)}>
+        {this.props.children}
+        </a>
     }
 })

@@ -10,7 +10,8 @@ exports.source = function(raw) {
 exports.entry = function(raw) {
     this.name = raw.name;
     this.creator = raw.creator || 'Unknown';
-    this.pic = raw.pic;
+    this.pic = raw.pic||'assets/img/album.png';
+    this.desc = raw.desc||'None'
     this.songList = raw.songList || [];
 };
 

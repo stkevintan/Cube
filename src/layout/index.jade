@@ -8,7 +8,9 @@ html(lang="zh-CN")
         +_style('font-awesome.min','index')
     body
         include ./partial/head.jade
-        include ./partial/body.jade
+        #body.container-row
+            .sidebar.hide-scrollbar
+            .view
         #footer
         //load script
         //script(src='http://cdn.bootcss.com/react/0.14.0-beta3/react.js')

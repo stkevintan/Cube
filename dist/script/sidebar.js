@@ -59,7 +59,7 @@ var Source = _react2['default'].createClass({
 
         return _react2['default'].createElement(
             'div',
-            { className: 'source' },
+            { className: 'source ' + this.props.className },
             _react2['default'].createElement(
                 'div',
                 { className: 'head' },
@@ -81,7 +81,6 @@ var Source = _react2['default'].createClass({
         );
     }
 });
-
 var Sidebar = _react2['default'].createClass({
     displayName: 'Sidebar',
 
@@ -103,7 +102,7 @@ var Sidebar = _react2['default'].createClass({
         }
         return _react2['default'].createElement(
             'div',
-            null,
+            { className: 'sidebar' },
             inner
         );
     }

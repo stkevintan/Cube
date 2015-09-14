@@ -28,7 +28,7 @@ var Entry = React.createClass({
 
 var Source = React.createClass({
     render:function() {
-        return <div className='source'>
+        return <div className={'source ' + this.props.className}>
             <div className='head'>
                 <h4 className='txt'>{this.props.data.name}</h4>
                 <EntryTool type = 'head' />
@@ -42,7 +42,6 @@ var Source = React.createClass({
         </div>
     }
 });
-
 export var Sidebar = React.createClass({
     getInitialState:function(){
         return {}
@@ -58,6 +57,6 @@ export var Sidebar = React.createClass({
         for(let key in this.state){
             inner.push(<Source key={key} id={key} data={this.state[key]} />);
         }
-        return <div>{inner}</div>
+        return <div className='sidebar'>{inner}</div>
     }
 });

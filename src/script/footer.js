@@ -1,5 +1,5 @@
 import React from 'react'
-import {Dropdown,Icon,Slider} from './component'
+import {Dropdown,Icon,Slider,Media} from './component'
 
 const loopDict = [
     {iconName:'refresh',name:'列表循环'},
@@ -37,29 +37,28 @@ export const Footer = React.createClass({
             {item.name}
         </li>);
         return <div className='container-flow'>
-                <a href="javascript:0" className="media playinfo">
-                    <Icon iconName='angle-double-up' />
-                    <Icon iconName='angle-double-up' />
-                    <img src="assets/img/album.png" />
-                    <h1 className="media-body title txt">Music Box Dancer</h1>
-                </a>
-                <div data-curtime={timeStr(this.state.curTime)} data-duration={timeStr(this.state.duration)} className="playtrack">
-                    <Slider onChange={this.onPlayTrackChange} onUpdate={this.onPlayTrackUpdate} />
-                </div>
-                <ul className='list-inline playset'>
-                    <li><Icon iconName='step-backward' /></li>
-                    <li onClick={this.onPlayIconClick}><Icon iconName = {playIcon} /></li>
-                    <li><Icon iconName = 'step-forward' /></li>
-                    <li><Dropdown>
-                        <ul className='list-menu'>{MenuItems}</ul>
-                        <Icon iconName={loopDict[this.props.loopMode].iconName} />
-                    </Dropdown></li>
-                    <li className='volume'><Dropdown>
-                        <div className='voltrack'><Slider dir='vertial' /></div>
-                        <Icon iconName='volume-up' />
-                    </Dropdown></li>
-                    <li><Icon iconName='sliders' /></li>
-                </ul>
+            <Media className="clickable playinfo" imgUrl='assets/img/album.png'>
+                <Icon iconName='angle-double-up' />
+                <Icon iconName='angle-double-up' />
+                <h1 className="title txt">Music Box Dancer</h1>
+            </Media>
+            <div data-curtime={timeStr(this.state.curTime)} data-duration={timeStr(this.state.duration)} className="playtrack">
+                <Slider onChange={this.onPlayTrackChange} onUpdate={this.onPlayTrackUpdate} />
             </div>
+            <ul className='list-inline playset'>
+                <li><Icon iconName='step-backward' /></li>
+                <li onClick={this.onPlayIconClick}><Icon iconName = {playIcon} /></li>
+                <li><Icon iconName = 'step-forward' /></li>
+                <li><Dropdown>
+                    <ul className='list-menu'>{MenuItems}</ul>
+                    <Icon iconName={loopDict[this.props.loopMode].iconName} />
+                </Dropdown></li>
+                <li className='volume'><Dropdown>
+                    <div className='voltrack'><Slider dir='vertial' /></div>
+                    <Icon iconName='volume-up' />
+                </Dropdown></li>
+                <li><Icon iconName='sliders' /></li>
+            </ul>
+        </div>
     }
 });

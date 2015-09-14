@@ -35,6 +35,9 @@ img {
 .hidden {
   display: none;
 }
+.clickable {
+  cursor: pointer;
+}
 .txt,
 table tr td,
 table tr th {
@@ -144,15 +147,12 @@ ul.list-seperator > li:nth-of-type(n+2)::before {
   content: '|';
   color: #ccc;
 }
-ul.list-prefix a {
-  display: table-cell;
-}
 ul.list-prefix > li {
   margin-bottom: 0.5rem;
 }
 ul.list-prefix > li::before {
   content: attr(data-item) ':';
-  display: table-cell;
+  display: inline-block;
   min-width: 5rem;
   font-weight: bold;
 }
@@ -604,70 +604,71 @@ body,
 #body .lrcview .container-view .view-lrc .lrc-box ul.lyric > li.current {
   color: #64b5f6;
 }
-.main {
+.view {
   width: 75%;
   height: 100%;
   min-height: 100%;
   margin-left: 25%;
   box-shadow: -1px 0 6px rgba(0,0,0,0.24);
 }
-.main section {
+.view section {
   height: 100%;
   padding: 2rem;
 }
-.main .playlist-intro {
+.view .playlist-intro {
   display: inline-block;
   height: 128px;
 }
-.main .playlist-intro ul.playlist-desc {
+.view .playlist-intro ul.playlist-desc {
   padding: 1rem;
+  min-width: 15rem;
 }
-.main .btn-group.playlist-display {
+.view .btn-group.playlist-display {
   border: none;
 }
-.main table.playlist-content {
+.view table.playlist-content {
   table-layout: fixed;
 }
-.main table.playlist-content th.index {
+.view table.playlist-content th.index {
   width: 2em;
 }
-.main table.playlist-content th.time {
+.view table.playlist-content th.time {
   width: 4em;
 }
-.main table.playlist-content th.artist {
+.view table.playlist-content th.artist {
   width: 14%;
 }
-.main table.playlist-content th.album {
+.view table.playlist-content th.album {
   width: 20%;
 }
-.main table.playlist-content td.time {
+.view table.playlist-content td.time {
   text-align: center;
 }
-.main table.playlist-content td.index {
+.view table.playlist-content td.index {
   text-align: right;
 }
-.main table.playlist-content td.index i {
+.view table.playlist-content td.index i {
   display: none;
 }
-.main table.playlist-content tr:hover td.index i.hint {
+.view table.playlist-content tr:hover td.index i.hint {
   display: inline;
 }
-.main table.playlist-content tr:hover td.index i.active {
+.view table.playlist-content tr:hover td.index i.active {
   display: none;
 }
-.main table.playlist-content tr:hover td.index::before {
+.view table.playlist-content tr:hover td.index::before {
   content: '';
 }
-.main table.playlist-content tr.active:hover td.index i.active,
-.main table.playlist-content tr.active td.index i.active {
+.view table.playlist-content tr.active:hover td.index i.active,
+.view table.playlist-content tr.active td.index i.active {
   display: inline;
 }
-.main table.playlist-content tr.active:hover td.index i.hint,
-.main table.playlist-content tr.active td.index i.hint {
+.view table.playlist-content tr.active:hover td.index i.hint,
+.view table.playlist-content tr.active td.index i.hint {
   display: none;
 }
-.main table.playlist-content tr.active:hover td.index::before,
-.main table.playlist-content tr.active td.index::before {
+.view table.playlist-content tr.active:hover td.index::before,
+.view table.playlist-content tr.active td.index::before {
   content: '';
 }
 .sidebar {

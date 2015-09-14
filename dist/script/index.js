@@ -10,12 +10,13 @@ var _react = require('react');
 
 var _react2 = _interopRequireDefault(_react);
 
-var _scriptSidebar = require('./script/sidebar');
+var _scriptBody = require('./script/body');
 
 var _scriptFooter = require('./script/footer');
 
 window.onload = function () {
     _ipc2['default'].send('load-source');
-    _react2['default'].render(_react2['default'].createElement(_scriptSidebar.Sidebar, null), document.querySelector('#body .sidebar'));
+    var activeEntry = 1;
+    _react2['default'].render(_react2['default'].createElement(_scriptBody.Body, { active: activeEntry }), document.querySelector('#body'));
     _react2['default'].render(_react2['default'].createElement(_scriptFooter.Footer, null), document.querySelector('#footer'));
 };

@@ -18,9 +18,28 @@ var prevent = function prevent(e) {
         e.stopPropagation();
     }
 };
-document.querySelector('#body .main').onClick = function () {
-    return console.log('click main');
-};
+var nowOpenedDropdown = null;
+//事件委托
+document.addEventListener('click', function (e) {
+    var stack = e.path,
+        target;
+    for (var i = 0; i < stack.length - 1; i++) {
+        // no need to check document
+        if (stack[i].classList && stack[i].classList.contains('dropdown')) {
+            target = stack[i];
+            break;
+        }
+    }
+    if (target == nowOpenedDropdown) return;
+    if (nowOpenedDropdown) {
+        nowOpenedDropdown.classList.remove('open');
+        nowOpenedDropdown = null;
+    }
+    if (target) {
+        target.classList.add('open');
+        nowOpenedDropdown = target;
+    }
+});
 var Dropdown = _react2['default'].createClass({
     displayName: 'Dropdown',
 
@@ -30,38 +49,7 @@ var Dropdown = _react2['default'].createClass({
     getDefaultProps: function getDefaultProps() {
         return { instant: false };
     },
-    componentDidMount: function componentDidMount() {
-        this.hide();
-        this.getDOMNode().addEventListener('click', this.onClickDropdown);
-        this.refs.content.getDOMNode().addEventListener('click', this.onClickContent);
-    },
-    hide: function hide() {
-        this.state.opened = false;
-        this.setState(this.state);
-        document.removeEventListener('click', this.hide);
-    },
-    show: function show() {
-        this.state.opened = true;
-        this.setState(this.state);
-        document.addEventListener('click', this.hide);
-    },
-    onClickDropdown: function onClickDropdown(e) {
-        prevent(e);
-        console.log('click dropdown', e.path);
-        document.dispatchEvent(new MouseEvent('click', {
-            'view': window,
-            'bubbles': true,
-            'cancelable': true
-        }));
-        this.show();
-    },
-    onClickContent: function onClickContent(e) {
-        prevent(e);
-        console.log('click content');
-        if (this.props.instant) {
-            this.hide();
-        }
-    },
+    componentDidMount: function componentDidMount() {},
     render: function render() {
         var _props$children = _toArray(this.props.children);
 
@@ -71,7 +59,7 @@ var Dropdown = _react2['default'].createClass({
 
         return _react2['default'].createElement(
             'div',
-            { className: 'dropdown ' + (this.state.opened ? 'open' : '') },
+            { className: 'dropdown' },
             _react2['default'].createElement(
                 'div',
                 { ref: 'content', className: 'content arrow arrow-down' },
@@ -90,7 +78,7 @@ var Icon = _react2['default'].createClass({
         iconName: _react2['default'].PropTypes.string.isRequired
     },
     render: function render() {
-        return _react2['default'].createElement('i', { className: 'fa fa-' + this.props.iconName });
+        return _react2['default'].createElement('i', { className: this.props.className + ' fa fa-' + this.props.iconName });
     }
 });
 exports.Icon = Icon;
@@ -159,3 +147,32 @@ var Slider = _react2['default'].createClass({
     }
 });
 exports.Slider = Slider;
+var Media = _react2['default'].createClass({
+    displayName: 'Media',
+
+    render: function render() {
+        return _react2['default'].createElement(
+            'div',
+            { className: this.props.className + ' media' },
+            _react2['default'].createElement('img', { src: this.props.imgUrl }),
+            _react2['default'].createElement(
+                'div',
+                { className: 'media-body' },
+                this.props.children
+            )
+        );
+    }
+});
+exports.Media = Media;
+var Button = _react2['default'].createClass({
+    displayName: 'Button',
+
+    render: function render() {
+        return _react2['default'].createElement(
+            'a',
+            { className: this.props.className + ' button ' + (this.props.active ? 'active' : null) },
+            this.props.children
+        );
+    }
+});
+exports.Button = Button;

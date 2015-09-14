@@ -36,6 +36,9 @@ img
 .hidden
     display:none
 
+.clickable
+    cursor:pointer
+
 .txt
     overflow:hidden
     text-overflow:ellipsis
@@ -136,13 +139,11 @@ ul.list-seperator > li
         content:'|'
         color:color-border
 
-ul.list-prefix  a
-    display:table-cell
 ul.list-prefix > li
     margin-bottom:.5rem
     &::before
         content:attr(data-item) ':'
-        display:table-cell
+        display:inline-block
         min-width:5rem
         font-weight: bold
 
