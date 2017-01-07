@@ -1,9 +1,7 @@
 #网易音乐盒 
-使用html5和node.js构建的网易云音乐的跨平台第三方客户端。   
-*目前使用nw.js下个版本准备使用electron(atom-shell)*
- 
-###Release    
-~~百度网盘: [linux64](http://pan.baidu.com/s/1mgrIGVQ)~~  *破损，不支持邮箱登陆。请参考Manual Install*  
+使用nw.js构建的网易云音乐的跨平台第三方客户端。  
+**由于官方已经提供Linux版客户端了，本项目已不再维护。**  
+ 官方下载地址：http://music.163.com/#/download  
 
 ###Feature  
 1. 设定本地音乐文件夹，递归搜索本地音乐。  
@@ -17,7 +15,7 @@
 9. 系统托盘    
 
 
-###Manual Install  
+###Install  
 1. 下载安装[nw.js](https://github.com/nwjs/nw.js)
 2. 拷贝chrome安装目录下的`libffmpegsumo.so`(windows下是`libffmpegsumo.dll`)至nw.js目录下  
 3. 下载并切换至项目：`git clone https://github.com/stkevintan/nw_musicbox.git && cd nw_musicbox/`  
@@ -26,7 +24,6 @@
 
 `libffmpegsumo`的版本一定要与nw.js版本对应，否则不支持MP3等常见格式。nw.js v0.12.0对应chrome 41.x +
 
-
 ###Update
 `cd /path/to/NetEaseMusic/ && git pull`  
 
@@ -34,31 +31,6 @@
 <img src="http://7xiyak.com1.z0.glb.clouddn.com/s59.png"/>
 <img src="http://7xiyak.com1.z0.glb.clouddn.com/s60.png"/>
 <img src="http://7xiyak.com1.z0.glb.clouddn.com/s52.png"/>
-
-###Developer tips  
-本项目前端使用jade、stylus与bootstrap框架，源文件包括在src中，使用gulp自动构建至dist文件夹中。  
-本项目结构类似于MVC结构，所有定义ui交互等运行于web context中的文件皆置于controller文件夹中，所有定义数据模型、处理网络或本地事务等运行于node context中的文件皆置于model文件夹中。  
-controller中包括：   
-- `category` 管理播放列表目录（sidebar）
-- `account`  管理账户
-- `nav`  管理顶栏
-- `lrc`  歌词面板
-- `player`  底部播放器
-- `playlist` 歌曲列表
-- `radio` 私人fm
-- `settings` 设置面板
-- `tray` 托盘图标
-
-model中包括：   
-- `EntryModel` 定义播放列表源
-- `PlaylistModel` 定义播放列表
-- `SongModel` 定义歌曲
-- `FileManager` 处理本地文件系统
-- `NetEaseMusic` 处理网络（既api）
-- `Crypto` 加密模块
-- `Utils` 对node.js中util的扩展，包括二分查找、队列等实用工具
-
-目前已经定义了本地、用户、云音乐三个播放列表源。可以通过扩展entry对象添加新的播放列表源。
 
 ###Troubleshooting
 
