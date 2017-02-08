@@ -1,7 +1,6 @@
 #网易音乐盒 
 使用nw.js构建的网易云音乐的跨平台第三方客户端。 
 
-
 **由于官方已经提供Linux版客户端了，本项目已不再维护。**官方下载地址：http://music.163.com/#/download  
 
 ###Feature  
@@ -19,7 +18,7 @@
 ###Install  
 1. 下载安装[nw.js](https://github.com/nwjs/nw.js)
 2. 拷贝chrome安装目录下的`libffmpegsumo.so`(windows下是`libffmpegsumo.dll`)至nw.js目录下  
-3. 下载并切换至项目：`git clone https://github.com/stkevintan/nw_musicbox.git && cd nw_musicbox/`  
+3. 下载并切换至项目：`git clone https://github.com/stkevintan/Cube.git && cd Cube/`  
 4. 安装模块: `npm i`
 5. 运行： `/path/to/nw .`   
 
