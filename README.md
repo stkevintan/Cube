@@ -4,7 +4,7 @@
 - [musicbox](https://github.com/darknessomi/musicbox): Python版的网易云音乐客户端，功能比较全面。
 - [FeelUOwn](https://github.com/cosven/FeelUOwn): 拥有Qt界面的Python版网易云音乐客户端。
 
-**由于官方已经提供Linux版客户端了，本项目已不再维护。**  [官方下载地址](http://music.163.com/#/download)  
+此外：
 - JS版网易API可以参考：     [NetEaseMusic](https://github.com/stkevintan/Cube/blob/master/src/model/NetEaseMusic.js)
 - JS版的加密算法可以参考：   [Crypto](https://github.com/stkevintan/Cube/blob/master/src/model/Crypto.js)
 
