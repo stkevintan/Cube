@@ -1,4 +1,4 @@
-***注意*** nw.js版本已经不再维护，推荐使用Electron移植版： [Cube in Electron](https://github.com/issac2015/Cube-In-Electron): Cube项目的Electron移植。感谢[@issac2015](https://github.com/issac2015)  
+**注意** nw.js版本已经不再维护，推荐使用Electron移植版： [Cube in Electron](https://github.com/issac2015/Cube-In-Electron),感谢[@issac2015](https://github.com/issac2015)  
 
 # 网易音乐盒 
 使用nw.js构建的网易云音乐的跨平台第三方客户端。    
